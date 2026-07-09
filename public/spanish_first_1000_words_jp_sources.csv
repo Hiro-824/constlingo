@@ -1,0 +1,8 @@
+﻿名前,特徴,向いている用途,URL
+RAE CREA Listado de frecuencias,Real Academia Española の CREA コーパスに基づく頻度表。1000/5000/10000語形へのリンクがある。語形ベースなので活用形も別カウント。,公式寄りの頻度確認。学習順に使うより参照向き。,https://corpus.rae.es/lfrecuencias.html
+Wiktionary Spanish Frequency Lists,スペイン語の頻度リスト集。字幕ベースのTop 1000/10000などがある。,会話っぽい語の頻度を見たいとき。,https://en.wiktionary.org/wiki/Wiktionary:Frequency_lists/Spanish
+Wiktionary Spanish1000,映画・テレビ字幕由来の約2740万語コーパスから作られたTop 1000。,まず頻出語形をざっと眺めたいとき。,https://en.wiktionary.org/wiki/Wiktionary:Frequency_lists/Spanish1000
+SUBTLEX-ESP,映画・テレビ字幕に基づくスペイン語頻度データ。研究論文では約4100万語規模の字幕コーパスとして説明される。,研究寄りの頻度データを使いたいとき。,https://osf.io/xp6sz/overview
+SpanishDict Vocabulary,SpanishDict の語彙学習機能・学習ガイド。単語練習や辞書と併用しやすい。,発音・例文・辞書を同じサイトで確認したいとき。,https://www.spanishdict.com/guide/learn-1000-words-in-15-hours
+LanguageGuide Spanish Visual Vocabulary,画像と音声つきのテーマ別語彙。挨拶、数字、体、服、食べ物など。,初学者が音声と絵で覚えたいとき。,https://www.languageguide.org/spanish/vocabulary/
+Adsonant 1000 Most Common Spanish Words,頻度順位、品詞、英訳など付きの1000語リスト。CSVダウンロードも案内されている。,Ankiや表計算に取り込みたいとき。,https://www.adsonant.com/resources/spanish/1000-most-common-words/
