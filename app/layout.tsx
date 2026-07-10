@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Constlingo",
-  description: "スペイン語1000語の発音学習アプリ",
+  description: "スペイン語1000語の四択・発音演習アプリ",
 };
 
 export default function RootLayout({

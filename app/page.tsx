@@ -8,19 +8,35 @@ type Word = {
   category: string;
   spanish: string;
   japanese: string;
-  part: string;
+  partOfSpeech: string;
   memo: string;
 };
 
-type Screen = "setup" | "study" | "test" | "result";
-type TestKind = "speak" | "choice";
+type Screen = "home" | "range" | "mode" | "session" | "result";
+type RangeKind = "category" | "part" | "all";
+type StudyMode = "standard";
+type QuestionKind = "es-ja" | "pronunciation";
 type RecognitionStatus = "idle" | "listening" | "correct" | "miss" | "unsupported";
 
-type TestQuestion = {
+type Selection = {
+  kind: RangeKind;
+  key: string;
+  label: string;
+};
+
+type Question = {
   id: string;
-  kind: TestKind;
+  kind: QuestionKind;
   word: Word;
   choices?: Word[];
+  attempts: number;
+  wrong: boolean;
+};
+
+type ResultStats = {
+  attempts: number;
+  correct: number;
+  wrong: number;
 };
 
 type SpeechRecognitionLike = {
@@ -41,8 +57,52 @@ type SpeechRecognitionEventLike = {
 
 type SpeechRecognitionConstructor = new () => SpeechRecognitionLike;
 
-const BLOCKS = Array.from({ length: 10 }, (_, index) => `${index + 1}/10`);
-const TEST_LIMIT_SECONDS = 10;
+const CATEGORY_ORDER = [
+  "最初のあいさつ・反応",
+  "文を作る基本語",
+  "超重要動詞",
+  "形容詞・性質",
+  "副詞・頻度・程度",
+  "数字・時間",
+  "人・家族・関係",
+  "場所・移動・旅行",
+  "家・日用品",
+  "食べ物・飲み物",
+  "体・健康・気持ち",
+  "学習・仕事・お金",
+  "自然・天気・動物",
+  "社会・文化・抽象語",
+] as const;
+
+const PARTS = [
+  {
+    key: "part-1",
+    label: "パート1",
+    subtitle: "最初のあいさつ・反応〜副詞・頻度・程度",
+    categories: CATEGORY_ORDER.slice(0, 5),
+  },
+  {
+    key: "part-2",
+    label: "パート2",
+    subtitle: "数字・時間〜食べ物・飲み物",
+    categories: CATEGORY_ORDER.slice(5, 10),
+  },
+  {
+    key: "part-3",
+    label: "パート3",
+    subtitle: "体・健康・気持ち〜社会・文化・抽象語",
+    categories: CATEGORY_ORDER.slice(10, 14),
+  },
+];
+
+const TIMER_SECONDS = 10;
+const FEEDBACK_MS = 980;
+const SPEECH_FALLBACK_BASE_MS = 1600;
+
+const KIND_LABELS: Record<QuestionKind, string> = {
+  "es-ja": "西→日",
+  pronunciation: "日→西 発音",
+};
 
 function parseCsv(text: string) {
   const rows: string[][] = [];
@@ -87,6 +147,15 @@ function parseCsv(text: string) {
   }
 
   return rows;
+}
+
+function shuffle<T>(items: T[]) {
+  const copy = [...items];
+  for (let i = copy.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
 }
 
 function normalizeSpeech(input: string) {
@@ -139,15 +208,6 @@ function isClosePronunciation(answer: string, target: string) {
   return ratio <= (normalizedTarget.length <= 5 ? 0.34 : 0.28);
 }
 
-function shuffle<T>(items: T[]) {
-  const copy = [...items];
-  for (let i = copy.length - 1; i > 0; i -= 1) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [copy[i], copy[j]] = [copy[j], copy[i]];
-  }
-  return copy;
-}
-
 function getSpeechRecognition(): SpeechRecognitionConstructor | null {
   if (typeof window === "undefined") {
     return null;
@@ -164,39 +224,32 @@ function getSpeechRecognition(): SpeechRecognitionConstructor | null {
 
 function getPreferredSpanishVoice(voices: SpeechSynthesisVoice[]) {
   const spanishVoices = voices.filter((voice) => voice.lang.toLowerCase().startsWith("es"));
-  const googleSpanish = spanishVoices.find(
+  const exactGoogle = spanishVoices.find(
     (voice) => voice.name === "Google español" && voice.lang === "es-ES",
   );
-  const preferredNames = ["google español", "monica", "paulina", "jorge", "marisol", "diego", "juan"];
 
-  if (googleSpanish) {
-    return googleSpanish;
+  if (exactGoogle) {
+    return exactGoogle;
   }
 
   return (
     [...spanishVoices].sort((a, b) => {
-      const aName = a.name.toLowerCase();
-      const bName = b.name.toLowerCase();
-      const aNameScore = preferredNames.findIndex((name) => aName.includes(name));
-      const bNameScore = preferredNames.findIndex((name) => bName.includes(name));
-      const aScore =
-        (a.lang.toLowerCase() === "es-es" ? 40 : 0) +
-        (a.localService ? 20 : 0) +
-        (aNameScore >= 0 ? 20 - aNameScore : 0);
-      const bScore =
-        (b.lang.toLowerCase() === "es-es" ? 40 : 0) +
-        (b.localService ? 20 : 0) +
-        (bNameScore >= 0 ? 20 - bNameScore : 0);
-      return bScore - aScore;
+      const score = (voice: SpeechSynthesisVoice) => {
+        const name = voice.name.toLowerCase();
+        return (
+          (voice.lang.toLowerCase() === "es-es" ? 50 : 0) +
+          (name.includes("google") ? 30 : 0) +
+          (name.includes("español") || name.includes("spanish") ? 20 : 0) +
+          (voice.localService ? 5 : 0)
+        );
+      };
+
+      return score(b) - score(a);
     })[0] ?? null
   );
 }
 
-function speakSpanish(
-  text: string,
-  options: { voice?: SpeechSynthesisVoice | null; rate?: number },
-  onEnd?: () => void,
-) {
+function speakSpanish(text: string, voice?: SpeechSynthesisVoice | null, onEnd?: () => void) {
   if (typeof window === "undefined" || !("speechSynthesis" in window)) {
     onEnd?.();
     return;
@@ -205,65 +258,149 @@ function speakSpanish(
   window.speechSynthesis.cancel();
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = "es-ES";
-  if (options.voice) {
-    utterance.voice = options.voice;
-    utterance.lang = options.voice.lang;
-  }
-  utterance.rate = options.rate ?? 0.92;
+  utterance.rate = 0.92;
   utterance.pitch = 1;
+
+  if (voice) {
+    utterance.voice = voice;
+    utterance.lang = voice.lang;
+  }
+
   utterance.onend = () => onEnd?.();
   utterance.onerror = () => onEnd?.();
   window.speechSynthesis.speak(utterance);
 }
 
-function blockLabel(block: string) {
-  return `単元 ${block.replace("/10", "")}`;
+function questionCount(selection: Selection) {
+  if (selection.kind === "category") {
+    return 20;
+  }
+  return 30;
+}
+
+function getChoices(word: Word, pool: Word[], key: "spanish" | "japanese") {
+  const used = new Set([word[key]]);
+  const distractors: Word[] = [];
+
+  for (const item of shuffle(pool.filter((candidate) => candidate.id !== word.id))) {
+    if (used.has(item[key])) {
+      continue;
+    }
+    distractors.push(item);
+    used.add(item[key]);
+    if (distractors.length === 3) {
+      break;
+    }
+  }
+
+  return shuffle([word, ...distractors]);
+}
+
+function makeQuestions(pool: Word[], selection: Selection) {
+  const count = Math.min(questionCount(selection), pool.length);
+  const selected = shuffle(pool).slice(0, count);
+
+  return selected.map<Question>((word, index) => {
+    const kind: QuestionKind = index % 2 === 0 ? "pronunciation" : "es-ja";
+
+    return {
+      id: `${kind}-${word.id}-${index}`,
+      kind,
+      word,
+      choices: kind === "es-ja" ? getChoices(word, pool, "japanese") : undefined,
+      attempts: 0,
+      wrong: false,
+    };
+  });
+}
+
+function getRangeWords(words: Word[], selection: Selection | null) {
+  if (!selection) {
+    return [];
+  }
+
+  if (selection.kind === "all") {
+    return words;
+  }
+
+  if (selection.kind === "category") {
+    return words.filter((word) => word.category === selection.key);
+  }
+
+  const part = PARTS.find((item) => item.key === selection.key);
+  return words.filter((word) => part?.categories.includes(word.category as (typeof CATEGORY_ORDER)[number]));
+}
+
+function calculateStats(questions: Question[]) {
+  return questions.reduce<Record<QuestionKind, ResultStats>>(
+    (stats, question) => {
+      stats[question.kind].attempts += question.attempts;
+      stats[question.kind].correct += question.attempts > 0 ? 1 : 0;
+      stats[question.kind].wrong += Math.max(question.attempts - 1, 0);
+      return stats;
+    },
+    {
+      "es-ja": { attempts: 0, correct: 0, wrong: 0 },
+      pronunciation: { attempts: 0, correct: 0, wrong: 0 },
+    },
+  );
+}
+
+function rate(correct: number, attempts: number) {
+  if (attempts === 0) {
+    return 0;
+  }
+  return Math.round((correct / attempts) * 100);
 }
 
 export default function Home() {
   const [words, setWords] = useState<Word[]>([]);
-  const [selectedBlocks, setSelectedBlocks] = useState(() => new Set(BLOCKS));
-  const [screen, setScreen] = useState<Screen>("setup");
-  const [studyIndex, setStudyIndex] = useState(0);
+  const [screen, setScreen] = useState<Screen>("home");
+  const [rangeKind, setRangeKind] = useState<RangeKind | null>(null);
+  const [selection, setSelection] = useState<Selection | null>(null);
+  const [mode, setMode] = useState<StudyMode | null>(null);
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [questionIndex, setQuestionIndex] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(TIMER_SECONDS);
+  const [answered, setAnswered] = useState(false);
+  const [feedback, setFeedback] = useState<"correct" | "miss" | null>(null);
+  const [selectedChoiceId, setSelectedChoiceId] = useState<number | null>(null);
   const [heard, setHeard] = useState("");
   const [recognitionStatus, setRecognitionStatus] = useState<RecognitionStatus>("idle");
-  const [questions, setQuestions] = useState<TestQuestion[]>([]);
-  const [questionIndex, setQuestionIndex] = useState(0);
-  const [score, setScore] = useState(0);
-  const [answered, setAnswered] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(TEST_LIMIT_SECONDS);
-  const [choiceSelection, setChoiceSelection] = useState<number | null>(null);
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [voiceURI, setVoiceURI] = useState("");
-  const [speechRate, setSpeechRate] = useState(0.92);
-  const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
-  const activeQuestionIdRef = useRef("");
-  const questionFinishingRef = useRef(false);
-  const studyAdvancingRef = useRef(false);
-  const studyPlaybackTokenRef = useRef(0);
-  const selectedVoiceRef = useRef<SpeechSynthesisVoice | null>(null);
-  const speechRateRef = useRef(speechRate);
+  const [speechSupported, setSpeechSupported] = useState(true);
 
-  const scopedWords = useMemo(
-    () => words.filter((word) => selectedBlocks.has(word.block)),
-    [selectedBlocks, words],
-  );
-  const currentStudyWord = scopedWords[studyIndex % Math.max(scopedWords.length, 1)];
-  const currentQuestion = questions[questionIndex];
-  const selectedCount = selectedBlocks.size;
-  const spanishVoices = useMemo(
-    () => voices.filter((voice) => voice.lang.toLowerCase().startsWith("es")),
-    [voices],
-  );
+  const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
+  const finishingRef = useRef(false);
+  const activeQuestionIdRef = useRef("");
+  const selectedVoiceRef = useRef<SpeechSynthesisVoice | null>(null);
+  const feedbackTimerRef = useRef<number | null>(null);
+  const speechFallbackTimerRef = useRef<number | null>(null);
+
   const selectedVoice = useMemo(() => {
-    const selected = spanishVoices.find((voice) => voice.voiceURI === voiceURI);
-    return selected ?? getPreferredSpanishVoice(spanishVoices);
-  }, [spanishVoices, voiceURI]);
+    const spanishVoices = voices.filter((voice) => voice.lang.toLowerCase().startsWith("es"));
+    return spanishVoices.find((voice) => voice.voiceURI === voiceURI) ?? getPreferredSpanishVoice(spanishVoices);
+  }, [voiceURI, voices]);
+
+  const rangeWords = useMemo(() => getRangeWords(words, selection), [selection, words]);
+  const currentQuestion = questions[questionIndex];
+  const stats = useMemo(() => calculateStats(questions), [questions]);
+  const totalAttempts = questions.reduce((sum, question) => sum + question.attempts, 0);
+  const totalCorrect = questions.filter((question) => question.attempts > 0).length;
+  const wrongQuestions = questions.filter((question) => question.wrong);
 
   useEffect(() => {
     selectedVoiceRef.current = selectedVoice;
-    speechRateRef.current = speechRate;
-  }, [selectedVoice, speechRate]);
+  }, [selectedVoice]);
+
+  useEffect(() => {
+    const detector = window.setTimeout(() => {
+      setSpeechSupported(getSpeechRecognition() !== null);
+    }, 0);
+
+    return () => window.clearTimeout(detector);
+  }, []);
 
   useEffect(() => {
     let active = true;
@@ -284,9 +421,10 @@ export default function Home() {
             category: row[2],
             spanish: row[3],
             japanese: row[4],
-            part: row[5] ?? "",
+            partOfSpeech: row[5] ?? "",
             memo: row[6] ?? "",
           }));
+
         setWords(parsed);
       });
 
@@ -296,25 +434,18 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    return () => {
-      recognitionRef.current?.abort();
-      window.speechSynthesis?.cancel();
-    };
-  }, []);
-
-  useEffect(() => {
     if (typeof window === "undefined" || !("speechSynthesis" in window)) {
       return;
     }
 
     const loadVoices = () => {
-      const availableVoices = window.speechSynthesis.getVoices();
-      setVoices(availableVoices);
+      const available = window.speechSynthesis.getVoices();
+      setVoices(available);
       setVoiceURI((current) => {
-        if (current && availableVoices.some((voice) => voice.voiceURI === current)) {
+        if (current && available.some((voice) => voice.voiceURI === current)) {
           return current;
         }
-        return getPreferredSpanishVoice(availableVoices)?.voiceURI ?? "";
+        return getPreferredSpanishVoice(available)?.voiceURI ?? "";
       });
     };
 
@@ -326,57 +457,161 @@ export default function Home() {
     };
   }, []);
 
+  useEffect(() => {
+    return () => {
+      if (feedbackTimerRef.current !== null) {
+        window.clearTimeout(feedbackTimerRef.current);
+      }
+      if (speechFallbackTimerRef.current !== null) {
+        window.clearTimeout(speechFallbackTimerRef.current);
+      }
+      recognitionRef.current?.abort();
+      window.speechSynthesis?.cancel();
+    };
+  }, []);
+
+  const cancelSpeech = useCallback(() => {
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
+  }, []);
+
+  const clearFeedbackTimer = useCallback(() => {
+    if (feedbackTimerRef.current !== null) {
+      window.clearTimeout(feedbackTimerRef.current);
+      feedbackTimerRef.current = null;
+    }
+    if (speechFallbackTimerRef.current !== null) {
+      window.clearTimeout(speechFallbackTimerRef.current);
+      speechFallbackTimerRef.current = null;
+    }
+  }, []);
+
   const stopRecognition = useCallback(() => {
     recognitionRef.current?.abort();
     recognitionRef.current = null;
-    setRecognitionStatus("idle");
   }, []);
 
-  const nextStudy = useCallback(() => {
-    studyPlaybackTokenRef.current += 1;
-    studyAdvancingRef.current = false;
+  const resetAnswerState = useCallback(() => {
+    clearFeedbackTimer();
     stopRecognition();
+    cancelSpeech();
+    activeQuestionIdRef.current = "";
+    finishingRef.current = false;
+    setAnswered(false);
+    setFeedback(null);
+    setSelectedChoiceId(null);
     setHeard("");
     setRecognitionStatus("idle");
-    setStudyIndex((index) => (scopedWords.length ? (index + 1) % scopedWords.length : 0));
-  }, [scopedWords.length, stopRecognition]);
+    setTimeLeft(TIMER_SECONDS);
+  }, [cancelSpeech, clearFeedbackTimer, stopRecognition]);
 
-  const finishQuestion = useCallback(
-    (questionId: string, isCorrect: boolean) => {
-      if (questionFinishingRef.current || activeQuestionIdRef.current !== questionId) {
+  const startSession = useCallback(
+    (nextMode: StudyMode, retryQuestions?: Question[]) => {
+      if (!selection) {
         return;
       }
 
-      questionFinishingRef.current = true;
-      stopRecognition();
-      setAnswered(true);
-      setRecognitionStatus(isCorrect ? "correct" : "miss");
-      if (isCorrect) {
-        setScore((value) => value + 1);
-      }
-      window.setTimeout(() => {
-        setAnswered(false);
-        setChoiceSelection(null);
-        setHeard("");
-        setTimeLeft(TEST_LIMIT_SECONDS);
-        setRecognitionStatus("idle");
-        setQuestionIndex((index) => {
-          if (index + 1 >= questions.length) {
-            setScreen("result");
-            return index;
-          }
-          return index + 1;
-        });
-        window.setTimeout(() => {
-          questionFinishingRef.current = false;
-        }, 0);
-      }, 850);
+      const nextQuestions = retryQuestions
+        ? retryQuestions.map((question, index) => ({
+            ...question,
+            id: `${question.kind}-${question.word.id}-retry-${index}-${Date.now()}`,
+            attempts: 0,
+            wrong: false,
+          }))
+        : makeQuestions(rangeWords, selection);
+
+      setMode(nextMode);
+      setQuestions(nextQuestions);
+      setQuestionIndex(0);
+      resetAnswerState();
+      setScreen("session");
     },
-    [questions.length, stopRecognition],
+    [rangeWords, resetAnswerState, selection],
+  );
+
+  const finishAttempt = useCallback(
+    (questionId: string, isCorrect: boolean) => {
+      if (finishingRef.current || activeQuestionIdRef.current !== questionId) {
+        return;
+      }
+
+      finishingRef.current = true;
+      stopRecognition();
+      cancelSpeech();
+      setAnswered(true);
+      setFeedback(isCorrect ? "correct" : "miss");
+      setRecognitionStatus(isCorrect ? "correct" : "miss");
+
+      setQuestions((current) =>
+        current.map((question, index) =>
+          index === questionIndex
+            ? {
+                ...question,
+                attempts: question.attempts + 1,
+                wrong: question.wrong || !isCorrect,
+              }
+            : question,
+        ),
+      );
+
+      let minimumDisplayDone = false;
+      let speechDone = false;
+      let advanced = false;
+
+      const completeQuestion = () => {
+        if (advanced || !minimumDisplayDone || !speechDone) {
+          return;
+        }
+        if (activeQuestionIdRef.current !== questionId) {
+          return;
+        }
+
+        advanced = true;
+        resetAnswerState();
+
+        if (isCorrect) {
+          setQuestionIndex((index) => {
+            if (index + 1 >= questions.length) {
+              setScreen("result");
+              return index;
+            }
+            return index + 1;
+          });
+        }
+      };
+
+      const markSpeechDone = () => {
+        if (speechDone) {
+          return;
+        }
+        speechDone = true;
+        if (speechFallbackTimerRef.current !== null) {
+          window.clearTimeout(speechFallbackTimerRef.current);
+          speechFallbackTimerRef.current = null;
+        }
+        completeQuestion();
+      };
+
+      const speechFallbackMs = Math.max(
+        SPEECH_FALLBACK_BASE_MS,
+        Math.min(currentQuestion.word.spanish.length * 220, 5200),
+      );
+
+      feedbackTimerRef.current = window.setTimeout(() => {
+        feedbackTimerRef.current = null;
+        minimumDisplayDone = true;
+        completeQuestion();
+      }, FEEDBACK_MS);
+
+      speechFallbackTimerRef.current = window.setTimeout(markSpeechDone, speechFallbackMs);
+      speakSpanish(currentQuestion.word.spanish, selectedVoiceRef.current, markSpeechDone);
+    },
+    [cancelSpeech, currentQuestion, questionIndex, questions.length, resetAnswerState, stopRecognition],
   );
 
   const startRecognition = useCallback(
-    (word: Word, mode: "study" | "test", questionId?: string) => {
+    (question: Question) => {
       stopRecognition();
       const Recognition = getSpeechRecognition();
 
@@ -393,296 +628,256 @@ export default function Home() {
       setRecognitionStatus("listening");
 
       recognition.onresult = (event) => {
+        if (recognitionRef.current !== recognition) {
+          return;
+        }
+
         const result = event.results[event.results.length - 1];
         const transcript = result?.[0]?.transcript ?? "";
-        const correct = isClosePronunciation(transcript, word.spanish);
+        const correct = isClosePronunciation(transcript, question.word.spanish);
         setHeard(transcript);
 
-        if (mode === "test") {
-          if (correct || result?.isFinal) {
-            finishQuestion(questionId ?? "", correct);
-          }
-          return;
-        }
-
-        if (correct && !studyAdvancingRef.current) {
-          studyAdvancingRef.current = true;
-          setRecognitionStatus("correct");
-          window.setTimeout(nextStudy, 620);
-          return;
-        }
-
-        if (result?.isFinal) {
-          setRecognitionStatus("miss");
+        if (correct || result?.isFinal) {
+          finishAttempt(question.id, correct);
         }
       };
 
       recognition.onerror = () => {
-        if (mode === "test") {
-          finishQuestion(questionId ?? "", false);
-        } else {
-          setRecognitionStatus("miss");
+        if (recognitionRef.current === recognition) {
+          finishAttempt(question.id, false);
         }
       };
       recognition.onend = () => {
+        if (recognitionRef.current !== recognition) {
+          return;
+        }
+
         recognitionRef.current = null;
-        setRecognitionStatus((status) => (status === "listening" ? "idle" : status));
+        finishAttempt(question.id, false);
       };
 
       try {
         recognition.start();
       } catch {
-        setRecognitionStatus("idle");
+        finishAttempt(question.id, false);
       }
     },
-    [finishQuestion, nextStudy, stopRecognition],
+    [finishAttempt, stopRecognition],
   );
 
   useEffect(() => {
-    if (screen !== "test" || !currentQuestion || answered) {
+    if (screen !== "session" || !currentQuestion || answered) {
       return;
     }
 
     activeQuestionIdRef.current = currentQuestion.id;
-    questionFinishingRef.current = false;
+    finishingRef.current = false;
+
+    if (currentQuestion.kind === "pronunciation") {
+      const starter = window.setTimeout(() => startRecognition(currentQuestion), 240);
+      return () => window.clearTimeout(starter);
+    }
+
     const startedAt = Date.now();
     const timer = window.setInterval(() => {
-      const elapsed = Math.floor((Date.now() - startedAt) / 1000);
-      const remaining = Math.max(TEST_LIMIT_SECONDS - elapsed, 0);
-      setTimeLeft(remaining);
+      const elapsed = (Date.now() - startedAt) / 1000;
+      const remaining = Math.max(TIMER_SECONDS - elapsed, 0);
+      setTimeLeft(Math.ceil(remaining));
 
-      if (remaining === 0) {
+      if (remaining <= 0) {
         window.clearInterval(timer);
-        finishQuestion(currentQuestion.id, false);
+        finishAttempt(currentQuestion.id, false);
       }
-    }, 200);
+    }, 100);
 
     return () => window.clearInterval(timer);
-  }, [answered, currentQuestion, finishQuestion, screen]);
+  }, [answered, currentQuestion, finishAttempt, screen, startRecognition]);
 
-  useEffect(() => {
-    if (screen !== "test" || !currentQuestion || answered) {
+  const chooseRangeKind = (kind: RangeKind) => {
+    setRangeKind(kind);
+
+    if (kind === "all") {
+      setSelection({ kind, key: "all", label: "全範囲" });
+      setScreen("mode");
       return;
     }
 
-    const starter = window.setTimeout(() => {
-      if (currentQuestion.kind === "choice") {
-        speakSpanish(currentQuestion.word.spanish, { rate: speechRate, voice: selectedVoice });
-      } else {
-        startRecognition(currentQuestion.word, "test", currentQuestion.id);
-      }
-    }, currentQuestion.kind === "choice" ? 180 : 220);
-
-    return () => window.clearTimeout(starter);
-  }, [answered, currentQuestion, screen, selectedVoice, speechRate, startRecognition]);
-
-  const playStudyPrompt = useCallback(() => {
-    if (!currentStudyWord) {
-      return;
-    }
-
-    const token = studyPlaybackTokenRef.current + 1;
-    studyPlaybackTokenRef.current = token;
-    stopRecognition();
-    setHeard("");
-    setRecognitionStatus("idle");
-    speakSpanish(
-      currentStudyWord.spanish,
-      { rate: speechRateRef.current, voice: selectedVoiceRef.current },
-      () => {
-        window.setTimeout(() => {
-          if (studyPlaybackTokenRef.current === token) {
-            startRecognition(currentStudyWord, "study");
-          }
-        }, 40);
-      },
-    );
-  }, [currentStudyWord, startRecognition, stopRecognition]);
-
-  useEffect(() => {
-    if (screen !== "study" || !currentStudyWord) {
-      return;
-    }
-
-    studyAdvancingRef.current = false;
-    const starter = window.setTimeout(() => {
-      const token = studyPlaybackTokenRef.current + 1;
-      studyPlaybackTokenRef.current = token;
-      stopRecognition();
-      setHeard("");
-      setRecognitionStatus("idle");
-      speakSpanish(
-        currentStudyWord.spanish,
-        { rate: speechRateRef.current, voice: selectedVoiceRef.current },
-        () => {
-          window.setTimeout(() => {
-            if (studyPlaybackTokenRef.current === token) {
-              startRecognition(currentStudyWord, "study");
-            }
-          }, 40);
-        },
-      );
-    }, 120);
-
-    return () => {
-      window.clearTimeout(starter);
-      studyPlaybackTokenRef.current += 1;
-    };
-  }, [currentStudyWord, screen, startRecognition, stopRecognition]);
-
-  const beginStudy = () => {
-    setScreen("study");
-    setStudyIndex(0);
-    setHeard("");
-    setRecognitionStatus("idle");
+    setSelection(null);
+    setScreen("range");
   };
 
-  const makeQuestions = () => {
-    const pool = shuffle(scopedWords);
-    const speakWords = pool.slice(0, 10);
-    const choiceWords = pool.slice(10, 20);
-    const choiceQuestions = choiceWords.map<TestQuestion>((word) => {
-      const distractors = shuffle(scopedWords.filter((item) => item.id !== word.id)).slice(0, 3);
-      return {
-        id: `choice-${word.id}`,
-        kind: "choice",
-        word,
-        choices: shuffle([word, ...distractors]),
-      };
-    });
-
-    return shuffle([
-      ...speakWords.map<TestQuestion>((word) => ({
-        id: `speak-${word.id}`,
-        kind: "speak",
-        word,
-      })),
-      ...choiceQuestions,
-    ]);
-  };
-
-  const beginTest = () => {
-    stopRecognition();
-    questionFinishingRef.current = false;
-    activeQuestionIdRef.current = "";
-    setQuestions(makeQuestions());
-    setQuestionIndex(0);
-    setScore(0);
-    setAnswered(false);
-    setChoiceSelection(null);
-    setHeard("");
-    setTimeLeft(TEST_LIMIT_SECONDS);
-    setRecognitionStatus("idle");
-    setScreen("test");
-  };
-
-  const toggleBlock = (block: string) => {
-    setSelectedBlocks((current) => {
-      const next = new Set(current);
-      if (next.has(block)) {
-        next.delete(block);
-      } else {
-        next.add(block);
-      }
-      return next;
-    });
+  const chooseSelection = (nextSelection: Selection) => {
+    setSelection(nextSelection);
+    setScreen("mode");
   };
 
   const selectChoice = (choice: Word) => {
-    if (answered || !currentQuestion) {
+    if (!currentQuestion || answered) {
       return;
     }
 
-    setChoiceSelection(choice.id);
-    finishQuestion(currentQuestion.id, choice.id === currentQuestion.word.id);
+    setSelectedChoiceId(choice.id);
+    finishAttempt(currentQuestion.id, choice.id === currentQuestion.word.id);
+  };
+
+  const giveUpQuestion = () => {
+    if (!currentQuestion || answered) {
+      return;
+    }
+
+    finishAttempt(currentQuestion.id, false);
+  };
+
+  const goHome = () => {
+    resetAnswerState();
+    setScreen("home");
+    setRangeKind(null);
+    setSelection(null);
+    setMode(null);
+    setQuestions([]);
+    setQuestionIndex(0);
+  };
+
+  const retryMistakes = () => {
+    if (!mode || wrongQuestions.length === 0) {
+      return;
+    }
+    startSession(mode, wrongQuestions);
+  };
+
+  const restartFresh = () => {
+    if (!mode) {
+      return;
+    }
+    startSession(mode);
   };
 
   return (
     <main className="app-shell">
-      <section className="top-band">
+      <header className="app-header">
         <div>
-          <p className="eyebrow">Constlingo</p>
-          <h1>スペイン語1000語</h1>
+          <p className="brand-kicker">Constlingo</p>
+          <h1>スペイン語1000語演習</h1>
         </div>
-        <div className="stats-strip">
-          <span>{selectedCount} 単元</span>
-          <span>{scopedWords.length} 語</span>
+        <div className="header-meta">
+          <span>{words.length || "..."} 語</span>
+          <span>{speechSupported ? "発音対応" : "発音非対応"}</span>
         </div>
-      </section>
+      </header>
 
-      {screen === "setup" && (
+      {screen === "home" && (
+        <section className="workspace home-screen">
+          <div className="intro">
+            <p className="section-label">Range</p>
+            <h2>演習範囲を選択</h2>
+          </div>
+          <div className="primary-grid">
+            <button className="range-card" type="button" onClick={() => chooseRangeKind("category")}>
+              <span>01</span>
+              <strong>カテゴリー単位での演習</strong>
+              <small>14カテゴリーから選択</small>
+            </button>
+            <button className="range-card" type="button" onClick={() => chooseRangeKind("part")}>
+              <span>02</span>
+              <strong>パート単位での演習</strong>
+              <small>3つの大きな範囲から選択</small>
+            </button>
+            <button className="range-card range-card-accent" type="button" onClick={() => chooseRangeKind("all")}>
+              <span>03</span>
+              <strong>全範囲での演習</strong>
+              <small>1000語すべてから出題</small>
+            </button>
+          </div>
+        </section>
+      )}
+
+      {screen === "range" && rangeKind && (
         <section className="workspace">
-          <div className="setup-layout">
-            <div>
-          <div className="section-head">
-            <h2>範囲</h2>
-            <div className="range-actions">
-              <button type="button" onClick={() => setSelectedBlocks(new Set(BLOCKS))}>
-                全選択
-              </button>
-              <button type="button" onClick={() => setSelectedBlocks(new Set())}>
-                クリア
-              </button>
-            </div>
+          <div className="screen-toolbar">
+            <button className="ghost-button" type="button" onClick={() => setScreen("home")}>
+              戻る
+            </button>
+            <span>{rangeKind === "category" ? "カテゴリー選択" : "パート選択"}</span>
           </div>
 
-          <div className="unit-grid">
-            {BLOCKS.map((block) => {
-              const count = words.filter((word) => word.block === block).length;
-              const active = selectedBlocks.has(block);
-              return (
-                <button
-                  className={active ? "unit-tile active" : "unit-tile"}
-                  key={block}
-                  onClick={() => toggleBlock(block)}
-                  type="button"
-                >
-                  <span>{blockLabel(block)}</span>
-                  <strong>{count}</strong>
-                </button>
-              );
-            })}
-          </div>
+          {rangeKind === "category" ? (
+            <div className="category-grid">
+              {CATEGORY_ORDER.map((category, index) => {
+                const count = words.filter((word) => word.category === category).length;
+                return (
+                  <button
+                    className="selection-card"
+                    key={category}
+                    type="button"
+                    onClick={() => chooseSelection({ kind: "category", key: category, label: category })}
+                  >
+                    <span>{String(index + 1).padStart(2, "0")}</span>
+                    <strong>{category}</strong>
+                    <small>{count}語</small>
+                  </button>
+                );
+              })}
             </div>
+          ) : (
+            <div className="part-grid">
+              {PARTS.map((part) => {
+                const count = words.filter((word) =>
+                  part.categories.includes(word.category as (typeof CATEGORY_ORDER)[number]),
+                ).length;
+                return (
+                  <button
+                    className="selection-card part-card"
+                    key={part.key}
+                    type="button"
+                    onClick={() => chooseSelection({ kind: "part", key: part.key, label: part.label })}
+                  >
+                    <span>{part.label}</span>
+                    <strong>{part.subtitle}</strong>
+                    <small>{count}語</small>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </section>
+      )}
 
-            <aside className="sound-panel">
-              <div>
-                <p className="panel-kicker">Audio</p>
-                <h2>音声</h2>
-              </div>
+      {screen === "mode" && selection && (
+        <section className="workspace mode-screen">
+          <div className="screen-toolbar">
+            <button className="ghost-button" type="button" onClick={() => setScreen(selection.kind === "all" ? "home" : "range")}>
+              戻る
+            </button>
+            <span>{selection.label} / {rangeWords.length}語</span>
+          </div>
+
+          <div className="mode-layout">
+            <div className="intro">
+              <p className="section-label">Mode</p>
+              <h2>学習モードを選択</h2>
+              <p>日→西はスペイン語で発音、西→日は日本語を四択から選びます。不正解の問題は正解するまで直後に繰り返します。</p>
+            </div>
+            <aside className="audio-panel">
               <label>
                 <span>スペイン語音声</span>
                 <select
                   onChange={(event) => setVoiceURI(event.target.value)}
                   value={selectedVoice?.voiceURI ?? ""}
                 >
-                  {spanishVoices.length === 0 ? (
-                    <option value="">ブラウザ既定</option>
+                  {voices.filter((voice) => voice.lang.toLowerCase().startsWith("es")).length === 0 ? (
+                    <option value="">ブラウザ既定 / es-ES</option>
                   ) : (
-                    spanishVoices.map((voice) => (
-                      <option key={voice.voiceURI} value={voice.voiceURI}>
-                        {voice.name} / {voice.lang}
-                      </option>
-                    ))
+                    voices
+                      .filter((voice) => voice.lang.toLowerCase().startsWith("es"))
+                      .map((voice) => (
+                        <option key={voice.voiceURI} value={voice.voiceURI}>
+                          {voice.name} / {voice.lang}
+                        </option>
+                      ))
                   )}
                 </select>
               </label>
-              <label>
-                <span>速度 {speechRate.toFixed(2)}</span>
-                <input
-                  max="1.12"
-                  min="0.72"
-                  onChange={(event) => setSpeechRate(Number(event.target.value))}
-                  step="0.02"
-                  type="range"
-                  value={speechRate}
-                />
-              </label>
-              <button
-                className="sample-button"
-                onClick={() => speakSpanish("buenos días", { rate: speechRate, voice: selectedVoice })}
-                type="button"
-              >
+              <button type="button" onClick={() => speakSpanish("buenos días", selectedVoice)}>
                 試聴
               </button>
             </aside>
@@ -690,141 +885,83 @@ export default function Home() {
 
           <div className="mode-grid">
             <button
-              className="mode-button primary"
-              disabled={scopedWords.length === 0}
-              onClick={beginStudy}
+              className="mode-card"
+              disabled={rangeWords.length < 4}
               type="button"
+              onClick={() => startSession("standard")}
             >
-              <span>学習モード</span>
-              <small>日本語から聞いて発音</small>
-            </button>
-            <button
-              className="mode-button"
-              disabled={scopedWords.length < 20}
-              onClick={beginTest}
-              type="button"
-            >
-              <span>テストモード</span>
-              <small>20問・各10秒</small>
+              <span>{questionCount(selection)}問</span>
+              <strong>演習開始</strong>
+              <small>日→西の発音と、西→日の日本語四択のみ出題。</small>
             </button>
           </div>
         </section>
       )}
 
-      {screen === "study" && currentStudyWord && (
-        <section className="workspace practice-workspace">
-          <div className="toolbar">
-            <button type="button" onClick={() => setScreen("setup")}>
-              範囲へ
-            </button>
-            <span>
-              {studyIndex + 1} / {scopedWords.length}
-            </span>
-          </div>
-
-          <div className="prompt-panel">
-            <p className="category">{currentStudyWord.category}</p>
-            <h2>{currentStudyWord.japanese}</h2>
-            <p className="part">{currentStudyWord.part}</p>
-          </div>
-
-          <div className="control-row">
-            <button className="listen-button" type="button" onClick={playStudyPrompt}>
-              再生して発音
-            </button>
-            <button type="button" onClick={() => startRecognition(currentStudyWord, "study")}>
-              マイク
-            </button>
-            <button type="button" onClick={nextStudy}>
-              次へ
-            </button>
-          </div>
-
-          <StatusLine status={recognitionStatus} heard={heard} />
-        </section>
-      )}
-
-      {screen === "test" && currentQuestion && (
-        <section className="workspace test-workspace">
-          <div className="timer-track" aria-label={`残り${timeLeft}秒`}>
-            <div style={{ width: `${(timeLeft / TEST_LIMIT_SECONDS) * 100}%` }} />
-          </div>
-
-          <div className="toolbar">
-            <button type="button" onClick={() => setScreen("setup")}>
+      {screen === "session" && currentQuestion && (
+        <section className="workspace session-screen">
+          <div className="session-top">
+            <button className="ghost-button" type="button" onClick={goHome}>
               終了
             </button>
-            <span>
-              {questionIndex + 1} / {questions.length}
-            </span>
-            <strong>{score} 点</strong>
+            <div className="progress-meta">
+              <span>{questionIndex + 1} / {questions.length}</span>
+              <strong>{KIND_LABELS[currentQuestion.kind]}</strong>
+            </div>
           </div>
 
-          {currentQuestion.kind === "speak" ? (
-            <>
-              <div className="prompt-panel">
-                <p className="category">発音</p>
-                <h2>{currentQuestion.word.japanese}</h2>
-                <p className="part">10秒以内</p>
-              </div>
-              <div className="control-row">
-                <button
-                  type="button"
-                  onClick={() => startRecognition(currentQuestion.word, "test", currentQuestion.id)}
-                >
-                  マイク
-                </button>
-              </div>
-              <StatusLine status={recognitionStatus} heard={heard} />
-            </>
-          ) : (
-            <>
-              <div className="prompt-panel">
-                <p className="category">聞き取り</p>
-                <h2>音声を聞いて選択</h2>
-                <p className="part">10秒以内</p>
-              </div>
-              <div className="control-row">
-                <button
-                  type="button"
-                  onClick={() =>
-                    speakSpanish(currentQuestion.word.spanish, {
-                      rate: speechRate,
-                      voice: selectedVoice,
-                    })
-                  }
-                >
-                  もう一度
-                </button>
-              </div>
-              <div className="choice-grid">
-                {currentQuestion.choices?.map((choice) => (
-                  <button
-                    className={choiceSelection === choice.id ? "choice selected" : "choice"}
-                    disabled={answered}
-                    key={choice.id}
-                    onClick={() => selectChoice(choice)}
-                    type="button"
-                  >
-                    {choice.japanese}
-                  </button>
-                ))}
-              </div>
-            </>
+          {currentQuestion.kind !== "pronunciation" && (
+            <div className="timer-track" aria-label={`残り${timeLeft}秒`}>
+              <div style={{ width: `${(timeLeft / TIMER_SECONDS) * 100}%` }} />
+            </div>
           )}
+
+          <QuestionPanel
+            question={currentQuestion}
+            selectedChoiceId={selectedChoiceId}
+            answered={answered}
+            feedback={feedback}
+            heard={heard}
+            recognitionStatus={recognitionStatus}
+            onSelectChoice={selectChoice}
+            onStartRecognition={() => startRecognition(currentQuestion)}
+            onGiveUp={giveUpQuestion}
+          />
         </section>
       )}
 
-      {screen === "result" && (
-        <section className="workspace result-workspace">
-          <p className="eyebrow">Result</p>
-          <h2>{score} / {questions.length}</h2>
-          <div className="mode-grid compact">
-            <button className="mode-button primary" type="button" onClick={beginTest}>
-              もう一度
+      {screen === "result" && selection && mode && (
+        <section className="workspace result-screen">
+          <p className="section-label">Result</p>
+          <h2>{rate(totalCorrect, totalAttempts)}%</h2>
+          <p>
+            {selection.label} / 2形式演習 /{" "}
+            {totalCorrect}問完了・{Math.max(totalAttempts - totalCorrect, 0)}回ミス
+          </p>
+
+          <div className="stats-grid">
+            {Object.entries(stats)
+              .filter(([, value]) => value.attempts > 0)
+              .map(([kind, value]) => (
+                <div className="stat-card" key={kind}>
+                  <span>{KIND_LABELS[kind as QuestionKind]}</span>
+                  <strong>{rate(value.correct, value.attempts)}%</strong>
+                  <small>
+                    {value.correct}/{value.attempts}
+                  </small>
+                </div>
+              ))}
+          </div>
+
+          <div className="result-actions">
+            <button type="button" disabled={wrongQuestions.length === 0} onClick={retryMistakes}>
+              間違えた問題のみ再挑戦
             </button>
-            <button className="mode-button" type="button" onClick={() => setScreen("setup")}>
-              範囲へ
+            <button type="button" onClick={restartFresh}>
+              同じ範囲・モードで新しく再挑戦
+            </button>
+            <button className="ghost-button" type="button" onClick={goHome}>
+              ホームに戻る
             </button>
           </div>
         </section>
@@ -833,25 +970,99 @@ export default function Home() {
   );
 }
 
-function StatusLine({
-  status,
+function QuestionPanel({
+  question,
+  selectedChoiceId,
+  answered,
+  feedback,
   heard,
+  recognitionStatus,
+  onSelectChoice,
+  onStartRecognition,
+  onGiveUp,
 }: {
-  status: RecognitionStatus;
+  question: Question;
+  selectedChoiceId: number | null;
+  answered: boolean;
+  feedback: "correct" | "miss" | null;
   heard: string;
+  recognitionStatus: RecognitionStatus;
+  onSelectChoice: (choice: Word) => void;
+  onStartRecognition: () => void;
+  onGiveUp: () => void;
 }) {
-  const label = {
-    idle: "待機中",
-    listening: "聞き取り中",
-    correct: "OK",
-    miss: "もう一度",
-    unsupported: "音声認識非対応",
-  }[status];
+  const isChoice = question.kind === "es-ja";
+  const feedbackText =
+    feedback === "correct"
+      ? "⭕️"
+      : question.kind === "es-ja"
+        ? question.word.japanese
+        : question.word.spanish;
 
   return (
-    <div className={`status-line ${status}`}>
-      <span>{label}</span>
-      <span>{heard ? `認識: ${heard}` : ""}</span>
+    <div className="question-shell">
+      <div className="prompt-panel">
+        <p className="question-kind">{KIND_LABELS[question.kind]}</p>
+        {question.kind === "es-ja" && <h2 lang="es">{question.word.spanish}</h2>}
+        {question.kind === "pronunciation" && (
+          <>
+            <h2>{question.word.japanese}</h2>
+            <p className="prompt-sub">スペイン語で発音</p>
+          </>
+        )}
+        <p className="word-meta">{question.word.category}</p>
+      </div>
+
+      {feedback && <div className={`feedback-mark ${feedback}`}>{feedbackText}</div>}
+
+      {isChoice && (
+        <div className="choice-grid">
+          {question.choices?.map((choice) => (
+            <button
+              className={selectedChoiceId === choice.id ? "choice selected" : "choice"}
+              disabled={answered}
+              key={choice.id}
+              type="button"
+              onClick={() => onSelectChoice(choice)}
+            >
+              {choice.japanese}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {isChoice && (
+        <div className="question-actions">
+          <button className="give-up-button" disabled={answered} type="button" onClick={onGiveUp}>
+            わからない
+          </button>
+        </div>
+      )}
+
+      {question.kind === "pronunciation" && (
+        <div className="speech-box">
+          <button disabled={answered || recognitionStatus === "listening"} type="button" onClick={onStartRecognition}>
+            マイク
+          </button>
+          <button className="give-up-button" disabled={answered} type="button" onClick={onGiveUp}>
+            わからない
+          </button>
+          <div className={`speech-status ${recognitionStatus}`}>
+            <span>
+              {
+                {
+                  idle: "待機中",
+                  listening: "聞き取り中",
+                  correct: "OK",
+                  miss: "もう一度",
+                  unsupported: "音声認識非対応",
+                }[recognitionStatus]
+              }
+            </span>
+            <small>{heard ? `認識: ${heard}` : " "}</small>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
