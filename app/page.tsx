@@ -14,7 +14,12 @@ type Word = {
 
 type Screen = "home" | "range" | "mode" | "session" | "result";
 type RangeKind = "category" | "part" | "all";
-type StudyMode = "standard";
+type PracticeOrder = "random" | "weak";
+type QuestionPlan = "pronunciation-20" | "mixed-10-10" | "es-ja-20";
+type StudyMode = {
+  order: PracticeOrder;
+  plan: QuestionPlan;
+};
 type QuestionKind = "es-ja" | "pronunciation";
 type RecognitionStatus = "idle" | "listening" | "correct" | "miss" | "unsupported";
 
@@ -38,6 +43,13 @@ type ResultStats = {
   correct: number;
   wrong: number;
 };
+
+type WordProgress = {
+  seen: boolean;
+  wrong: number;
+};
+
+type ProgressStore = Record<number, WordProgress>;
 
 type SpeechRecognitionLike = {
   lang: string;
@@ -98,10 +110,23 @@ const PARTS = [
 const TIMER_SECONDS = 10;
 const FEEDBACK_MS = 980;
 const SPEECH_FALLBACK_BASE_MS = 1600;
+const PROGRESS_STORAGE_KEY = "constlingo-word-progress-v1";
+const PROGRESS_EXPORT_VERSION = 1;
 
 const KIND_LABELS: Record<QuestionKind, string> = {
   "es-ja": "西→日",
   pronunciation: "日→西 発音",
+};
+
+const ORDER_LABELS: Record<PracticeOrder, string> = {
+  random: "ランダム",
+  weak: "苦手順",
+};
+
+const PLAN_LABELS: Record<QuestionPlan, string> = {
+  "pronunciation-20": "日→西 発音 20問",
+  "mixed-10-10": "西→日 10問 + 日→西 発音 10問",
+  "es-ja-20": "西→日 20問",
 };
 
 function parseCsv(text: string) {
@@ -271,13 +296,6 @@ function speakSpanish(text: string, voice?: SpeechSynthesisVoice | null, onEnd?:
   window.speechSynthesis.speak(utterance);
 }
 
-function questionCount(selection: Selection) {
-  if (selection.kind === "category") {
-    return 20;
-  }
-  return 30;
-}
-
 function getChoices(word: Word, pool: Word[], key: "spanish" | "japanese") {
   const used = new Set([word[key]]);
   const distractors: Word[] = [];
@@ -296,20 +314,58 @@ function getChoices(word: Word, pool: Word[], key: "spanish" | "japanese") {
   return shuffle([word, ...distractors]);
 }
 
-function makeQuestions(pool: Word[], selection: Selection) {
-  const count = Math.min(questionCount(selection), pool.length);
-  const selected = shuffle(pool).slice(0, count);
+function getPracticePool(pool: Word[], order: PracticeOrder, progress: ProgressStore) {
+  if (order === "random") {
+    return shuffle(pool);
+  }
 
+  return pool
+    .map((word) => ({ word, tieBreaker: Math.random() }))
+    .sort((a, b) => {
+      const progressA = progress[a.word.id];
+      const progressB = progress[b.word.id];
+      const unseenA = !progressA?.seen;
+      const unseenB = !progressB?.seen;
+
+      if (unseenA !== unseenB) {
+        return unseenA ? -1 : 1;
+      }
+      if (!unseenA && (progressA?.wrong ?? 0) !== (progressB?.wrong ?? 0)) {
+        return (progressB?.wrong ?? 0) - (progressA?.wrong ?? 0);
+      }
+      return a.tieBreaker - b.tieBreaker;
+    })
+    .map(({ word }) => word);
+}
+
+function buildQuestion(word: Word, index: number, kind: QuestionKind, pool: Word[]) {
+  return {
+    id: `${kind}-${word.id}-${index}`,
+    kind,
+    word,
+    choices: kind === "es-ja" ? getChoices(word, pool, "japanese") : undefined,
+    attempts: 0,
+    wrong: false,
+  } satisfies Question;
+}
+
+function makeQuestions(pool: Word[], mode: StudyMode, progress: ProgressStore) {
+  const orderedPool = getPracticePool(pool, mode.order, progress);
+
+  if (mode.plan === "mixed-10-10") {
+    const selected = orderedPool.slice(0, Math.min(20, orderedPool.length));
+    const questions = selected.map((word, index) => {
+      const kind: QuestionKind = index < 10 ? "pronunciation" : "es-ja";
+      return buildQuestion(word, index, kind, pool);
+    });
+    return shuffle(questions);
+  }
+
+  const kind: QuestionKind = mode.plan === "es-ja-20" ? "es-ja" : "pronunciation";
+  const selected = orderedPool.slice(0, Math.min(20, orderedPool.length));
   return selected.map<Question>((word, index) => {
-    const kind: QuestionKind = index % 2 === 0 ? "pronunciation" : "es-ja";
-
     return {
-      id: `${kind}-${word.id}-${index}`,
-      kind,
-      word,
-      choices: kind === "es-ja" ? getChoices(word, pool, "japanese") : undefined,
-      attempts: 0,
-      wrong: false,
+      ...buildQuestion(word, index, kind, pool),
     };
   });
 }
@@ -353,12 +409,41 @@ function rate(correct: number, attempts: number) {
   return Math.round((correct / attempts) * 100);
 }
 
+function parseProgressPayload(text: string) {
+  const parsed = JSON.parse(text) as { words?: unknown };
+  const source = parsed.words && typeof parsed.words === "object" ? parsed.words : parsed;
+  const entries = Object.entries(source as Record<string, unknown>).flatMap(([id, value]) => {
+    if (!value || typeof value !== "object") {
+      return [];
+    }
+    const item = value as Partial<WordProgress>;
+    const numericId = Number(id);
+    if (!Number.isFinite(numericId)) {
+      return [];
+    }
+    return [
+      [
+        numericId,
+        {
+          seen: Boolean(item.seen),
+          wrong: Math.max(0, Number(item.wrong) || 0),
+        },
+      ] as const,
+    ];
+  });
+  return Object.fromEntries(entries);
+}
+
 export default function Home() {
   const [words, setWords] = useState<Word[]>([]);
   const [screen, setScreen] = useState<Screen>("home");
   const [rangeKind, setRangeKind] = useState<RangeKind | null>(null);
   const [selection, setSelection] = useState<Selection | null>(null);
   const [mode, setMode] = useState<StudyMode | null>(null);
+  const [practiceOrder, setPracticeOrder] = useState<PracticeOrder>("random");
+  const [questionPlan, setQuestionPlan] = useState<QuestionPlan>("mixed-10-10");
+  const [progress, setProgress] = useState<ProgressStore>({});
+  const [progressLoaded, setProgressLoaded] = useState(false);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [questionIndex, setQuestionIndex] = useState(0);
   const [timeLeft, setTimeLeft] = useState(TIMER_SECONDS);
@@ -369,7 +454,6 @@ export default function Home() {
   const [recognitionStatus, setRecognitionStatus] = useState<RecognitionStatus>("idle");
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [voiceURI, setVoiceURI] = useState("");
-  const [speechSupported, setSpeechSupported] = useState(true);
 
   const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
   const finishingRef = useRef(false);
@@ -377,6 +461,7 @@ export default function Home() {
   const selectedVoiceRef = useRef<SpeechSynthesisVoice | null>(null);
   const feedbackTimerRef = useRef<number | null>(null);
   const speechFallbackTimerRef = useRef<number | null>(null);
+  const progressFileRef = useRef<HTMLInputElement | null>(null);
 
   const selectedVoice = useMemo(() => {
     const spanishVoices = voices.filter((voice) => voice.lang.toLowerCase().startsWith("es"));
@@ -389,18 +474,40 @@ export default function Home() {
   const totalAttempts = questions.reduce((sum, question) => sum + question.attempts, 0);
   const totalCorrect = questions.filter((question) => question.attempts > 0).length;
   const wrongQuestions = questions.filter((question) => question.wrong);
+  const canStart = rangeWords.length >= (questionPlan === "pronunciation-20" ? 1 : 4);
+  const learnedCount = Object.values(progress).filter((item) => item.seen).length;
+  const wrongCount = Object.values(progress).reduce((sum, item) => sum + item.wrong, 0);
+  const seenWordCount = (targetWords: Word[]) => targetWords.filter((word) => progress[word.id]?.seen).length;
 
   useEffect(() => {
     selectedVoiceRef.current = selectedVoice;
   }, [selectedVoice]);
 
   useEffect(() => {
-    const detector = window.setTimeout(() => {
-      setSpeechSupported(getSpeechRecognition() !== null);
+    const loader = window.setTimeout(() => {
+      try {
+        const stored = window.localStorage.getItem(PROGRESS_STORAGE_KEY);
+        if (!stored) {
+          return;
+        }
+
+        setProgress(parseProgressPayload(stored));
+      } catch {
+        setProgress({});
+      } finally {
+        setProgressLoaded(true);
+      }
     }, 0);
 
-    return () => window.clearTimeout(detector);
+    return () => window.clearTimeout(loader);
   }, []);
+
+  useEffect(() => {
+    if (!progressLoaded) {
+      return;
+    }
+    window.localStorage.setItem(PROGRESS_STORAGE_KEY, JSON.stringify(progress));
+  }, [progress, progressLoaded]);
 
   useEffect(() => {
     let active = true;
@@ -519,7 +626,7 @@ export default function Home() {
             attempts: 0,
             wrong: false,
           }))
-        : makeQuestions(rangeWords, selection);
+        : makeQuestions(rangeWords, nextMode, progress);
 
       setMode(nextMode);
       setQuestions(nextQuestions);
@@ -527,7 +634,7 @@ export default function Home() {
       resetAnswerState();
       setScreen("session");
     },
-    [rangeWords, resetAnswerState, selection],
+    [progress, rangeWords, resetAnswerState, selection],
   );
 
   const finishAttempt = useCallback(
@@ -554,6 +661,16 @@ export default function Home() {
             : question,
         ),
       );
+      setProgress((current) => {
+        const currentProgress = current[currentQuestion.word.id] ?? { seen: false, wrong: 0 };
+        return {
+          ...current,
+          [currentQuestion.word.id]: {
+            seen: true,
+            wrong: currentProgress.wrong + (isCorrect ? 0 : 1),
+          },
+        };
+      });
 
       let minimumDisplayDone = false;
       let speechDone = false;
@@ -752,25 +869,81 @@ export default function Home() {
     startSession(mode);
   };
 
+  const downloadProgress = () => {
+    const payload = {
+      version: PROGRESS_EXPORT_VERSION,
+      exportedAt: new Date().toISOString(),
+      words: progress,
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `constlingo-progress-${new Date().toISOString().slice(0, 10)}.json`;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const importProgress = (file: File | undefined) => {
+    if (!file) {
+      return;
+    }
+
+    if (
+      Object.keys(progress).length > 0 &&
+      !window.confirm("ブラウザに保存済みの苦手度データを上書きします。アップロードしますか？")
+    ) {
+      if (progressFileRef.current) {
+        progressFileRef.current.value = "";
+      }
+      return;
+    }
+
+    file
+      .text()
+      .then((text) => {
+        setProgress(parseProgressPayload(text));
+      })
+      .finally(() => {
+        if (progressFileRef.current) {
+          progressFileRef.current.value = "";
+        }
+      });
+  };
+
+  const beginConfiguredSession = () => {
+    startSession({ order: practiceOrder, plan: questionPlan });
+  };
+
   return (
     <main className="app-shell">
-      <header className="app-header">
-        <div>
-          <p className="brand-kicker">Constlingo</p>
-          <h1>スペイン語1000語演習</h1>
-        </div>
-        <div className="header-meta">
-          <span>{words.length || "..."} 語</span>
-          <span>{speechSupported ? "発音対応" : "発音非対応"}</span>
-        </div>
-      </header>
-
       {screen === "home" && (
         <section className="workspace home-screen">
           <div className="intro">
             <p className="section-label">Range</p>
             <h2>演習範囲を選択</h2>
           </div>
+          <section className="progress-panel home-progress" aria-label="苦手度データ">
+            <div>
+              <strong>苦手度データ</strong>
+              <span>{learnedCount}語学習済み / {wrongCount}回ミス</span>
+            </div>
+            <div className="progress-actions">
+              <button type="button" onClick={downloadProgress}>
+                ダウンロード
+              </button>
+              <button type="button" onClick={() => progressFileRef.current?.click()}>
+                アップロード
+              </button>
+              <input
+                ref={progressFileRef}
+                accept="application/json"
+                hidden
+                type="file"
+                onChange={(event) => importProgress(event.target.files?.[0])}
+              />
+            </div>
+          </section>
           <div className="primary-grid">
             <button className="range-card" type="button" onClick={() => chooseRangeKind("category")}>
               <span>01</span>
@@ -794,16 +967,15 @@ export default function Home() {
       {screen === "range" && rangeKind && (
         <section className="workspace">
           <div className="screen-toolbar">
-            <button className="ghost-button" type="button" onClick={() => setScreen("home")}>
-              戻る
+            <button className="icon-button" type="button" aria-label="戻る" onClick={() => setScreen("home")}>
+              ＜
             </button>
-            <span>{rangeKind === "category" ? "カテゴリー選択" : "パート選択"}</span>
           </div>
 
           {rangeKind === "category" ? (
             <div className="category-grid">
               {CATEGORY_ORDER.map((category, index) => {
-                const count = words.filter((word) => word.category === category).length;
+                const categoryWords = words.filter((word) => word.category === category);
                 return (
                   <button
                     className="selection-card"
@@ -813,7 +985,7 @@ export default function Home() {
                   >
                     <span>{String(index + 1).padStart(2, "0")}</span>
                     <strong>{category}</strong>
-                    <small>{count}語</small>
+                    <small>{categoryWords.length}/{seenWordCount(categoryWords)}</small>
                   </button>
                 );
               })}
@@ -821,9 +993,9 @@ export default function Home() {
           ) : (
             <div className="part-grid">
               {PARTS.map((part) => {
-                const count = words.filter((word) =>
+                const partWords = words.filter((word) =>
                   part.categories.includes(word.category as (typeof CATEGORY_ORDER)[number]),
-                ).length;
+                );
                 return (
                   <button
                     className="selection-card part-card"
@@ -833,7 +1005,7 @@ export default function Home() {
                   >
                     <span>{part.label}</span>
                     <strong>{part.subtitle}</strong>
-                    <small>{count}語</small>
+                    <small>{partWords.length}/{seenWordCount(partWords)}</small>
                   </button>
                 );
               })}
@@ -845,54 +1017,63 @@ export default function Home() {
       {screen === "mode" && selection && (
         <section className="workspace mode-screen">
           <div className="screen-toolbar">
-            <button className="ghost-button" type="button" onClick={() => setScreen(selection.kind === "all" ? "home" : "range")}>
-              戻る
+            <button
+              className="icon-button"
+              type="button"
+              aria-label="戻る"
+              onClick={() => setScreen(selection.kind === "all" ? "home" : "range")}
+            >
+              ＜
             </button>
             <span>{selection.label} / {rangeWords.length}語</span>
           </div>
 
-          <div className="mode-layout">
-            <div className="intro">
-              <p className="section-label">Mode</p>
-              <h2>学習モードを選択</h2>
-              <p>日→西はスペイン語で発音、西→日は日本語を四択から選びます。不正解の問題は正解するまで直後に繰り返します。</p>
-            </div>
-            <aside className="audio-panel">
+          <div className="intro">
+            <h2>出題設定</h2>
+          </div>
+
+          <div className="settings-grid">
+            <fieldset className="setting-panel">
+              <legend>出題順</legend>
               <label>
-                <span>スペイン語音声</span>
-                <select
-                  onChange={(event) => setVoiceURI(event.target.value)}
-                  value={selectedVoice?.voiceURI ?? ""}
-                >
-                  {voices.filter((voice) => voice.lang.toLowerCase().startsWith("es")).length === 0 ? (
-                    <option value="">ブラウザ既定 / es-ES</option>
-                  ) : (
-                    voices
-                      .filter((voice) => voice.lang.toLowerCase().startsWith("es"))
-                      .map((voice) => (
-                        <option key={voice.voiceURI} value={voice.voiceURI}>
-                          {voice.name} / {voice.lang}
-                        </option>
-                      ))
-                  )}
-                </select>
+                <input
+                  checked={practiceOrder === "random"}
+                  name="practice-order"
+                  type="radio"
+                  onChange={() => setPracticeOrder("random")}
+                />
+                <strong>純粋なランダム</strong>
               </label>
-              <button type="button" onClick={() => speakSpanish("buenos días", selectedVoice)}>
-                試聴
-              </button>
-            </aside>
+              <label>
+                <input
+                  checked={practiceOrder === "weak"}
+                  name="practice-order"
+                  type="radio"
+                  onChange={() => setPracticeOrder("weak")}
+                />
+                <strong>苦手順</strong>
+              </label>
+            </fieldset>
+
+            <fieldset className="setting-panel">
+              <legend>問題構成</legend>
+              {(["pronunciation-20", "mixed-10-10", "es-ja-20"] as const).map((plan) => (
+                <label key={plan}>
+                  <input
+                    checked={questionPlan === plan}
+                    name="question-plan"
+                    type="radio"
+                    onChange={() => setQuestionPlan(plan)}
+                  />
+                  <strong>{PLAN_LABELS[plan]}</strong>
+                </label>
+              ))}
+            </fieldset>
           </div>
 
           <div className="mode-grid">
-            <button
-              className="mode-card"
-              disabled={rangeWords.length < 4}
-              type="button"
-              onClick={() => startSession("standard")}
-            >
-              <span>{questionCount(selection)}問</span>
-              <strong>演習開始</strong>
-              <small>日→西の発音と、西→日の日本語四択のみ出題。</small>
+            <button className="start-button" disabled={!canStart} type="button" onClick={beginConfiguredSession}>
+              演習開始
             </button>
           </div>
         </section>
@@ -935,7 +1116,7 @@ export default function Home() {
           <p className="section-label">Result</p>
           <h2>{rate(totalCorrect, totalAttempts)}%</h2>
           <p>
-            {selection.label} / 2形式演習 /{" "}
+            {selection.label} / {ORDER_LABELS[mode.order]} / {PLAN_LABELS[mode.plan]} /{" "}
             {totalCorrect}問完了・{Math.max(totalAttempts - totalCorrect, 0)}回ミス
           </p>
 

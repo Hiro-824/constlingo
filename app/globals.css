@@ -161,6 +161,7 @@ p {
 .category-grid,
 .part-grid,
 .mode-grid,
+.settings-grid,
 .stats-grid,
 .choice-grid {
   display: grid;
@@ -183,11 +184,17 @@ p {
   grid-template-columns: minmax(0, 1fr);
 }
 
+.settings-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .range-card,
 .selection-card,
 .mode-card,
 .stat-card,
 .audio-panel,
+.progress-panel,
+.setting-panel,
 .prompt-panel {
   border: 1px solid var(--line);
   background: var(--panel);
@@ -202,6 +209,18 @@ p {
   gap: 16px;
   padding: 20px;
   text-align: left;
+}
+
+.start-button {
+  justify-self: center;
+  min-width: 220px;
+  min-height: 52px;
+  padding: 0 28px;
+  border-color: var(--line-strong);
+  background: var(--foreground);
+  color: var(--background);
+  font-size: 1.02rem;
+  font-weight: 650;
 }
 
 .range-card span,
@@ -257,6 +276,18 @@ p {
 
 .ghost-button {
   color: var(--muted);
+  padding: 0 16px;
+}
+
+.icon-button {
+  display: grid;
+  width: 44px;
+  min-height: 44px;
+  place-items: center;
+  padding: 0;
+  color: var(--muted);
+  font-size: 1.35rem;
+  line-height: 1;
 }
 
 .mode-layout {
@@ -266,10 +297,74 @@ p {
   align-items: start;
 }
 
-.audio-panel {
+.audio-panel,
+.progress-panel,
+.setting-panel {
   display: grid;
   gap: 14px;
   padding: 18px;
+}
+
+.progress-panel strong,
+.setting-panel legend {
+  color: var(--foreground);
+  font-size: 1rem;
+  font-weight: 650;
+}
+
+.progress-panel span {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.home-progress {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+}
+
+.progress-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.progress-actions button {
+  padding: 0 12px;
+}
+
+.setting-panel {
+  margin: 0;
+  min-width: 0;
+}
+
+.setting-panel legend {
+  padding: 0 4px;
+}
+
+.setting-panel label {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  border: 1px solid var(--line);
+  padding: 14px;
+  cursor: pointer;
+}
+
+.setting-panel input {
+  margin: 0;
+}
+
+.setting-panel label:has(input:checked) {
+  border-color: var(--line-strong);
+}
+
+.setting-panel label strong {
+  font-size: 1rem;
+  font-weight: 650;
 }
 
 .audio-panel label {
@@ -437,14 +532,16 @@ p {
 }
 
 .stats-grid {
-  width: 100%;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  width: min(100%, 640px);
+  grid-template-columns: repeat(auto-fit, minmax(180px, 220px));
+  justify-content: center;
   margin-top: 8px;
-  text-align: left;
+  text-align: center;
 }
 
 .stat-card {
   display: grid;
+  justify-items: center;
   gap: 8px;
   padding: 16px;
 }
@@ -480,7 +577,7 @@ p {
 
   .primary-grid,
   .category-grid,
-  .stats-grid {
+  .settings-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -524,6 +621,7 @@ p {
   .category-grid,
   .part-grid,
   .mode-grid,
+  .settings-grid,
   .stats-grid,
   .choice-grid,
   .speech-box {
@@ -537,10 +635,13 @@ p {
     padding: 18px;
   }
 
-  .screen-toolbar,
   .session-top {
-    align-items: stretch;
+    align-items: flex-start;
     flex-direction: column;
+  }
+
+  .home-progress {
+    grid-template-columns: 1fr;
   }
 
   .progress-meta {
