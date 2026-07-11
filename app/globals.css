@@ -440,6 +440,13 @@ p {
   font-weight: 400;
 }
 
+.drill-word {
+  overflow-wrap: anywhere;
+  font-size: 2.2rem;
+  font-weight: 650;
+  line-height: 1.1;
+}
+
 .choice-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
@@ -474,6 +481,31 @@ p {
   display: grid;
   grid-template-columns: 160px 160px minmax(0, 1fr);
   gap: 12px;
+}
+
+.drill-box {
+  grid-template-columns: minmax(180px, 1fr) 160px minmax(0, 1fr);
+}
+
+.drill-meter {
+  display: grid;
+  align-content: center;
+  gap: 8px;
+  min-height: 58px;
+  border: 1px solid var(--line);
+  padding: 8px 12px;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.drill-meter > div {
+  height: 8px;
+  border: 1px solid var(--line);
+}
+
+.drill-meter > div > div {
+  height: 100%;
+  background: var(--foreground);
 }
 
 .speech-status {

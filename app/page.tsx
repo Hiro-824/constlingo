@@ -15,12 +15,12 @@ type Word = {
 type Screen = "home" | "range" | "mode" | "session" | "result";
 type RangeKind = "category" | "part" | "all";
 type PracticeOrder = "random" | "least-touched" | "weak";
-type QuestionPlan = "pronunciation-20" | "mixed-10-10" | "es-ja-20";
+type QuestionPlan = "pronunciation-20" | "pronunciation-drill-20" | "mixed-10-10" | "es-ja-20";
 type StudyMode = {
   order: PracticeOrder;
   plan: QuestionPlan;
 };
-type QuestionKind = "es-ja" | "pronunciation";
+type QuestionKind = "es-ja" | "pronunciation" | "pronunciation-drill";
 type RecognitionStatus = "idle" | "listening" | "correct" | "miss" | "unsupported";
 
 type Selection = {
@@ -116,6 +116,8 @@ const PARTS = [
 
 const TIMER_SECONDS = 10;
 const QUESTIONS_PER_SESSION = 20;
+const DRILL_REPEAT_COUNT = 10;
+const DRILL_REPEAT_PAUSE_MS = 900;
 const FEEDBACK_MS = 980;
 const SPEECH_FALLBACK_BASE_MS = 1600;
 const PROGRESS_STORAGE_KEY = "constlingo-word-progress-v1";
@@ -124,6 +126,7 @@ const PROGRESS_EXPORT_VERSION = 1;
 const KIND_LABELS: Record<QuestionKind, string> = {
   "es-ja": "西→日",
   pronunciation: "日→西 発音",
+  "pronunciation-drill": "発音反復",
 };
 
 const ORDER_LABELS: Record<PracticeOrder, string> = {
@@ -134,6 +137,7 @@ const ORDER_LABELS: Record<PracticeOrder, string> = {
 
 const PLAN_LABELS: Record<QuestionPlan, string> = {
   "pronunciation-20": "日→西 発音 20問",
+  "pronunciation-drill-20": "発音反復 20語",
   "mixed-10-10": "西→日 10問 + 日→西 発音 10問",
   "es-ja-20": "西→日 20問",
 };
@@ -603,7 +607,12 @@ function makeQuestionsFromSelection(selected: Word[], mode: StudyMode, pool: Wor
     return shuffle(questions);
   }
 
-  const kind: QuestionKind = mode.plan === "es-ja-20" ? "es-ja" : "pronunciation";
+  const kind: QuestionKind =
+    mode.plan === "es-ja-20"
+      ? "es-ja"
+      : mode.plan === "pronunciation-drill-20"
+        ? "pronunciation-drill"
+        : "pronunciation";
   return selected.map<Question>((word, index) => {
     return {
       ...buildQuestion(word, index, kind, pool),
@@ -675,6 +684,7 @@ function calculateStats(questions: Question[]) {
     {
       "es-ja": { attempts: 0, correct: 0, wrong: 0 },
       pronunciation: { attempts: 0, correct: 0, wrong: 0 },
+      "pronunciation-drill": { attempts: 0, correct: 0, wrong: 0 },
     },
   );
 }
@@ -740,6 +750,7 @@ export default function Home() {
   const [selectedChoiceId, setSelectedChoiceId] = useState<number | null>(null);
   const [heard, setHeard] = useState("");
   const [recognitionStatus, setRecognitionStatus] = useState<RecognitionStatus>("idle");
+  const [drillRepeatCount, setDrillRepeatCount] = useState(0);
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [voiceURI, setVoiceURI] = useState("");
 
@@ -749,6 +760,7 @@ export default function Home() {
   const selectedVoiceRef = useRef<SpeechSynthesisVoice | null>(null);
   const feedbackTimerRef = useRef<number | null>(null);
   const speechFallbackTimerRef = useRef<number | null>(null);
+  const drillPauseTimerRef = useRef<number | null>(null);
   const progressFileRef = useRef<HTMLInputElement | null>(null);
   const sessionCycleRef = useRef<SessionCycle | null>(null);
 
@@ -763,7 +775,9 @@ export default function Home() {
   const totalAttempts = questions.reduce((sum, question) => sum + question.attempts, 0);
   const totalCorrect = questions.filter((question) => question.attempts > 0).length;
   const wrongQuestions = questions.filter((question) => question.wrong);
-  const canStart = rangeWords.length >= (questionPlan === "pronunciation-20" ? 1 : 4);
+  const canStart =
+    rangeWords.length >=
+    (questionPlan === "pronunciation-20" || questionPlan === "pronunciation-drill-20" ? 1 : 4);
   const learnedCount = Object.values(progress).filter((item) => item.seen).length;
   const wrongCount = Object.values(progress).reduce((sum, item) => sum + item.wrong, 0);
   const seenWordCount = (targetWords: Word[]) => targetWords.filter((word) => progress[word.id]?.seen).length;
@@ -867,6 +881,9 @@ export default function Home() {
       if (speechFallbackTimerRef.current !== null) {
         window.clearTimeout(speechFallbackTimerRef.current);
       }
+      if (drillPauseTimerRef.current !== null) {
+        window.clearTimeout(drillPauseTimerRef.current);
+      }
       recognitionRef.current?.abort();
       window.speechSynthesis?.cancel();
     };
@@ -887,6 +904,10 @@ export default function Home() {
       window.clearTimeout(speechFallbackTimerRef.current);
       speechFallbackTimerRef.current = null;
     }
+    if (drillPauseTimerRef.current !== null) {
+      window.clearTimeout(drillPauseTimerRef.current);
+      drillPauseTimerRef.current = null;
+    }
   }, []);
 
   const stopRecognition = useCallback(() => {
@@ -905,6 +926,7 @@ export default function Home() {
     setSelectedChoiceId(null);
     setHeard("");
     setRecognitionStatus("idle");
+    setDrillRepeatCount(0);
     setTimeLeft(TIMER_SECONDS);
   }, [cancelSpeech, clearFeedbackTimer, stopRecognition]);
 
@@ -914,6 +936,8 @@ export default function Home() {
         return;
       }
 
+      const sessionMode: StudyMode =
+        nextMode.plan === "pronunciation-drill-20" ? { ...nextMode, order: "random" } : nextMode;
       let nextQuestions: Question[];
 
       if (retryQuestions) {
@@ -924,16 +948,16 @@ export default function Home() {
           wrong: false,
         }));
       } else if (allowDuplicates) {
-        const orderedPool = getPracticePool(rangeWords, nextMode.order, progress);
+        const orderedPool = getPracticePool(rangeWords, sessionMode.order, progress);
         const selected = orderedPool.slice(0, Math.min(QUESTIONS_PER_SESSION, orderedPool.length));
-        nextQuestions = makeQuestionsFromSelection(selected, nextMode, rangeWords);
+        nextQuestions = makeQuestionsFromSelection(selected, sessionMode, rangeWords);
       } else {
         const rangeKey = getSelectionCycleKey(selection);
         const currentCycle =
           sessionCycleRef.current?.rangeKey === rangeKey
             ? sessionCycleRef.current
             : { rangeKey, seenWordIds: new Set<number>() };
-        const orderedPool = getPracticePool(rangeWords, nextMode.order, progress);
+        const orderedPool = getPracticePool(rangeWords, sessionMode.order, progress);
         const nextSelection = getCycleAwareSelection(
           orderedPool,
           QUESTIONS_PER_SESSION,
@@ -944,10 +968,10 @@ export default function Home() {
           rangeKey,
           seenWordIds: nextSelection.seenWordIds,
         };
-        nextQuestions = makeQuestionsFromSelection(nextSelection.selected, nextMode, rangeWords);
+        nextQuestions = makeQuestionsFromSelection(nextSelection.selected, sessionMode, rangeWords);
       }
 
-      setMode(nextMode);
+      setMode(sessionMode);
       setQuestions(nextQuestions);
       setQuestionIndex(0);
       resetAnswerState();
@@ -1105,6 +1129,172 @@ export default function Home() {
     [finishAttempt, stopRecognition],
   );
 
+  const completeDrillQuestion = useCallback(
+    (questionId: string) => {
+      if (activeQuestionIdRef.current !== questionId) {
+        return;
+      }
+
+      stopRecognition();
+      cancelSpeech();
+      setAnswered(true);
+      setFeedback("correct");
+
+      setQuestions((current) =>
+        current.map((question, index) =>
+          index === questionIndex
+            ? {
+                ...question,
+                attempts: question.attempts + 1,
+                wrong: false,
+              }
+            : question,
+        ),
+      );
+      setProgress((current) => {
+        const currentProgress = current[currentQuestion.word.id] ?? { seen: false, touched: 0, wrong: 0 };
+        const currentTouched = currentProgress.touched ?? (currentProgress.seen ? 1 : 0);
+        return {
+          ...current,
+          [currentQuestion.word.id]: {
+            seen: true,
+            touched: (Number.isFinite(currentTouched) ? currentTouched : 0) + 1,
+            wrong: currentProgress.wrong,
+          },
+        };
+      });
+
+      resetAnswerState();
+      setQuestionIndex((index) => {
+        if (index + 1 >= questions.length) {
+          setScreen("result");
+          return index;
+        }
+        return index + 1;
+      });
+    },
+    [cancelSpeech, currentQuestion, questionIndex, questions.length, resetAnswerState, stopRecognition],
+  );
+
+  const startDrill = useCallback(
+    (question: Question) => {
+      clearFeedbackTimer();
+      stopRecognition();
+      cancelSpeech();
+      activeQuestionIdRef.current = question.id;
+      finishingRef.current = false;
+      setAnswered(false);
+      setFeedback(null);
+      setDrillRepeatCount(0);
+      setHeard("");
+      setRecognitionStatus("idle");
+
+      let completedRepeats = 0;
+      let cancelled = false;
+
+      const completeRound = (status: RecognitionStatus) => {
+        if (cancelled || activeQuestionIdRef.current !== question.id) {
+          return;
+        }
+
+        completedRepeats += 1;
+        setDrillRepeatCount(completedRepeats);
+        setRecognitionStatus(status);
+
+        if (completedRepeats >= DRILL_REPEAT_COUNT) {
+          completeDrillQuestion(question.id);
+          return;
+        }
+
+        drillPauseTimerRef.current = window.setTimeout(() => {
+          drillPauseTimerRef.current = null;
+          runRound();
+        }, DRILL_REPEAT_PAUSE_MS);
+      };
+
+      const startDrillRecognition = () => {
+        if (cancelled || activeQuestionIdRef.current !== question.id) {
+          return;
+        }
+
+        const Recognition = getSpeechRecognition();
+
+        if (!Recognition) {
+          setRecognitionStatus("unsupported");
+          completeRound("unsupported");
+          return;
+        }
+
+        const recognition = new Recognition();
+        let roundFinished = false;
+        recognition.lang = "es-ES";
+        recognition.interimResults = true;
+        recognition.maxAlternatives = 3;
+        recognitionRef.current = recognition;
+        setRecognitionStatus("listening");
+
+        const finishRound = (isCorrect: boolean) => {
+          if (roundFinished || recognitionRef.current !== recognition) {
+            return;
+          }
+          roundFinished = true;
+          recognitionRef.current = null;
+          recognition.abort();
+          completeRound(isCorrect ? "correct" : "miss");
+        };
+
+        recognition.onresult = (event) => {
+          if (recognitionRef.current !== recognition) {
+            return;
+          }
+
+          const result = event.results[event.results.length - 1];
+          const transcript = result?.[0]?.transcript ?? "";
+          const correct = getPronunciationTargets(question.word).some((target) =>
+            isClosePronunciation(transcript, target),
+          );
+          setHeard(transcript);
+
+          if (correct || result?.isFinal) {
+            finishRound(correct);
+          }
+        };
+        recognition.onerror = () => finishRound(false);
+        recognition.onend = () => finishRound(false);
+
+        try {
+          recognition.start();
+        } catch {
+          finishRound(false);
+        }
+      };
+
+      const runRound = () => {
+        if (cancelled || activeQuestionIdRef.current !== question.id) {
+          return;
+        }
+
+        stopRecognition();
+        setHeard("");
+        setRecognitionStatus("idle");
+        speakSpanish(getSpokenSpanish(question.word), selectedVoiceRef.current, startDrillRecognition);
+      };
+
+      runRound();
+
+      return () => {
+        cancelled = true;
+        if (drillPauseTimerRef.current !== null) {
+          window.clearTimeout(drillPauseTimerRef.current);
+          drillPauseTimerRef.current = null;
+        }
+        stopRecognition();
+        cancelSpeech();
+      };
+    },
+    [cancelSpeech, clearFeedbackTimer, completeDrillQuestion, stopRecognition],
+  );
+
   useEffect(() => {
     if (screen !== "session" || !currentQuestion || answered) {
       return;
@@ -1112,6 +1302,18 @@ export default function Home() {
 
     activeQuestionIdRef.current = currentQuestion.id;
     finishingRef.current = false;
+
+    if (currentQuestion.kind === "pronunciation-drill") {
+      let cleanupDrill: (() => void) | undefined;
+      const starter = window.setTimeout(() => {
+        cleanupDrill = startDrill(currentQuestion);
+      }, 0);
+
+      return () => {
+        window.clearTimeout(starter);
+        cleanupDrill?.();
+      };
+    }
 
     if (currentQuestion.kind === "pronunciation") {
       const starter = window.setTimeout(() => startRecognition(currentQuestion), 240);
@@ -1131,7 +1333,7 @@ export default function Home() {
     }, 100);
 
     return () => window.clearInterval(timer);
-  }, [answered, currentQuestion, finishAttempt, screen, startRecognition]);
+  }, [answered, currentQuestion, finishAttempt, screen, startDrill, startRecognition]);
 
   const chooseRangeKind = (kind: RangeKind) => {
     setRangeKind(kind);
@@ -1166,6 +1368,14 @@ export default function Home() {
     }
 
     finishAttempt(currentQuestion.id, false);
+  };
+
+  const skipDrillQuestion = () => {
+    if (!currentQuestion || answered || currentQuestion.kind !== "pronunciation-drill") {
+      return;
+    }
+
+    completeDrillQuestion(currentQuestion.id);
   };
 
   const goHome = () => {
@@ -1403,7 +1613,7 @@ export default function Home() {
 
             <fieldset className="setting-panel">
               <legend>問題構成</legend>
-              {(["pronunciation-20", "mixed-10-10", "es-ja-20"] as const).map((plan) => (
+              {(["pronunciation-20", "pronunciation-drill-20", "mixed-10-10", "es-ja-20"] as const).map((plan) => (
                 <label key={plan}>
                   <input
                     checked={questionPlan === plan}
@@ -1437,7 +1647,7 @@ export default function Home() {
             </div>
           </div>
 
-          {currentQuestion.kind !== "pronunciation" && (
+          {currentQuestion.kind === "es-ja" && (
             <div className="timer-track" aria-label={`残り${timeLeft}秒`}>
               <div style={{ width: `${(timeLeft / TIMER_SECONDS) * 100}%` }} />
             </div>
@@ -1450,9 +1660,11 @@ export default function Home() {
             feedback={feedback}
             heard={heard}
             recognitionStatus={recognitionStatus}
+            drillRepeatCount={drillRepeatCount}
             onSelectChoice={selectChoice}
             onStartRecognition={() => startRecognition(currentQuestion)}
             onGiveUp={giveUpQuestion}
+            onSkipDrill={skipDrillQuestion}
           />
         </section>
       )}
@@ -1507,9 +1719,11 @@ function QuestionPanel({
   feedback,
   heard,
   recognitionStatus,
+  drillRepeatCount,
   onSelectChoice,
   onStartRecognition,
   onGiveUp,
+  onSkipDrill,
 }: {
   question: Question;
   selectedChoiceId: number | null;
@@ -1517,11 +1731,14 @@ function QuestionPanel({
   feedback: "correct" | "miss" | null;
   heard: string;
   recognitionStatus: RecognitionStatus;
+  drillRepeatCount: number;
   onSelectChoice: (choice: Word) => void;
   onStartRecognition: () => void;
   onGiveUp: () => void;
+  onSkipDrill: () => void;
 }) {
   const isChoice = question.kind === "es-ja";
+  const isDrill = question.kind === "pronunciation-drill";
   const promptSpanish = getPromptSpanish(question.word);
   const feedbackText =
     feedback === "correct"
@@ -1539,6 +1756,14 @@ function QuestionPanel({
           <>
             <h2>{question.word.japanese}</h2>
             <p className="prompt-sub">スペイン語で発音</p>
+          </>
+        )}
+        {isDrill && (
+          <>
+            <h2>{question.word.japanese}</h2>
+            <p className="drill-word" lang="es">
+              {promptSpanish}
+            </p>
           </>
         )}
         <p className="word-meta">{question.word.category}</p>
@@ -1583,6 +1808,34 @@ function QuestionPanel({
               {
                 {
                   idle: "待機中",
+                  listening: "聞き取り中",
+                  correct: "OK",
+                  miss: "もう一度",
+                  unsupported: "音声認識非対応",
+                }[recognitionStatus]
+              }
+            </span>
+            <small>{heard ? `認識: ${heard}` : " "}</small>
+          </div>
+        </div>
+      )}
+
+      {isDrill && (
+        <div className="speech-box drill-box">
+          <div className="drill-meter" aria-label={`${DRILL_REPEAT_COUNT}回中${drillRepeatCount}回完了`}>
+            <span>{drillRepeatCount} / {DRILL_REPEAT_COUNT}</span>
+            <div>
+              <div style={{ width: `${(drillRepeatCount / DRILL_REPEAT_COUNT) * 100}%` }} />
+            </div>
+          </div>
+          <button className="give-up-button" disabled={answered} type="button" onClick={onSkipDrill}>
+            次へ
+          </button>
+          <div className={`speech-status ${recognitionStatus}`}>
+            <span>
+              {
+                {
+                  idle: "読み上げ中",
                   listening: "聞き取り中",
                   correct: "OK",
                   miss: "もう一度",
