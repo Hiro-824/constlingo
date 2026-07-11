@@ -14,7 +14,7 @@ type Word = {
 
 type Screen = "home" | "range" | "mode" | "session" | "result";
 type RangeKind = "category" | "part" | "all";
-type PracticeOrder = "random" | "weak";
+type PracticeOrder = "random" | "least-touched" | "weak";
 type QuestionPlan = "pronunciation-20" | "mixed-10-10" | "es-ja-20";
 type StudyMode = {
   order: PracticeOrder;
@@ -46,10 +46,17 @@ type ResultStats = {
 
 type WordProgress = {
   seen: boolean;
+  touched: number;
   wrong: number;
 };
 
 type ProgressStore = Record<number, WordProgress>;
+type DefiniteArticle = "el" | "la" | "los" | "las" | "el/la";
+
+type SessionCycle = {
+  rangeKey: string;
+  seenWordIds: Set<number>;
+};
 
 type SpeechRecognitionLike = {
   lang: string;
@@ -108,6 +115,7 @@ const PARTS = [
 ];
 
 const TIMER_SECONDS = 10;
+const QUESTIONS_PER_SESSION = 20;
 const FEEDBACK_MS = 980;
 const SPEECH_FALLBACK_BASE_MS = 1600;
 const PROGRESS_STORAGE_KEY = "constlingo-word-progress-v1";
@@ -120,6 +128,7 @@ const KIND_LABELS: Record<QuestionKind, string> = {
 
 const ORDER_LABELS: Record<PracticeOrder, string> = {
   random: "ランダム",
+  "least-touched": "未接触優先",
   weak: "苦手順",
 };
 
@@ -127,6 +136,185 @@ const PLAN_LABELS: Record<QuestionPlan, string> = {
   "pronunciation-20": "日→西 発音 20問",
   "mixed-10-10": "西→日 10問 + 日→西 発音 10問",
   "es-ja-20": "西→日 20問",
+};
+
+const DEFINITE_ARTICLE_OVERRIDES: Record<string, DefiniteArticle> = {
+  cero: "el",
+  uno: "el",
+  dos: "el",
+  tres: "el",
+  cuatro: "el",
+  cinco: "el",
+  seis: "el",
+  siete: "el",
+  ocho: "el",
+  nueve: "el",
+  diez: "el",
+  once: "el",
+  doce: "el",
+  trece: "el",
+  catorce: "el",
+  quince: "el",
+  dieciséis: "el",
+  diecisiete: "el",
+  dieciocho: "el",
+  diecinueve: "el",
+  veinte: "el",
+  treinta: "el",
+  cuarenta: "el",
+  cincuenta: "el",
+  sesenta: "el",
+  setenta: "el",
+  ochenta: "el",
+  noventa: "el",
+  cien: "el",
+  ciento: "el",
+  doscientos: "el",
+  mil: "el",
+  mitad: "la",
+  vez: "la",
+  hora: "la",
+  día: "el",
+  semana: "la",
+  mes: "el",
+  año: "el",
+  siglo: "el",
+  momento: "el",
+  noche: "la",
+  mediodía: "el",
+  medianoche: "la",
+  lunes: "el",
+  martes: "el",
+  miércoles: "el",
+  jueves: "el",
+  viernes: "el",
+  persona: "la",
+  gente: "la",
+  hombre: "el",
+  mujer: "la",
+  bebé: "el/la",
+  padre: "el",
+  madre: "la",
+  padres: "los",
+  pareja: "la",
+  colega: "el/la",
+  jefe: "el",
+  cliente: "el/la",
+  estudiante: "el/la",
+  policía: "el/la",
+  país: "el",
+  ciudad: "la",
+  capital: "la",
+  calle: "la",
+  parque: "el",
+  jardín: "el",
+  pared: "la",
+  hospital: "el",
+  hotel: "el",
+  estación: "la",
+  mapa: "el",
+  dirección: "la",
+  puente: "el",
+  viaje: "el",
+  turista: "el/la",
+  pasaporte: "el",
+  billete: "el",
+  sofá: "el",
+  estante: "el",
+  luz: "la",
+  interruptor: "el",
+  enchufe: "el",
+  llave: "la",
+  papel: "el",
+  peine: "el",
+  suéter: "el",
+  calcetín: "el",
+  guante: "el",
+  reloj: "el",
+  gafas: "las",
+  paraguas: "el",
+  tenedor: "el",
+  sartén: "la",
+  agua: "el",
+  leche: "la",
+  té: "el",
+  café: "el",
+  pan: "el",
+  arroz: "el",
+  pasta: "la",
+  tomate: "el",
+  maíz: "el",
+  frijol: "el",
+  sándwich: "el",
+  pastel: "el",
+  carne: "la",
+  nariz: "la",
+  boca: "la",
+  diente: "el",
+  lengua: "la",
+  mano: "la",
+  piel: "la",
+  mente: "la",
+  voz: "la",
+  síntoma: "el",
+  fiebre: "la",
+  tos: "la",
+  dolor: "el",
+  "dolor de cabeza": "el",
+  descanso: "el",
+  sueño: "el",
+  dentista: "el/la",
+  clase: "la",
+  examen: "el",
+  frase: "la",
+  idioma: "el",
+  español: "el",
+  inglés: "el",
+  japonés: "el",
+  lápiz: "el",
+  bolígrafo: "el",
+  ordenador: "el",
+  móvil: "el",
+  celular: "el",
+  ratón: "el",
+  internet: "el",
+  aplicación: "la",
+  programa: "el",
+  tierra: "la",
+  mar: "el",
+  sol: "el",
+  nube: "la",
+  nieve: "la",
+  árbol: "el",
+  raíz: "la",
+  aire: "el",
+  hielo: "el",
+  vida: "la",
+  muerte: "la",
+  arte: "el",
+  ley: "la",
+  paz: "la",
+  razón: "la",
+  control: "el",
+  orden: "el",
+  acuerdo: "el",
+  imagen: "la",
+  señal: "la",
+  color: "el",
+  nivel: "el",
+  parte: "la",
+  fin: "el",
+  base: "la",
+  sistema: "el",
+};
+
+const DEFINITE_ARTICLE_BY_WORD_KEY: Record<string, DefiniteArticle> = {
+  "capital|首都": "la",
+  "capital|資本": "el",
+  "orden|秩序・順番": "el",
+  "orden|命令": "la",
+  "papa|じゃがいも・ラテンアメリカ": "la",
+  "papa|ローマ教皇": "el",
 };
 
 function parseCsv(text: string) {
@@ -233,6 +421,53 @@ function isClosePronunciation(answer: string, target: string) {
   return ratio <= (normalizedTarget.length <= 5 ? 0.34 : 0.28);
 }
 
+function getDefiniteArticle(word: Word) {
+  if (!word.partOfSpeech.split("・").includes("名詞")) {
+    return null;
+  }
+
+  const spanish = word.spanish.toLowerCase();
+  const firstWord = spanish.split(/\s+/)[0];
+  const wordKey = `${spanish}|${word.japanese}`;
+  const override =
+    DEFINITE_ARTICLE_BY_WORD_KEY[wordKey] ?? DEFINITE_ARTICLE_OVERRIDES[spanish] ?? DEFINITE_ARTICLE_OVERRIDES[firstWord];
+
+  if (override) {
+    return override;
+  }
+
+  if (spanish.endsWith("as")) {
+    return "las";
+  }
+  if (spanish.endsWith("os")) {
+    return "los";
+  }
+  if (spanish.endsWith("a") || spanish.endsWith("dad") || spanish.endsWith("ción") || spanish.endsWith("sión")) {
+    return "la";
+  }
+
+  return "el";
+}
+
+function getPromptSpanish(word: Word) {
+  const article = getDefiniteArticle(word);
+  return article ? `${article} ${word.spanish}` : word.spanish;
+}
+
+function getPronunciationTargets(word: Word) {
+  const article = getDefiniteArticle(word);
+
+  if (article === "el/la") {
+    return [`el ${word.spanish}`, `la ${word.spanish}`];
+  }
+
+  return [getPromptSpanish(word)];
+}
+
+function getSpokenSpanish(word: Word) {
+  return getPronunciationTargets(word)[0];
+}
+
 function getSpeechRecognition(): SpeechRecognitionConstructor | null {
   if (typeof window === "undefined") {
     return null;
@@ -324,6 +559,16 @@ function getPracticePool(pool: Word[], order: PracticeOrder, progress: ProgressS
     .sort((a, b) => {
       const progressA = progress[a.word.id];
       const progressB = progress[b.word.id];
+      const touchedA = progressA?.touched ?? (progressA?.seen ? 1 : 0);
+      const touchedB = progressB?.touched ?? (progressB?.seen ? 1 : 0);
+
+      if (order === "least-touched") {
+        if (touchedA !== touchedB) {
+          return touchedA - touchedB;
+        }
+        return a.tieBreaker - b.tieBreaker;
+      }
+
       const unseenA = !progressA?.seen;
       const unseenB = !progressB?.seen;
 
@@ -349,11 +594,8 @@ function buildQuestion(word: Word, index: number, kind: QuestionKind, pool: Word
   } satisfies Question;
 }
 
-function makeQuestions(pool: Word[], mode: StudyMode, progress: ProgressStore) {
-  const orderedPool = getPracticePool(pool, mode.order, progress);
-
+function makeQuestionsFromSelection(selected: Word[], mode: StudyMode, pool: Word[]) {
   if (mode.plan === "mixed-10-10") {
-    const selected = orderedPool.slice(0, Math.min(20, orderedPool.length));
     const questions = selected.map((word, index) => {
       const kind: QuestionKind = index < 10 ? "pronunciation" : "es-ja";
       return buildQuestion(word, index, kind, pool);
@@ -362,12 +604,47 @@ function makeQuestions(pool: Word[], mode: StudyMode, progress: ProgressStore) {
   }
 
   const kind: QuestionKind = mode.plan === "es-ja-20" ? "es-ja" : "pronunciation";
-  const selected = orderedPool.slice(0, Math.min(20, orderedPool.length));
   return selected.map<Question>((word, index) => {
     return {
       ...buildQuestion(word, index, kind, pool),
     };
   });
+}
+
+function getSelectionCycleKey(selection: Selection) {
+  return `${selection.kind}:${selection.key}`;
+}
+
+function getCycleAwareSelection(orderedPool: Word[], limit: number, seenWordIds: Set<number>) {
+  const sessionLimit = Math.min(limit, orderedPool.length);
+  const selected: Word[] = [];
+  const selectedIds = new Set<number>();
+  let nextSeenWordIds = new Set(seenWordIds);
+
+  while (selected.length < sessionLimit) {
+    let available = orderedPool.filter((word) => !nextSeenWordIds.has(word.id) && !selectedIds.has(word.id));
+
+    if (available.length === 0) {
+      nextSeenWordIds = new Set();
+      available = orderedPool.filter((word) => !selectedIds.has(word.id));
+    }
+
+    if (available.length === 0) {
+      break;
+    }
+
+    for (const word of available) {
+      if (selected.length >= sessionLimit) {
+        break;
+      }
+
+      selected.push(word);
+      selectedIds.add(word.id);
+      nextSeenWordIds.add(word.id);
+    }
+  }
+
+  return { selected, seenWordIds: nextSeenWordIds };
 }
 
 function getRangeWords(words: Word[], selection: Selection | null) {
@@ -409,6 +686,15 @@ function rate(correct: number, attempts: number) {
   return Math.round((correct / attempts) * 100);
 }
 
+function formatLapCount(total: number, touched: number) {
+  if (total === 0 || !Number.isFinite(touched)) {
+    return "0周";
+  }
+
+  const laps = touched / total;
+  return `${laps.toFixed(1).replace(/\.0$/, "")}周`;
+}
+
 function parseProgressPayload(text: string) {
   const parsed = JSON.parse(text) as { words?: unknown };
   const source = parsed.words && typeof parsed.words === "object" ? parsed.words : parsed;
@@ -421,11 +707,13 @@ function parseProgressPayload(text: string) {
     if (!Number.isFinite(numericId)) {
       return [];
     }
+    const touched = Math.max(0, Number(item.touched) || (item.seen ? 1 : 0));
     return [
       [
         numericId,
         {
-          seen: Boolean(item.seen),
+          seen: Boolean(item.seen) || touched > 0,
+          touched,
           wrong: Math.max(0, Number(item.wrong) || 0),
         },
       ] as const,
@@ -462,6 +750,7 @@ export default function Home() {
   const feedbackTimerRef = useRef<number | null>(null);
   const speechFallbackTimerRef = useRef<number | null>(null);
   const progressFileRef = useRef<HTMLInputElement | null>(null);
+  const sessionCycleRef = useRef<SessionCycle | null>(null);
 
   const selectedVoice = useMemo(() => {
     const spanishVoices = voices.filter((voice) => voice.lang.toLowerCase().startsWith("es"));
@@ -478,6 +767,12 @@ export default function Home() {
   const learnedCount = Object.values(progress).filter((item) => item.seen).length;
   const wrongCount = Object.values(progress).reduce((sum, item) => sum + item.wrong, 0);
   const seenWordCount = (targetWords: Word[]) => targetWords.filter((word) => progress[word.id]?.seen).length;
+  const touchedWordCount = (targetWords: Word[]) =>
+    targetWords.reduce((sum, word) => {
+      const wordProgress = progress[word.id];
+      const touched = wordProgress?.touched ?? (wordProgress?.seen ? 1 : 0);
+      return sum + (Number.isFinite(touched) ? touched : 0);
+    }, 0);
 
   useEffect(() => {
     selectedVoiceRef.current = selectedVoice;
@@ -614,19 +909,43 @@ export default function Home() {
   }, [cancelSpeech, clearFeedbackTimer, stopRecognition]);
 
   const startSession = useCallback(
-    (nextMode: StudyMode, retryQuestions?: Question[]) => {
+    (nextMode: StudyMode, retryQuestions?: Question[], allowDuplicates = false) => {
       if (!selection) {
         return;
       }
 
-      const nextQuestions = retryQuestions
-        ? retryQuestions.map((question, index) => ({
-            ...question,
-            id: `${question.kind}-${question.word.id}-retry-${index}-${Date.now()}`,
-            attempts: 0,
-            wrong: false,
-          }))
-        : makeQuestions(rangeWords, nextMode, progress);
+      let nextQuestions: Question[];
+
+      if (retryQuestions) {
+        nextQuestions = retryQuestions.map((question, index) => ({
+          ...question,
+          id: `${question.kind}-${question.word.id}-retry-${index}-${Date.now()}`,
+          attempts: 0,
+          wrong: false,
+        }));
+      } else if (allowDuplicates) {
+        const orderedPool = getPracticePool(rangeWords, nextMode.order, progress);
+        const selected = orderedPool.slice(0, Math.min(QUESTIONS_PER_SESSION, orderedPool.length));
+        nextQuestions = makeQuestionsFromSelection(selected, nextMode, rangeWords);
+      } else {
+        const rangeKey = getSelectionCycleKey(selection);
+        const currentCycle =
+          sessionCycleRef.current?.rangeKey === rangeKey
+            ? sessionCycleRef.current
+            : { rangeKey, seenWordIds: new Set<number>() };
+        const orderedPool = getPracticePool(rangeWords, nextMode.order, progress);
+        const nextSelection = getCycleAwareSelection(
+          orderedPool,
+          QUESTIONS_PER_SESSION,
+          currentCycle.seenWordIds,
+        );
+
+        sessionCycleRef.current = {
+          rangeKey,
+          seenWordIds: nextSelection.seenWordIds,
+        };
+        nextQuestions = makeQuestionsFromSelection(nextSelection.selected, nextMode, rangeWords);
+      }
 
       setMode(nextMode);
       setQuestions(nextQuestions);
@@ -662,11 +981,13 @@ export default function Home() {
         ),
       );
       setProgress((current) => {
-        const currentProgress = current[currentQuestion.word.id] ?? { seen: false, wrong: 0 };
+        const currentProgress = current[currentQuestion.word.id] ?? { seen: false, touched: 0, wrong: 0 };
+        const currentTouched = currentProgress.touched ?? (currentProgress.seen ? 1 : 0);
         return {
           ...current,
           [currentQuestion.word.id]: {
             seen: true,
+            touched: (Number.isFinite(currentTouched) ? currentTouched : 0) + 1,
             wrong: currentProgress.wrong + (isCorrect ? 0 : 1),
           },
         };
@@ -712,7 +1033,7 @@ export default function Home() {
 
       const speechFallbackMs = Math.max(
         SPEECH_FALLBACK_BASE_MS,
-        Math.min(currentQuestion.word.spanish.length * 220, 5200),
+        Math.min(getSpokenSpanish(currentQuestion.word).length * 220, 5200),
       );
 
       feedbackTimerRef.current = window.setTimeout(() => {
@@ -722,7 +1043,7 @@ export default function Home() {
       }, FEEDBACK_MS);
 
       speechFallbackTimerRef.current = window.setTimeout(markSpeechDone, speechFallbackMs);
-      speakSpanish(currentQuestion.word.spanish, selectedVoiceRef.current, markSpeechDone);
+      speakSpanish(getSpokenSpanish(currentQuestion.word), selectedVoiceRef.current, markSpeechDone);
     },
     [cancelSpeech, currentQuestion, questionIndex, questions.length, resetAnswerState, stopRecognition],
   );
@@ -751,7 +1072,9 @@ export default function Home() {
 
         const result = event.results[event.results.length - 1];
         const transcript = result?.[0]?.transcript ?? "";
-        const correct = isClosePronunciation(transcript, question.word.spanish);
+        const correct = getPronunciationTargets(question.word).some((target) =>
+          isClosePronunciation(transcript, target),
+        );
         setHeard(transcript);
 
         if (correct || result?.isFinal) {
@@ -847,6 +1170,7 @@ export default function Home() {
 
   const goHome = () => {
     resetAnswerState();
+    sessionCycleRef.current = null;
     setScreen("home");
     setRangeKind(null);
     setSelection(null);
@@ -867,6 +1191,13 @@ export default function Home() {
       return;
     }
     startSession(mode);
+  };
+
+  const restartWithDuplicates = () => {
+    if (!mode) {
+      return;
+    }
+    startSession(mode, undefined, true);
   };
 
   const downloadProgress = () => {
@@ -985,7 +1316,10 @@ export default function Home() {
                   >
                     <span>{String(index + 1).padStart(2, "0")}</span>
                     <strong>{category}</strong>
-                    <small>{categoryWords.length}/{seenWordCount(categoryWords)}</small>
+                    <small>
+                      {categoryWords.length}/{seenWordCount(categoryWords)}・
+                      {formatLapCount(categoryWords.length, touchedWordCount(categoryWords))}
+                    </small>
                   </button>
                 );
               })}
@@ -1005,7 +1339,10 @@ export default function Home() {
                   >
                     <span>{part.label}</span>
                     <strong>{part.subtitle}</strong>
-                    <small>{partWords.length}/{seenWordCount(partWords)}</small>
+                    <small>
+                      {partWords.length}/{seenWordCount(partWords)}・
+                      {formatLapCount(partWords.length, touchedWordCount(partWords))}
+                    </small>
                   </button>
                 );
               })}
@@ -1043,6 +1380,15 @@ export default function Home() {
                   onChange={() => setPracticeOrder("random")}
                 />
                 <strong>純粋なランダム</strong>
+              </label>
+              <label>
+                <input
+                  checked={practiceOrder === "least-touched"}
+                  name="practice-order"
+                  type="radio"
+                  onChange={() => setPracticeOrder("least-touched")}
+                />
+                <strong>未接触優先</strong>
               </label>
               <label>
                 <input
@@ -1141,6 +1487,9 @@ export default function Home() {
             <button type="button" onClick={restartFresh}>
               同じ範囲・モードで新しく再挑戦
             </button>
+            <button type="button" onClick={restartWithDuplicates}>
+              重複ありで再挑戦
+            </button>
             <button className="ghost-button" type="button" onClick={goHome}>
               ホームに戻る
             </button>
@@ -1173,18 +1522,19 @@ function QuestionPanel({
   onGiveUp: () => void;
 }) {
   const isChoice = question.kind === "es-ja";
+  const promptSpanish = getPromptSpanish(question.word);
   const feedbackText =
     feedback === "correct"
       ? "⭕️"
       : question.kind === "es-ja"
         ? question.word.japanese
-        : question.word.spanish;
+        : promptSpanish;
 
   return (
     <div className="question-shell">
       <div className="prompt-panel">
         <p className="question-kind">{KIND_LABELS[question.kind]}</p>
-        {question.kind === "es-ja" && <h2 lang="es">{question.word.spanish}</h2>}
+        {question.kind === "es-ja" && <h2 lang="es">{promptSpanish}</h2>}
         {question.kind === "pronunciation" && (
           <>
             <h2>{question.word.japanese}</h2>
