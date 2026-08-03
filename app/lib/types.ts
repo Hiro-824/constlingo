@@ -38,7 +38,14 @@ export type Course = {
 
 export type QuestionKind = "receptive" | "productive" | "drill";
 export type QuestionPlan = "mixed" | "receptive" | "productive" | "drill";
-export type PracticeOrder = "random" | "least-practiced" | "low-mastery";
+export type QuestionSelectionMethod = "interval" | "random" | "low-mastery";
+
+export type QuestionSelectionSettings = {
+  method: QuestionSelectionMethod;
+  start: number;
+  end: number;
+  count: number;
+};
 
 export type Selection = {
   kind: "category" | "part" | "all";
@@ -48,7 +55,8 @@ export type Selection = {
 
 export type StudyMode = {
   plan: QuestionPlan;
-  order: PracticeOrder;
+  questionSelection: QuestionSelectionSettings;
+  showDrillSpelling: boolean;
 };
 
 export type MasteryRecord = {

@@ -1,13 +1,13 @@
 import type {
   MasteryRecord,
   MasteryStore,
-  PracticeOrder,
   QuestionKind,
   QuestionPlan,
+  QuestionSelectionMethod,
   VocabularyItem,
 } from "./types";
 
-export const QUESTIONS_PER_SESSION = 20;
+export const DEFAULT_QUESTION_COUNT = 20;
 export const MASTERY_HISTORY_LIMIT = 5;
 
 export function shuffle<T>(items: T[]) {
@@ -160,13 +160,17 @@ function scoreForPlan(record: MasteryRecord, plan: QuestionPlan) {
 
 export function getPracticePool(
   items: VocabularyItem[],
-  order: PracticeOrder,
+  method: QuestionSelectionMethod,
   plan: QuestionPlan,
   mastery: MasteryStore,
   courseId: string,
 ) {
-  if (order === "random" || plan === "drill") {
+  if (method === "random") {
     return shuffle(items);
+  }
+
+  if (method === "interval") {
+    return items;
   }
 
   return items
@@ -180,10 +184,7 @@ export function getPracticePool(
       };
     })
     .sort((left, right) => {
-      if (order === "least-practiced" && left.attempts !== right.attempts) {
-        return left.attempts - right.attempts;
-      }
-      if (order === "low-mastery" && left.score !== right.score) {
+      if (left.score !== right.score) {
         return left.score - right.score;
       }
       return left.tie - right.tie;
