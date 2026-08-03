@@ -185,6 +185,25 @@ function getChoices(item: VocabularyItem, pool: VocabularyItem[]) {
   return shuffle([item, ...distractors]);
 }
 
+function getRecognitionAlternatives(result: SpeechRecognitionResultLike | undefined) {
+  if (!result) {
+    return [];
+  }
+  return Array.from(result)
+    .map((alternative) => alternative.transcript?.trim() ?? "")
+    .filter(Boolean);
+}
+
+function findAcceptedAlternative(
+  alternatives: string[],
+  item: VocabularyItem,
+  locale: string,
+) {
+  return alternatives.find((transcript) =>
+    isAcceptedPronunciation(transcript, item.acceptedSpokenForms, locale),
+  );
+}
+
 function makeQuestion(
   item: VocabularyItem,
   kind: QuestionKind,
@@ -559,6 +578,9 @@ export default function LearningApp({ course }: { course: Course }) {
     if (!currentQuestion || answered || currentQuestion.kind !== "productive") {
       return;
     }
+    if (recognitionRef.current) {
+      return;
+    }
     stopRecognition();
     const Recognition = getSpeechRecognition();
     if (!Recognition) {
@@ -569,7 +591,7 @@ export default function LearningApp({ course }: { course: Course }) {
     let finalReceived = false;
     recognition.lang = course.speechLocale;
     recognition.interimResults = true;
-    recognition.maxAlternatives = 1;
+    recognition.maxAlternatives = 3;
     recognitionRef.current = recognition;
     setHeard("");
     setRecognitionStatus("listening");
@@ -579,18 +601,19 @@ export default function LearningApp({ course }: { course: Course }) {
         return;
       }
       const result = event.results[event.results.length - 1];
-      const transcript = result?.[0]?.transcript?.trim() ?? "";
-      setHeard(transcript);
+      const alternatives = getRecognitionAlternatives(result);
+      const leadingTranscript = alternatives[0] ?? "";
+      setHeard(leadingTranscript);
       if (!result?.isFinal) {
         return;
       }
       finalReceived = true;
-      const correct = isAcceptedPronunciation(
-        transcript,
-        currentQuestion.item.acceptedSpokenForms,
+      const acceptedTranscript = findAcceptedAlternative(
+        alternatives,
+        currentQuestion.item,
         course.targetLocale,
       );
-      finishAttempt(correct, transcript);
+      finishAttempt(Boolean(acceptedTranscript), acceptedTranscript ?? leadingTranscript);
     };
     recognition.onerror = () => {
       if (recognitionRef.current === recognition) {
@@ -613,6 +636,21 @@ export default function LearningApp({ course }: { course: Course }) {
       setRecognitionStatus("no-match");
     }
   }, [answered, course.speechLocale, course.targetLocale, currentQuestion, finishAttempt, stopRecognition]);
+
+  useEffect(() => {
+    if (
+      screen !== "session" ||
+      !currentQuestion ||
+      currentQuestion.kind !== "productive" ||
+      answered ||
+      currentQuestion.attempts >= 10
+    ) {
+      return;
+    }
+
+    const starter = window.setTimeout(startRecognition, 380);
+    return () => window.clearTimeout(starter);
+  }, [answered, currentQuestion, screen, startRecognition]);
 
   useEffect(() => {
     if (screen !== "session" || !currentQuestion || currentQuestion.kind !== "receptive" || answered) {
@@ -687,7 +725,7 @@ export default function LearningApp({ course }: { course: Course }) {
       recognition = new Recognition();
       recognition.lang = course.speechLocale;
       recognition.interimResults = true;
-      recognition.maxAlternatives = 1;
+      recognition.maxAlternatives = 3;
       recognitionRef.current = recognition;
       setRecognitionStatus("listening");
       setHeard("");
@@ -701,15 +739,19 @@ export default function LearningApp({ course }: { course: Course }) {
       };
       recognition.onresult = (event) => {
         const result = event.results[event.results.length - 1];
-        const transcript = result?.[0]?.transcript?.trim() ?? "";
-        setHeard(transcript);
+        const alternatives = getRecognitionAlternatives(result);
+        const leadingTranscript = alternatives[0] ?? "";
+        setHeard(leadingTranscript);
         if (result?.isFinal) {
-          const correct = isAcceptedPronunciation(
-            transcript,
-            currentQuestion.item.acceptedSpokenForms,
+          const acceptedTranscript = findAcceptedAlternative(
+            alternatives,
+            currentQuestion.item,
             course.targetLocale,
           );
-          finishOnce(correct ? "correct" : "miss", transcript);
+          finishOnce(
+            acceptedTranscript ? "correct" : "miss",
+            acceptedTranscript ?? leadingTranscript,
+          );
         }
       };
       recognition.onerror = () => finishOnce("no-match");
@@ -803,6 +845,23 @@ export default function LearningApp({ course }: { course: Course }) {
 
   const skipDrill = () => {
     if (!currentQuestion || currentQuestion.kind !== "drill") {
+      return;
+    }
+    setQuestions((current) =>
+      current.map((question, index) =>
+        index === questionIndex ? { ...question, completed: true } : question,
+      ),
+    );
+    advanceQuestion();
+  };
+
+  const skipAfterRepeatedMisses = () => {
+    if (
+      !currentQuestion ||
+      currentQuestion.kind === "drill" ||
+      currentQuestion.attempts < 10 ||
+      answered
+    ) {
       return;
     }
     setQuestions((current) =>
@@ -1217,6 +1276,18 @@ export default function LearningApp({ course }: { course: Course }) {
                 <button className="dont-know-button" type="button" onClick={skipDrill}>次の単語へ</button>
               </div>
             )}
+
+            {currentQuestion.kind !== "drill" &&
+              currentQuestion.attempts >= 10 &&
+              !answered && (
+                <div className="repeated-miss-action">
+                  <span>10回試しました。ここでは無理に足止めしません。</span>
+                  <button type="button" onClick={skipAfterRepeatedMisses}>
+                    正解を確認して次へ
+                    <ArrowRightIcon />
+                  </button>
+                </div>
+              )}
           </div>
         </section>
       )}

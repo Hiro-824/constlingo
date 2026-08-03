@@ -43,9 +43,49 @@ export function isAcceptedPronunciation(
     return false;
   }
 
-  return acceptedForms.some(
-    (form) => normalizeTranscript(form, locale) === normalizedRecognized,
-  );
+  return acceptedForms.some((form) => {
+    const normalizedForm = normalizeTranscript(form, locale);
+    if (normalizedForm === normalizedRecognized) {
+      return true;
+    }
+
+    return isSpanishLiquidRecognitionVariant(
+      normalizedRecognized,
+      normalizedForm,
+      locale,
+    );
+  });
+}
+
+const SPANISH_PROTECTED_GRAMMAR_WORDS = new Set(["el", "la", "los", "las"]);
+
+function isSpanishLiquidRecognitionVariant(
+  recognized: string,
+  target: string,
+  locale: string,
+) {
+  if (locale.split("-")[0].toLocaleLowerCase() !== "es") {
+    return false;
+  }
+
+  const recognizedWords = recognized.split(" ");
+  const targetWords = target.split(" ");
+  if (recognizedWords.length !== targetWords.length) {
+    return false;
+  }
+
+  return targetWords.every((targetWord, index) => {
+    const recognizedWord = recognizedWords[index];
+    if (SPANISH_PROTECTED_GRAMMAR_WORDS.has(targetWord)) {
+      return recognizedWord === targetWord;
+    }
+
+    // Japanese speakers' Spanish /l/, /ll/ and /r/ are frequently transcribed
+    // interchangeably by browser speech recognition. Collapse only that sound
+    // family; word length, every other letter and the token boundary stay strict.
+    const collapseLiquids = (word: string) => word.replace(/[lr]+/g, "R");
+    return collapseLiquids(recognizedWord) === collapseLiquids(targetWord);
+  });
 }
 
 export function getMasteryKey(courseId: string, itemId: string) {
