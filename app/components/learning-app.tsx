@@ -22,24 +22,25 @@ import type {
   StudyMode,
   VocabularyItem,
 } from "../lib/types";
+import {
+  Brand,
+  LibraryScreen,
+  PLAN_DETAILS,
+  PracticeSetupScreen,
+  ResultLoading,
+  ResultScreen,
+  SessionLoading,
+  SessionScreen,
+  SettingsIcon,
+} from "./learning-screens";
+import type {
+  DrillPhase,
+  Feedback,
+  PlaybackPurpose,
+  RecognitionStatus,
+} from "./learning-screens";
 
 export type AppScreen = "library" | "setup" | "session" | "result";
-type RecognitionStatus =
-  | "idle"
-  | "preparing"
-  | "listening"
-  | "correct"
-  | "miss"
-  | "no-match"
-  | "unsupported";
-
-type PlaybackPurpose = "feedback" | "manual" | "drill-model";
-type DrillPhase = "model" | "listening" | "result" | "complete" | "unsupported";
-
-type Feedback = {
-  status: "correct" | "miss";
-  answer: string;
-} | null;
 
 type SpeechRecognitionAlternativeLike = {
   transcript: string;
@@ -77,56 +78,11 @@ const VOICE_STORAGE_PREFIX = "constlingo-voice-v1";
 const SESSION_RESULT_KEY = "constlingo-last-result-v1";
 const RETRY_QUESTIONS_KEY = "constlingo-retry-questions-v1";
 
-const PLAN_DETAILS: Record<
-  QuestionPlan,
-  { label: string; shortLabel: string; description: string; number: string }
-> = {
-  mixed: {
-    label: "ミックス",
-    shortLabel: "西→日 + 日→西",
-    description: "意味を選ぶ問題と、思い出して発音する問題を半分ずつ。",
-    number: "01",
-  },
-  productive: {
-    label: "思い出して発音",
-    shortLabel: "日→西 発音",
-    description: "日本語を見て、対応するスペイン語を声に出します。",
-    number: "02",
-  },
-  receptive: {
-    label: "見て意味を選ぶ",
-    shortLabel: "西→日 四択",
-    description: "スペイン語を見て、日本語の意味を4つから選びます。",
-    number: "03",
-  },
-  drill: {
-    label: "発音反復",
-    shortLabel: "聞く + 10回発音",
-    description: "音声を聞いたあと、同じ単語を10回ずつ声に出します。",
-    number: "04",
-  },
-};
-
-const QUESTION_SELECTION_DETAILS: Record<
-  QuestionSelectionMethod,
-  { label: string; description: string }
-> = {
-  interval: { label: "番号で指定", description: "開始と終了を選ぶ" },
-  random: { label: "ランダム", description: "指定した問題数を抽出" },
-  "low-mastery": { label: "定着度が低い順", description: "つまずいた語を優先" },
-};
-
 const DEFAULT_QUESTION_SELECTION: QuestionSelectionSettings = {
   method: "random",
   start: 1,
   end: DEFAULT_QUESTION_COUNT,
   count: DEFAULT_QUESTION_COUNT,
-};
-
-const KIND_LABELS: Record<QuestionKind, string> = {
-  receptive: "見て意味を選ぶ",
-  productive: "思い出して発音",
-  drill: "発音反復",
 };
 
 function getSpeechRecognition(): SpeechRecognitionConstructor | null {
@@ -274,16 +230,6 @@ function buildQuestions(
   return shuffle(selected).map((item, index) => makeQuestion(item, kind, index, pool));
 }
 
-function describeQuestionSelection(settings: QuestionSelectionSettings) {
-  if (settings.method === "interval") {
-    return `${settings.start}〜${settings.end}番`;
-  }
-  if (settings.method === "low-mastery") {
-    return `定着度が低い ${settings.count}問`;
-  }
-  return `ランダム ${settings.count}問`;
-}
-
 function sanitizeMastery(value: unknown): MasteryStore {
   if (!value || typeof value !== "object") {
     return {};
@@ -300,66 +246,6 @@ function sanitizeMastery(value: unknown): MasteryStore {
           : [];
       return [[key, { receptive: outcomes(record.receptive), productive: outcomes(record.productive) }]];
     }),
-  );
-}
-
-function ArrowLeftIcon() {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 24 24">
-      <path d="m15 18-6-6 6-6" />
-    </svg>
-  );
-}
-
-function ArrowRightIcon() {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 24 24">
-      <path d="m9 18 6-6-6-6" />
-    </svg>
-  );
-}
-
-function CheckIcon() {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 24 24">
-      <path d="m5 12 4 4L19 6" />
-    </svg>
-  );
-}
-
-function MicIcon() {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 24 24">
-      <rect height="11" rx="5" width="7" x="8.5" y="3" />
-      <path d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3M9 21h6" />
-    </svg>
-  );
-}
-
-function VolumeIcon() {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 24 24">
-      <path d="M11 6 7 9H3v6h4l4 3V6Z" />
-      <path d="M15 9a4 4 0 0 1 0 6M18 6a8 8 0 0 1 0 12" />
-    </svg>
-  );
-}
-
-function SettingsIcon() {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 24 24">
-      <circle cx="12" cy="12" r="3" />
-      <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-4V21a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H2.8v-4H3a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1a1.7 1.7 0 0 0 1.9.3A1.7 1.7 0 0 0 10 3v-.2h4V3a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v4H21a1.7 1.7 0 0 0-1.6 1Z" />
-    </svg>
-  );
-}
-
-function Brand({ compact = false }: { compact?: boolean }) {
-  return (
-    <div className={`brand ${compact ? "brand-compact" : ""}`}>
-      <span className="brand-mark" aria-hidden="true">ñ</span>
-      <span>Constlingo</span>
-    </div>
   );
 }
 
@@ -1220,7 +1106,7 @@ export default function LearningApp({
       {settingsOpen && (
         <div className="settings-popover">
           <div>
-            <span className="eyebrow">Voice</span>
+            <span className="section-kicker">音声設定</span>
             <strong>読み上げ音声</strong>
           </div>
           <select value={voiceURI} onChange={(event) => setVoiceURI(event.target.value)}>
@@ -1231,716 +1117,103 @@ export default function LearningApp({
               </option>
             ))}
           </select>
-          <p>このコースではGoogleのスペイン語音声を優先します。</p>
+          <p>このコースに適した音声を優先します。</p>
         </div>
       )}
     </header>
   );
 
-  return (
-    <main className="app-shell">
-      {screen !== "session" && header}
+  if (screen === "library") {
+    return (
+      <main className="app-shell">
+        {header}
+        <LibraryScreen
+          course={course}
+          courseMasteryCount={courseMasteryCount}
+          onOpenRange={openRange}
+        />
+      </main>
+    );
+  }
 
-      {screen === "library" && (
-        <div className="page-frame library-page">
-          <section className="library-header">
-            <div className="library-heading">
-              <span className="eyebrow">Vocabulary</span>
-              <h1>学ぶ範囲</h1>
-              <p>語彙全体、カテゴリー、パートから対象を選びます。</p>
-            </div>
-            <div className="library-meta" aria-label={`${course.items.length}語を収録`}>
-              <strong>{course.items.length.toLocaleString()}語</strong>
-              <span>{course.categories.length}カテゴリー</span>
-              <span>{course.parts.length}パート</span>
-            </div>
-          </section>
+  if (screen === "setup") {
+    return (
+      <main className="app-shell">
+        {header}
+        <PracticeSetupScreen
+          selection={selection}
+          rangeItemsCount={rangeItems.length}
+          plan={plan}
+          setPlan={setPlan}
+          questionSelection={boundedQuestionSelection}
+          setQuestionSelection={setQuestionSelection}
+          showDrillSpelling={showDrillSpelling}
+          setShowDrillSpelling={setShowDrillSpelling}
+          selectedQuestionCount={selectedQuestionCount}
+          onBack={goLibrary}
+          onStart={startSession}
+        />
+      </main>
+    );
+  }
 
-          <section className="library-collections" aria-labelledby="collection-heading">
-            <div className="collection-block">
-              <div className="collection-block-heading">
-                <h3 id="collection-heading">カテゴリー別</h3>
-                <span>{course.categories.length}カテゴリー</span>
-              </div>
-              <div className="category-list">
-                {course.categories.map((category, index) => {
-                  const count = course.items.filter((item) => item.categoryId === category.id).length;
-                  return (
-                    <button
-                      className="category-row"
-                      key={category.id}
-                      type="button"
-                      onClick={() => openRange({ kind: "category", id: category.id, label: category.label })}
-                    >
-                      <span className="category-index">{String(index + 1).padStart(2, "0")}</span>
-                      <strong>{category.label}</strong>
-                      <small>{count}語</small>
-                      <span className="row-check"><ArrowRightIcon /></span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            <div className="collection-block part-collection-block">
-              <div className="collection-block-heading">
-                <h3>パート別</h3>
-                <span>{course.parts.length}パート</span>
-              </div>
-              <div className="part-list">
-                {course.parts.map((part, index) => {
-                  const count = course.items.filter((item) => part.categoryIds.includes(item.categoryId)).length;
-                  return (
-                    <button
-                      className="part-row"
-                      key={part.id}
-                      type="button"
-                      onClick={() => openRange({ kind: "part", id: part.id, label: part.label })}
-                    >
-                      <span className="part-index">0{index + 1}</span>
-                      <span><strong>{part.label}</strong><small>{part.description}</small></span>
-                      <span className="part-count">{count}語</span>
-                      <span className="row-check"><ArrowRightIcon /></span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            <div className="secondary-ranges">
-              <div className="collection-block-heading">
-                <h3>その他の範囲</h3>
-              </div>
-              <div className="utility-range-list">
-                <button
-                  className="utility-range-row"
-                  type="button"
-                  onClick={() => openRange({ kind: "all", id: "all", label: "全範囲" })}
-                >
-                  <span aria-hidden="true">∞</span>
-                  <span><strong>全範囲</strong><small>{course.datasetLabel}を横断</small></span>
-                  <ArrowRightIcon />
-                </button>
-                <button
-                  className="utility-range-row"
-                  type="button"
-                  onClick={() => openRange(
-                    { kind: "all", id: "all", label: "全範囲" },
-                    "low-mastery",
-                  )}
-                >
-                  <span aria-hidden="true">↗</span>
-                  <span>
-                    <strong>定着度が低い語</strong>
-                    <small>{courseMasteryCount === 0 ? "練習後に利用" : "定着度から自動選択"}</small>
-                  </span>
-                  <ArrowRightIcon />
-                </button>
-              </div>
-            </div>
-          </section>
-
-          <footer className="app-footer">
-            <span>{course.datasetLabel}</span>
-            <span>定着度のみを端末に保存</span>
-            <span>Chromeでの音声認識を推奨</span>
-          </footer>
-        </div>
-      )}
-
-      {screen === "setup" && (
-        <div className="page-frame setup-page">
-          <button className="back-button" type="button" onClick={goLibrary}>
-            <ArrowLeftIcon />
-            学ぶ範囲を選び直す
-          </button>
-
-          <section className="setup-object-header">
-            <div>
-              <span className="eyebrow">
-                {selection.id === "low-mastery"
-                  ? "Smart collection"
-                  : selection.kind === "category"
-                    ? "Category"
-                    : selection.kind === "part"
-                      ? "Part"
-                      : "Collection"}
-              </span>
-              <h1>{selection.label}</h1>
-              <p>
-                {selection.id === "low-mastery"
-                  ? "定着度の記録から、優先する語を毎回自動で選びます。"
-                  : `${rangeItems.length}語のコレクションに、練習方法を選んで適用します。`}
-              </p>
-            </div>
-            <span className="setup-object-mark" aria-hidden="true">
-              {selection.id === "low-mastery"
-                ? "↗"
-                : selection.kind === "category"
-                  ? "C"
-                  : selection.kind === "part"
-                    ? "P"
-                    : "∞"}
-            </span>
-          </section>
-
-          <div className="setup-layout">
-            <section className="setup-main" aria-labelledby="practice-heading">
-              <div className="section-heading">
-                <div>
-                  <span className="eyebrow">Action</span>
-                  <h2 id="practice-heading">どう練習しますか？</h2>
-                </div>
-                <p>選んだ範囲はそのままに、練習方法だけを切り替えられます。</p>
-              </div>
-
-              <div className="plan-grid">
-                {(Object.keys(PLAN_DETAILS) as QuestionPlan[]).map((option) => {
-                  const detail = PLAN_DETAILS[option];
-                  const selected = plan === option;
-                  return (
-                    <button
-                      className={`plan-card ${selected ? "is-selected" : ""}`}
-                      key={option}
-                      type="button"
-                      aria-pressed={selected}
-                      onClick={() => setPlan(option)}
-                    >
-                      <span className="plan-number">{detail.number}</span>
-                      <span className="plan-content">
-                        <strong>{detail.label}</strong>
-                        <small>{detail.shortLabel}</small>
-                        <span>{detail.description}</span>
-                      </span>
-                      <span className="plan-check" aria-hidden="true"><CheckIcon /></span>
-                    </button>
-                  );
-                })}
-              </div>
-
-              <section className="question-set-section" aria-labelledby="question-set-heading">
-                <div className="section-heading compact-heading">
-                  <div>
-                    <span className="eyebrow">Questions</span>
-                    <h2 id="question-set-heading">どの問題を使いますか？</h2>
-                  </div>
-                  <p>対象を選んだあと、出題順は毎回ランダムにします。</p>
-                </div>
-
-                <div className="question-set-methods">
-                  {(Object.keys(QUESTION_SELECTION_DETAILS) as QuestionSelectionMethod[]).map((method) => {
-                    const detail = QUESTION_SELECTION_DETAILS[method];
-                    const selected = boundedQuestionSelection.method === method;
-                    return (
-                      <button
-                        className={`question-set-method ${selected ? "is-selected" : ""}`}
-                        key={method}
-                        type="button"
-                        aria-pressed={selected}
-                        onClick={() => setQuestionSelection((current) => ({ ...current, method }))}
-                      >
-                        <span className="method-radio" aria-hidden="true" />
-                        <span><strong>{detail.label}</strong><small>{detail.description}</small></span>
-                      </button>
-                    );
-                  })}
-                </div>
-
-                {boundedQuestionSelection.method === "interval" ? (
-                  <div className="question-number-control">
-                    <label className="number-field">
-                      <span>開始</span>
-                      <span className="number-input-wrap">
-                        <input
-                          aria-label="開始番号"
-                          inputMode="numeric"
-                          max={rangeItems.length}
-                          min="1"
-                          type="number"
-                          value={boundedQuestionSelection.start}
-                          onChange={(event) => {
-                            const value = Math.min(
-                              Math.max(Number.parseInt(event.target.value, 10) || 1, 1),
-                              Math.max(rangeItems.length, 1),
-                            );
-                            setQuestionSelection((current) => ({
-                              ...current,
-                              start: value,
-                              end: Math.max(current.end, value),
-                            }));
-                          }}
-                        />
-                        <small>番</small>
-                      </span>
-                    </label>
-                    <span className="number-range-separator" aria-hidden="true">〜</span>
-                    <label className="number-field">
-                      <span>終了</span>
-                      <span className="number-input-wrap">
-                        <input
-                          aria-label="終了番号"
-                          inputMode="numeric"
-                          max={rangeItems.length}
-                          min={boundedQuestionSelection.start}
-                          type="number"
-                          value={boundedQuestionSelection.end}
-                          onChange={(event) => {
-                            const value = Math.min(
-                              Math.max(
-                                Number.parseInt(event.target.value, 10) || boundedQuestionSelection.start,
-                                boundedQuestionSelection.start,
-                              ),
-                              Math.max(rangeItems.length, 1),
-                            );
-                            setQuestionSelection((current) => ({ ...current, end: value }));
-                          }}
-                        />
-                        <small>番</small>
-                      </span>
-                    </label>
-                    <strong className="question-count-preview">{selectedQuestionCount}問</strong>
-                  </div>
-                ) : (
-                  <div className="question-number-control count-control">
-                    <label className="number-field">
-                      <span>問題数</span>
-                      <span className="number-input-wrap">
-                        <input
-                          aria-label="問題数"
-                          inputMode="numeric"
-                          max={rangeItems.length}
-                          min="1"
-                          type="number"
-                          value={boundedQuestionSelection.count}
-                          onChange={(event) => {
-                            const value = Math.min(
-                              Math.max(Number.parseInt(event.target.value, 10) || 1, 1),
-                              Math.max(rangeItems.length, 1),
-                            );
-                            setQuestionSelection((current) => ({ ...current, count: value }));
-                          }}
-                        />
-                        <small>問</small>
-                      </span>
-                    </label>
-                    <p>
-                      {boundedQuestionSelection.method === "low-mastery"
-                        ? "定着度の記録がない語は、同順位としてランダムに選びます。"
-                        : `${rangeItems.length}語から重複せずに選びます。`}
-                    </p>
-                  </div>
-                )}
-
-                {plan === "drill" && (
-                  <label className="spelling-setting">
-                    <span>
-                      <strong>スペルを表示</strong>
-                      <small>発音反復中にも、いつでも表示を切り替えられます。</small>
-                    </span>
-                    <input
-                      checked={showDrillSpelling}
-                      type="checkbox"
-                      onChange={(event) => setShowDrillSpelling(event.target.checked)}
-                    />
-                    <span className="toggle-track" aria-hidden="true"><span /></span>
-                  </label>
-                )}
-              </section>
-
-              <div className="setup-principles">
-                <span>問題数は自由に指定</span>
-                <span>出題順はランダム</span>
-                <span>日付・連続日数は記録しない</span>
-                <span>初回回答のみ定着度へ反映</span>
-              </div>
-            </section>
-
-            <aside className="session-summary setup-summary">
-              <span className="eyebrow">Session setup</span>
-              <h2>今回の演習</h2>
-              <dl>
-                <div><dt>範囲</dt><dd>{selection.label}</dd></div>
-                <div>
-                  <dt>収録</dt>
-                  <dd>{rangeItems.length}語</dd>
-                </div>
-                <div><dt>練習</dt><dd>{PLAN_DETAILS[plan].label}</dd></div>
-                <div><dt>対象</dt><dd>{describeQuestionSelection(boundedQuestionSelection)}</dd></div>
-                <div><dt>問題数</dt><dd>{selectedQuestionCount}問</dd></div>
-                <div><dt>出題順</dt><dd>ランダム</dd></div>
-                {plan === "drill" && (
-                  <div><dt>スペル</dt><dd>{showDrillSpelling ? "表示" : "非表示"}</dd></div>
-                )}
-              </dl>
-
-              <button
-                className="primary-button summary-start"
-                disabled={rangeItems.length < (plan === "receptive" || plan === "mixed" ? 4 : 1)}
-                type="button"
-                onClick={startSession}
-              >
-                この方法で始める
-                <ArrowRightIcon />
-              </button>
-              <p className="summary-note">練習後も、この範囲に戻って別の方法を選べます。</p>
-            </aside>
-          </div>
-        </div>
-      )}
-
-      {screen === "session" && !currentQuestion && (
-        <section className="session-page route-loading-page">
-          <Brand compact />
-          <div role="status">
-            <span className="eyebrow">Preparing session</span>
-            <strong>問題を準備しています…</strong>
-          </div>
-        </section>
-      )}
-
-      {screen === "session" && currentQuestion && (
-        <section className="session-page">
-          <header className="session-header">
-            <Brand compact />
-            <div className="session-progress-copy">
-              <span>{KIND_LABELS[currentQuestion.kind]}</span>
-              <strong>{String(questionIndex + 1).padStart(2, "0")} <small>/ {questions.length}</small></strong>
-            </div>
-            <button className="exit-button" type="button" onClick={leaveSession}>終了</button>
-          </header>
-          <div className="session-progress-track">
-            <div style={{ width: `${((questionIndex + 1) / questions.length) * 100}%` }} />
-          </div>
-
-          <div className="question-stage">
-            <div className="question-context">
-              <span>{currentQuestion.item.categoryId}</span>
-              <div className="question-tools">
-                {playbackPurpose && currentQuestion.kind !== "drill" && (
-                  <span className="audio-activity" role="status">
-                    <VolumeIcon />
-                    {playbackPurpose === "feedback" ? "正解音声を再生中" : "音声を再生中"}
-                  </span>
-                )}
-                {currentQuestion.kind === "receptive" && (
-                  <span className={`question-timer ${timeLeft <= 3 ? "is-low" : ""}`}>{timeLeft}s</span>
-                )}
-                {currentQuestion.kind === "drill" && (
-                  <button
-                    className="spelling-toggle-button"
-                    type="button"
-                    aria-pressed={showDrillSpelling}
-                    onClick={() => setShowDrillSpelling((visible) => !visible)}
-                  >
-                    {showDrillSpelling ? "スペルを隠す" : "スペルを表示"}
-                  </button>
-                )}
-                <button
-                  className="question-skip-button"
-                  disabled={answered}
-                  type="button"
-                  onClick={skipQuestion}
-                >
-                  スキップ
-                  <ArrowRightIcon />
-                </button>
-              </div>
-            </div>
-
-            <div className={`question-card question-${currentQuestion.kind} ${feedback ? `has-${feedback.status}` : ""}`}>
-              <span className="question-label">{KIND_LABELS[currentQuestion.kind]}</span>
-              {currentQuestion.kind === "receptive" && (
-                <>
-                  <h1 lang={course.targetLocale}>{currentQuestion.item.spokenForm}</h1>
-                  <p>もっとも近い意味を選んでください</p>
-                </>
-              )}
-              {currentQuestion.kind === "productive" && (
-                <>
-                  <h1>{currentQuestion.item.meaning}</h1>
-                  <p>{course.targetLanguageLabel}で発音してください</p>
-                </>
-              )}
-              {currentQuestion.kind === "drill" && (
-                <>
-                  <h1>{currentQuestion.item.meaning}</h1>
-                  <div
-                    className={`spoken-word ${playbackPurpose === "drill-model" ? "is-playing" : ""} ${showDrillSpelling ? "" : "is-hidden"}`}
-                    lang={course.targetLocale}
-                  >
-                    <VolumeIcon />
-                    {showDrillSpelling
-                      ? currentQuestion.item.spokenForm
-                      : <span className="hidden-spelling">スペル非表示</span>}
-                  </div>
-                </>
-              )}
-            </div>
-
-            {feedback && currentQuestion.kind !== "drill" && (
-              <div className={`feedback-strip feedback-${feedback.status}`} role="status">
-                <span className="feedback-icon">{feedback.status === "correct" ? <CheckIcon /> : "!"}</span>
-                <span>
-                  <strong>{feedback.status === "correct" ? "そのとおり" : "もう一度"}</strong>
-                  <small>正解：<span lang={course.targetLocale}>{feedback.answer}</span></small>
-                </span>
-                <button
-                  type="button"
-                  aria-label="正解を聞く"
-                  onClick={() => playSpeech(feedback.answer, "manual")}
-                >
-                  <VolumeIcon />
-                </button>
-              </div>
-            )}
-
-            {currentQuestion.kind === "receptive" && (
-              <div className="choice-list">
-                {currentQuestion.choices?.map((choice, index) => (
-                  <button
-                    className={`choice-button ${selectedChoiceId === choice.id ? "is-selected" : ""}`}
-                    disabled={answered}
-                    key={choice.id}
-                    type="button"
-                    onClick={() => selectChoice(choice)}
-                  >
-                    <span>{String.fromCharCode(65 + index)}</span>
-                    <strong>{choice.meaning}</strong>
-                  </button>
-                ))}
-                <button
-                  className="dont-know-button"
-                  disabled={answered}
-                  type="button"
-                  onClick={() => finishAttempt(false, "わからない")}
-                >
-                  わからない
-                </button>
-              </div>
-            )}
-
-            {currentQuestion.kind === "productive" && (
-              <div className="speech-control">
-                <button
-                  className={`mic-button status-${recognitionStatus}`}
-                  disabled={answered || recognitionStatus === "preparing" || recognitionStatus === "listening"}
-                  type="button"
-                  onClick={startRecognition}
-                >
-                  <MicIcon />
-                  <span>
-                    {recognitionStatus === "preparing"
-                      ? "準備しています"
-                      : recognitionStatus === "listening"
-                        ? "聞いています"
-                        : "発音する"}
-                  </span>
-                </button>
-                <SpeechStatus status={recognitionStatus} heard={heard} />
-                <button
-                  className="dont-know-button"
-                  disabled={answered}
-                  type="button"
-                  onClick={() => finishAttempt(false, "わからない")}
-                >
-                  わからない
-                </button>
-              </div>
-            )}
-
-            {currentQuestion.kind === "drill" && (
-              <div className="drill-control">
-                <DrillPhaseStatus
-                  phase={drillPhase}
-                  recognitionStatus={recognitionStatus}
-                  heard={showDrillSpelling ? heard : ""}
-                  showSpelling={showDrillSpelling}
-                />
-                <div className="drill-meter">
-                  <div className="drill-count">
-                    <strong>{String(drillRepeatCount).padStart(2, "0")}</strong>
-                    <span>/ {DRILL_REPEAT_COUNT}</span>
-                  </div>
-                  <div className="drill-progress"><div style={{ width: `${(drillRepeatCount / DRILL_REPEAT_COUNT) * 100}%` }} /></div>
-                </div>
-              </div>
-            )}
-          </div>
-        </section>
-      )}
-
-      {screen === "result" && mode && (
-        <div className="page-frame result-page">
-          <button className="back-button" type="button" onClick={goLibrary}>
-            <ArrowLeftIcon />
-            学ぶ範囲を選ぶ
-          </button>
-
-          <section className="result-hero">
-            <span className="eyebrow">Session complete</span>
-            {mode.plan === "drill" ? (
-              <>
-                <h1><em>{questions.filter((question) => question.completed).length}</em>語</h1>
-                <p>
-                  声に出した分だけ、ことばは自分のものになる。
-                  {skippedQuestions.length > 0 ? ` スキップ ${skippedQuestions.length}語。` : ""}
-                </p>
-              </>
-            ) : (
-              <>
-                <h1><em>{firstTryCorrect}</em><span>/ {firstAttemptQuestions.length}</span></h1>
-                <p>
-                  {firstAttemptQuestions.length === 0
-                    ? "今回は採点した問題がありません。"
-                    : mistakeQuestions.length === 0
-                      ? "すべて初回で正解しました。"
-                      : `初回正解は${firstTryCorrect}問。${mistakeQuestions.length}語をもう一度確認しましょう。`}
-                  {skippedQuestions.length > 0 ? ` スキップ ${skippedQuestions.length}問。` : ""}
-                </p>
-              </>
-            )}
-            <div className="result-meta">
-              <span>{PLAN_DETAILS[mode.plan].label}</span>
-              <span>{selection.label}</span>
-              <span>{describeQuestionSelection(mode.questionSelection)}</span>
-              <span>ランダム順</span>
-            </div>
-          </section>
-
-          {mistakeQuestions.length > 0 && (
-            <section className="review-section">
-              <div className="section-heading">
-                <div><span className="eyebrow">Review</span><h2>今回つまずいた単語</h2></div>
-                <span>{mistakeQuestions.length}語</span>
-              </div>
-              <div className="review-list">
-                {mistakeQuestions.map((question) => (
-                  <div className="review-row" key={question.id}>
-                    <span className="review-kind">{question.kind === "receptive" ? "西→日" : "日→西"}</span>
-                    <span>
-                      <strong lang={course.targetLocale}>{question.item.spokenForm}</strong>
-                      <small>
-                        {question.item.meaning}
-                        {question.firstResponse ? ` · 初回回答：${question.firstResponse}` : ""}
-                      </small>
-                    </span>
-                    <button
-                      type="button"
-                      aria-label={`${question.item.spokenForm}を聞く`}
-                      onClick={() => playSpeech(question.item.spokenForm, "manual")}
-                    >
-                      <VolumeIcon />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </section>
-          )}
-
-          <div className="result-actions">
-            {mistakeQuestions.length > 0 && (
-              <button className="primary-button" type="button" onClick={retryMistakes}>
-                間違えた問題を再挑戦
-                <ArrowRightIcon />
-              </button>
-            )}
-            <button className="secondary-button" type="button" onClick={startSession}>
-              同じ条件でもう一度
-            </button>
-            <button className="text-button" type="button" onClick={goSetup}>練習方法を選び直す</button>
-          </div>
-        </div>
-      )}
-
-
-      {screen === "result" && !mode && (
-        <div className="page-frame route-loading-page" role="status">
-          <span className="eyebrow">Loading result</span>
-          <strong>結果を読み込んでいます…</strong>
-        </div>
-      )}
-    </main>
-  );
-}
-
-function SpeechStatus({ status, heard }: { status: RecognitionStatus; heard: string }) {
-  const copy: Record<RecognitionStatus, string> = {
-    idle: "ボタンを押して発音",
-    preparing: "マイクを準備しています…",
-    listening: "聞き取っています…",
-    correct: "正しく認識しました",
-    miss: "別の語として認識されました",
-    "no-match": "聞き取れませんでした。もう一度どうぞ",
-    unsupported: "このブラウザは音声認識に対応していません",
-  };
-  const message = status === "no-match" && heard
-    ? "別の語として認識されました"
-    : copy[status];
-  return (
-    <div className={`speech-readout status-${status}`} aria-live="polite">
-      <span>{message}</span>
-      {heard && <small>認識：{heard}</small>}
-    </div>
-  );
-}
-
-function DrillPhaseStatus({
-  phase,
-  recognitionStatus,
-  heard,
-  showSpelling,
-}: {
-  phase: DrillPhase;
-  recognitionStatus: RecognitionStatus;
-  heard: string;
-  showSpelling: boolean;
-}) {
-  let step = "LISTEN";
-  let title = "お手本を聞いてください";
-  let detail = "再生が終わると、マイクが自動で始まります";
-  let icon = <VolumeIcon />;
-
-  if (phase === "listening") {
-    step = "SPEAK";
-    title = "あなたの番です";
-    detail = showSpelling
-      ? "いま、表示された単語を発音してください"
-      : "いま聞いた単語を発音してください";
-    icon = <MicIcon />;
-  } else if (phase === "result") {
-    step = "CHECK";
-    title = recognitionStatus === "correct"
-      ? "認識できました"
-      : recognitionStatus === "miss"
-        ? "少し違って聞こえました"
-        : "音声を確認できませんでした";
-    detail = "次のお手本を準備しています…";
-    icon = recognitionStatus === "correct" ? <CheckIcon /> : <span aria-hidden="true">!</span>;
-  } else if (phase === "complete") {
-    step = "COMPLETE";
-    title = "10回完了しました";
-    detail = "次の単語へ進みます…";
-    icon = <CheckIcon />;
-  } else if (phase === "unsupported") {
-    step = "WAIT";
-    title = "音声認識を利用できません";
-    detail = "次の反復を準備しています…";
-    icon = <span aria-hidden="true">!</span>;
+  if (screen === "session") {
+    return (
+      <main className="app-shell">
+        {!currentQuestion ? (
+          <SessionLoading />
+        ) : (
+          <SessionScreen
+            course={course}
+            currentQuestion={currentQuestion}
+            questionIndex={questionIndex}
+            questionCount={questions.length}
+            answered={answered}
+            playbackPurpose={playbackPurpose}
+            timeLeft={timeLeft}
+            showDrillSpelling={showDrillSpelling}
+            selectedChoiceId={selectedChoiceId}
+            feedback={feedback}
+            recognitionStatus={recognitionStatus}
+            heard={heard}
+            drillPhase={drillPhase}
+            drillRepeatCount={drillRepeatCount}
+            drillRepeatTarget={DRILL_REPEAT_COUNT}
+            onExit={leaveSession}
+            onSkip={skipQuestion}
+            onToggleSpelling={() => setShowDrillSpelling((visible) => !visible)}
+            onSelectChoice={selectChoice}
+            onFinishAttempt={finishAttempt}
+            onStartRecognition={startRecognition}
+            onPlaySpeech={playSpeech}
+          />
+        )}
+      </main>
+    );
   }
 
   return (
-    <div
-      className={`drill-phase-panel phase-${phase} status-${recognitionStatus}`}
-      role="status"
-      aria-live="polite"
-    >
-      <span className="drill-phase-icon">{icon}</span>
-      <span className="drill-phase-copy">
-        <small>{step}</small>
-        <strong>{title}</strong>
-        <span>{detail}</span>
-        {heard && <em>認識：{heard}</em>}
-      </span>
-    </div>
+    <main className="app-shell">
+      {header}
+      {mode ? (
+        <ResultScreen
+          course={course}
+          mode={mode}
+          questions={questions}
+          selection={selection}
+          mistakeQuestions={mistakeQuestions}
+          skippedQuestionCount={skippedQuestions.length}
+          firstTryCorrect={firstTryCorrect}
+          firstAttemptCount={firstAttemptQuestions.length}
+          onBack={goLibrary}
+          onRetry={retryMistakes}
+          onRestart={startSession}
+          onSetup={goSetup}
+          onPlaySpeech={playSpeech}
+        />
+      ) : (
+        <ResultLoading />
+      )}
+    </main>
   );
 }

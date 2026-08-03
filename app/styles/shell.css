@@ -1,0 +1,306 @@
+.app-shell {
+  min-height: 100vh;
+}
+
+.app-header {
+  position: relative;
+  z-index: 20;
+  display: flex;
+  width: min(1180px, calc(100% - 64px));
+  min-height: 80px;
+  margin: 0 auto;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.02rem;
+  font-weight: 760;
+  letter-spacing: -0.025em;
+}
+
+.brand-mark {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 44% 56% 48% 52% / 54% 45% 55% 46%;
+  background: var(--text);
+  color: var(--surface);
+  font-family: var(--font-display);
+  font-size: 1.08rem;
+  font-style: italic;
+  font-weight: 700;
+  transform: rotate(-5deg);
+}
+
+.brand-compact {
+  font-size: 0.92rem;
+}
+
+.brand-compact .brand-mark {
+  width: 30px;
+  height: 30px;
+  font-size: 0.94rem;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.course-chip {
+  display: inline-flex;
+  min-height: 38px;
+  padding: 5px 13px 5px 6px;
+  align-items: center;
+  gap: 8px;
+  border-radius: var(--radius-full);
+  background: var(--surface-raised);
+  box-shadow: var(--shadow-low);
+  color: var(--text-muted);
+  font-size: 0.76rem;
+  font-weight: 660;
+}
+
+.course-chip > span {
+  display: grid;
+  width: 27px;
+  height: 27px;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--brand-soft);
+  color: var(--brand-deep);
+  font-size: 0.62rem;
+  font-weight: 820;
+  letter-spacing: 0.06em;
+}
+
+.icon-control {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: var(--surface-raised);
+  box-shadow: var(--shadow-low);
+  color: var(--text-muted);
+  transition: 160ms ease;
+}
+
+.icon-control:hover {
+  color: var(--brand-deep);
+  transform: rotate(8deg);
+}
+
+.settings-popover {
+  position: absolute;
+  top: 68px;
+  right: 0;
+  display: grid;
+  width: min(360px, calc(100vw - 32px));
+  gap: 14px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface-raised);
+  box-shadow: var(--shadow-float);
+}
+
+.settings-popover > div {
+  display: grid;
+  gap: 4px;
+}
+
+.settings-popover strong {
+  font-size: 1rem;
+}
+
+.settings-popover select {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-muted);
+  color: var(--text);
+}
+
+.settings-popover p {
+  color: var(--text-subtle);
+  font-size: 0.74rem;
+  line-height: 1.55;
+}
+
+.page-frame {
+  width: min(1180px, calc(100% - 64px));
+  margin: 0 auto;
+}
+
+.section-kicker {
+  color: var(--brand-deep);
+  font-size: 0.68rem;
+  font-weight: 780;
+  letter-spacing: 0.09em;
+}
+
+.section-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.section-heading > div {
+  display: grid;
+  gap: 6px;
+}
+
+.section-heading h2 {
+  font-size: clamp(1.4rem, 2.4vw, 2rem);
+  letter-spacing: -0.045em;
+}
+
+.primary-button,
+.secondary-button,
+.text-button,
+.back-button {
+  border: 0;
+}
+
+.primary-button,
+.secondary-button {
+  display: inline-flex;
+  min-height: 52px;
+  padding: 0 21px;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.86rem;
+  font-weight: 760;
+  transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+
+.primary-button {
+  background: var(--text);
+  box-shadow: var(--shadow-low);
+  color: var(--surface);
+}
+
+.primary-button:hover:not(:disabled),
+.secondary-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.primary-button svg {
+  transition: transform 160ms ease;
+}
+
+.primary-button:hover svg {
+  transform: translateX(3px);
+}
+
+.secondary-button {
+  background: var(--surface-raised);
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+
+.text-button {
+  padding: 10px 4px;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.back-button {
+  display: inline-flex;
+  padding: 7px 0;
+  align-items: center;
+  gap: 7px;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.back-button:hover {
+  color: var(--brand-deep);
+}
+
+.route-loading-page {
+  display: grid;
+  min-height: 62vh;
+  place-content: center;
+  gap: 16px;
+  text-align: center;
+}
+
+.route-loading-page > div {
+  display: grid;
+  gap: 6px;
+}
+
+.app-footer {
+  display: flex;
+  padding: 28px 0 36px;
+  flex-wrap: wrap;
+  gap: 10px 24px;
+  color: var(--text-subtle);
+  font-size: 0.68rem;
+}
+
+@media (max-width: 700px) {
+  .app-header,
+  .page-frame {
+    width: min(100% - 32px, 1180px);
+  }
+
+  .app-header {
+    min-height: 68px;
+  }
+
+  .brand {
+    font-size: 0.92rem;
+  }
+
+  .brand-mark {
+    width: 31px;
+    height: 31px;
+  }
+
+  .course-chip {
+    width: 37px;
+    height: 37px;
+    min-height: 37px;
+    padding: 5px;
+    flex: 0 0 37px;
+    overflow: hidden;
+    color: transparent;
+    font-size: 0;
+    gap: 0;
+    white-space: nowrap;
+  }
+
+  .course-chip > span {
+    flex: 0 0 auto;
+    font-size: 0.62rem;
+  }
+
+  .settings-popover {
+    top: 61px;
+  }
+
+  .app-footer {
+    padding-bottom: 24px;
+    flex-direction: column;
+    gap: 5px;
+  }
+}

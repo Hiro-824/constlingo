@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./styles/shell.css";
+import "./styles/library.css";
+import "./styles/setup.css";
+import "./styles/session.css";
+import "./styles/result.css";
 
 export const metadata: Metadata = {
   title: "Constlingo — 声で身につける語学練習",
