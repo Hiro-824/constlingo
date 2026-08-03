@@ -204,6 +204,22 @@ function findAcceptedAlternative(
   );
 }
 
+function getRecognitionDecision(
+  alternatives: string[],
+  item: VocabularyItem,
+  locale: string,
+) {
+  const leadingTranscript = alternatives[0] ?? "";
+  if (!leadingTranscript) {
+    return null;
+  }
+  const acceptedTranscript = findAcceptedAlternative(alternatives, item, locale);
+  return {
+    accepted: Boolean(acceptedTranscript),
+    transcript: acceptedTranscript ?? leadingTranscript,
+  };
+}
+
 function makeQuestion(
   item: VocabularyItem,
   kind: QuestionKind,
@@ -219,6 +235,7 @@ function makeQuestion(
     firstAttemptCorrect: null,
     firstResponse: "",
     completed: false,
+    skipped: false,
     lastRecognized: "",
   } satisfies Question;
 }
@@ -386,6 +403,7 @@ export default function LearningApp({ course }: { course: Course }) {
   const mistakeQuestions = questions.filter(
     (question) => question.firstAttemptCorrect === false,
   );
+  const skippedQuestions = questions.filter((question) => question.skipped);
 
   useEffect(() => {
     selectedVoiceRef.current = selectedVoice;
@@ -588,7 +606,8 @@ export default function LearningApp({ course }: { course: Course }) {
       return;
     }
     const recognition = new Recognition();
-    let finalReceived = false;
+    let latestAlternatives: string[] = [];
+    let settled = false;
     recognition.lang = course.speechLocale;
     recognition.interimResults = true;
     recognition.maxAlternatives = 3;
@@ -596,35 +615,52 @@ export default function LearningApp({ course }: { course: Course }) {
     setHeard("");
     setRecognitionStatus("listening");
 
+    const finishFromLatestRecognition = () => {
+      if (settled) {
+        return true;
+      }
+      const decision = getRecognitionDecision(
+        latestAlternatives,
+        currentQuestion.item,
+        course.targetLocale,
+      );
+      if (!decision) {
+        return false;
+      }
+      settled = true;
+      finishAttempt(decision.accepted, decision.transcript);
+      return true;
+    };
+
     recognition.onresult = (event) => {
       if (recognitionRef.current !== recognition) {
         return;
       }
       const result = event.results[event.results.length - 1];
-      const alternatives = getRecognitionAlternatives(result);
-      const leadingTranscript = alternatives[0] ?? "";
+      latestAlternatives = getRecognitionAlternatives(result);
+      const leadingTranscript = latestAlternatives[0] ?? "";
       setHeard(leadingTranscript);
-      if (!result?.isFinal) {
-        return;
-      }
-      finalReceived = true;
-      const acceptedTranscript = findAcceptedAlternative(
-        alternatives,
+      const decision = getRecognitionDecision(
+        latestAlternatives,
         currentQuestion.item,
         course.targetLocale,
       );
-      finishAttempt(Boolean(acceptedTranscript), acceptedTranscript ?? leadingTranscript);
+      if (decision?.accepted || result?.isFinal) {
+        finishFromLatestRecognition();
+      }
     };
     recognition.onerror = () => {
       if (recognitionRef.current === recognition) {
-        recognitionRef.current = null;
-        setRecognitionStatus("no-match");
+        if (!finishFromLatestRecognition()) {
+          recognitionRef.current = null;
+          setRecognitionStatus("no-match");
+        }
       }
     };
     recognition.onend = () => {
       if (recognitionRef.current === recognition) {
-        recognitionRef.current = null;
-        if (!finalReceived) {
+        if (!finishFromLatestRecognition()) {
+          recognitionRef.current = null;
           setRecognitionStatus("no-match");
         }
       }
@@ -727,6 +763,7 @@ export default function LearningApp({ course }: { course: Course }) {
       recognition.interimResults = true;
       recognition.maxAlternatives = 3;
       recognitionRef.current = recognition;
+      let latestAlternatives: string[] = [];
       setRecognitionStatus("listening");
       setHeard("");
       let roundFinished = false;
@@ -737,26 +774,34 @@ export default function LearningApp({ course }: { course: Course }) {
         roundFinished = true;
         completeRound(status, transcript);
       };
+      const finishFromLatestRecognition = () => {
+        const decision = getRecognitionDecision(
+          latestAlternatives,
+          currentQuestion.item,
+          course.targetLocale,
+        );
+        finishOnce(
+          decision ? (decision.accepted ? "correct" : "miss") : "no-match",
+          decision?.transcript ?? "",
+        );
+      };
       recognition.onresult = (event) => {
         const result = event.results[event.results.length - 1];
-        const alternatives = getRecognitionAlternatives(result);
-        const leadingTranscript = alternatives[0] ?? "";
+        latestAlternatives = getRecognitionAlternatives(result);
+        const leadingTranscript = latestAlternatives[0] ?? "";
         setHeard(leadingTranscript);
-        if (result?.isFinal) {
-          const acceptedTranscript = findAcceptedAlternative(
-            alternatives,
-            currentQuestion.item,
-            course.targetLocale,
-          );
-          finishOnce(
-            acceptedTranscript ? "correct" : "miss",
-            acceptedTranscript ?? leadingTranscript,
-          );
+        const decision = getRecognitionDecision(
+          latestAlternatives,
+          currentQuestion.item,
+          course.targetLocale,
+        );
+        if (decision?.accepted || result?.isFinal) {
+          finishFromLatestRecognition();
         }
       };
-      recognition.onerror = () => finishOnce("no-match");
-      recognition.onend = () => finishOnce("no-match");
-      recognitionTimer = window.setTimeout(() => finishOnce("no-match"), 4500);
+      recognition.onerror = finishFromLatestRecognition;
+      recognition.onend = finishFromLatestRecognition;
+      recognitionTimer = window.setTimeout(finishFromLatestRecognition, 4500);
       try {
         recognition.start();
       } catch {
@@ -843,30 +888,13 @@ export default function LearningApp({ course }: { course: Course }) {
     }
   };
 
-  const skipDrill = () => {
-    if (!currentQuestion || currentQuestion.kind !== "drill") {
+  const skipQuestion = () => {
+    if (!currentQuestion || answered) {
       return;
     }
     setQuestions((current) =>
       current.map((question, index) =>
-        index === questionIndex ? { ...question, completed: true } : question,
-      ),
-    );
-    advanceQuestion();
-  };
-
-  const skipAfterRepeatedMisses = () => {
-    if (
-      !currentQuestion ||
-      currentQuestion.kind === "drill" ||
-      currentQuestion.attempts < 10 ||
-      answered
-    ) {
-      return;
-    }
-    setQuestions((current) =>
-      current.map((question, index) =>
-        index === questionIndex ? { ...question, completed: true } : question,
+        index === questionIndex ? { ...question, skipped: true } : question,
       ),
     );
     advanceQuestion();
@@ -1165,9 +1193,20 @@ export default function LearningApp({ course }: { course: Course }) {
           <div className="question-stage">
             <div className="question-context">
               <span>{currentQuestion.item.categoryId}</span>
-              {currentQuestion.kind === "receptive" && (
-                <span className={`question-timer ${timeLeft <= 3 ? "is-low" : ""}`}>{timeLeft}s</span>
-              )}
+              <div className="question-tools">
+                {currentQuestion.kind === "receptive" && (
+                  <span className={`question-timer ${timeLeft <= 3 ? "is-low" : ""}`}>{timeLeft}s</span>
+                )}
+                <button
+                  className="question-skip-button"
+                  disabled={answered}
+                  type="button"
+                  onClick={skipQuestion}
+                >
+                  スキップ
+                  <ArrowRightIcon />
+                </button>
+              </div>
             </div>
 
             <div className={`question-card question-${currentQuestion.kind} ${feedback ? `has-${feedback.status}` : ""}`}>
@@ -1273,21 +1312,8 @@ export default function LearningApp({ course }: { course: Course }) {
                 </div>
                 <div className="drill-progress"><div style={{ width: `${(drillRepeatCount / DRILL_REPEAT_COUNT) * 100}%` }} /></div>
                 <SpeechStatus status={recognitionStatus} heard={heard} drill />
-                <button className="dont-know-button" type="button" onClick={skipDrill}>次の単語へ</button>
               </div>
             )}
-
-            {currentQuestion.kind !== "drill" &&
-              currentQuestion.attempts >= 10 &&
-              !answered && (
-                <div className="repeated-miss-action">
-                  <span>10回試しました。ここでは無理に足止めしません。</span>
-                  <button type="button" onClick={skipAfterRepeatedMisses}>
-                    正解を確認して次へ
-                    <ArrowRightIcon />
-                  </button>
-                </div>
-              )}
           </div>
         </section>
       )}
@@ -1304,12 +1330,22 @@ export default function LearningApp({ course }: { course: Course }) {
             {mode.plan === "drill" ? (
               <>
                 <h1><em>{questions.filter((question) => question.completed).length}</em>語</h1>
-                <p>声に出した分だけ、ことばは自分のものになる。</p>
+                <p>
+                  声に出した分だけ、ことばは自分のものになる。
+                  {skippedQuestions.length > 0 ? ` スキップ ${skippedQuestions.length}語。` : ""}
+                </p>
               </>
             ) : (
               <>
                 <h1><em>{firstTryCorrect}</em><span>/ {firstAttemptQuestions.length}</span></h1>
-                <p>{mistakeQuestions.length === 0 ? "すべて初回で正解しました。" : `初回正解は${firstTryCorrect}問。${mistakeQuestions.length}語をもう一度確認しましょう。`}</p>
+                <p>
+                  {firstAttemptQuestions.length === 0
+                    ? "今回は採点した問題がありません。"
+                    : mistakeQuestions.length === 0
+                      ? "すべて初回で正解しました。"
+                      : `初回正解は${firstTryCorrect}問。${mistakeQuestions.length}語をもう一度確認しましょう。`}
+                  {skippedQuestions.length > 0 ? ` スキップ ${skippedQuestions.length}問。` : ""}
+                </p>
               </>
             )}
             <div className="result-meta">
@@ -1384,9 +1420,12 @@ function SpeechStatus({
     "no-match": "聞き取れませんでした。もう一度どうぞ",
     unsupported: "このブラウザは音声認識に対応していません",
   };
+  const message = status === "no-match" && heard
+    ? "別の語として認識されました"
+    : copy[status];
   return (
     <div className={`speech-readout status-${status}`} aria-live="polite">
-      <span>{copy[status]}</span>
+      <span>{message}</span>
       {heard && <small>認識：{heard}</small>}
     </div>
   );

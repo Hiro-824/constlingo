@@ -1092,6 +1092,39 @@ svg {
   letter-spacing: 0.09em;
 }
 
+.question-tools {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.question-skip-button {
+  display: inline-flex;
+  min-height: 34px;
+  padding: 0 2px 0 10px;
+  align-items: center;
+  gap: 6px;
+  border: 0;
+  background: transparent;
+  color: var(--ink-faint);
+  font-size: 0.7rem;
+  font-weight: 650;
+}
+
+.question-skip-button:hover:not(:disabled) {
+  color: var(--accent-dark);
+}
+
+.question-skip-button svg {
+  width: 14px;
+  height: 14px;
+  transition: transform 150ms ease;
+}
+
+.question-skip-button:hover:not(:disabled) svg {
+  transform: translateX(2px);
+}
+
 .question-card h1 {
   max-width: 100%;
   overflow-wrap: anywhere;
@@ -1366,45 +1399,6 @@ svg {
   border-radius: inherit;
   background: var(--accent);
   transition: width 220ms ease;
-}
-
-.repeated-miss-action {
-  display: flex;
-  min-height: 66px;
-  margin-top: 20px;
-  padding: 12px 14px 12px 20px;
-  align-items: center;
-  justify-content: space-between;
-  gap: 18px;
-  border: 1px solid #d8aea5;
-  border-radius: 14px;
-  background: var(--danger-soft);
-  color: var(--danger);
-}
-
-.repeated-miss-action > span {
-  font-size: 0.74rem;
-  line-height: 1.5;
-}
-
-.repeated-miss-action button {
-  display: inline-flex;
-  min-height: 42px;
-  padding: 0 15px;
-  align-items: center;
-  gap: 10px;
-  flex: 0 0 auto;
-  border: 1px solid var(--danger);
-  border-radius: 999px;
-  background: var(--surface);
-  color: var(--danger);
-  font-size: 0.72rem;
-  font-weight: 700;
-}
-
-.repeated-miss-action button:hover {
-  background: var(--danger);
-  color: var(--surface);
 }
 
 .result-page {
@@ -1791,14 +1785,6 @@ svg {
     width: 100%;
   }
 
-  .repeated-miss-action {
-    align-items: stretch;
-    flex-direction: column;
-  }
-
-  .repeated-miss-action button {
-    justify-content: center;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -67,5 +67,6 @@ export type Question = {
   firstAttemptCorrect: boolean | null;
   firstResponse: string;
   completed: boolean;
+  skipped: boolean;
   lastRecognized: string;
 };
