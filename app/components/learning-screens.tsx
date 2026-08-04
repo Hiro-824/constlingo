@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import type { Dispatch, SetStateAction } from "react";
 
 import type {
@@ -545,6 +546,7 @@ export function SessionScreen({
   onPlaySpeech: (text: string, purpose: PlaybackPurpose) => void;
 }) {
   const isDrill = currentQuestion.kind === "drill";
+  const hasVisual = currentQuestion.kind !== "receptive" && Boolean(currentQuestion.item.visual);
   return (
     <section className={`session-page ${isDrill ? "is-drill-session" : ""}`}>
       <header className="session-header">
@@ -585,17 +587,17 @@ export function SessionScreen({
           </div>
         </div>
 
-        <div className={`question-card question-${currentQuestion.kind} ${feedback ? `has-${feedback.status}` : ""}`}>
+        <div className={`question-card question-${currentQuestion.kind} ${hasVisual ? "has-visual" : ""} ${feedback ? `has-${feedback.status}` : ""}`}>
           {!isDrill && <span className="question-label">{KIND_LABELS[currentQuestion.kind]}</span>}
           {currentQuestion.kind === "receptive" && (
             <><h1 lang={course.targetLocale}>{currentQuestion.item.spokenForm}</h1><p>もっとも近い意味を選んでください</p></>
           )}
           {currentQuestion.kind === "productive" && (
-            <><h1>{currentQuestion.item.meaning}</h1><p>{course.targetLanguageLabel}で発音してください</p></>
+            <><MeaningPrompt item={currentQuestion.item} /><p>{course.targetLanguageLabel}で発音してください</p></>
           )}
           {isDrill && (
             <>
-              <h1>{currentQuestion.item.meaning}</h1>
+              <MeaningPrompt item={currentQuestion.item} />
               <div
                 className={`spoken-word ${playbackPurpose === "drill-model" ? "is-playing" : ""} ${showDrillSpelling ? "" : "is-hidden"}`}
                 lang={course.targetLocale}
@@ -664,6 +666,29 @@ export function SessionScreen({
         )}
       </div>
     </section>
+  );
+}
+
+function MeaningPrompt({ item }: { item: VocabularyItem }) {
+  const visual = item.visual;
+  if (!visual) {
+    return <h1>{item.meaning}</h1>;
+  }
+
+  return (
+    <figure className="meaning-visual">
+      <div className="meaning-visual-frame" aria-hidden="true">
+        <Image
+          alt=""
+          draggable={false}
+          fill
+          loading="eager"
+          sizes="(max-width: 700px) calc(100vw - 66px), 540px"
+          src={visual.src}
+        />
+      </div>
+      <figcaption>{item.meaning}</figcaption>
+    </figure>
   );
 }
 

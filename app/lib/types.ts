@@ -10,6 +10,10 @@ export type CoursePart = {
   categoryIds: string[];
 };
 
+export type VocabularyVisual = {
+  src: string;
+};
+
 export type VocabularyItem = {
   id: string;
   categoryId: string;
@@ -19,6 +23,7 @@ export type VocabularyItem = {
   note: string;
   spokenForm: string;
   acceptedSpokenForms: string[];
+  visual?: VocabularyVisual;
 };
 
 export type Course = {

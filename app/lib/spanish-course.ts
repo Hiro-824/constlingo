@@ -1,4 +1,5 @@
 import type { Course, VocabularyItem } from "./types";
+import { getSpanishVocabularyVisual } from "./spanish-visuals";
 
 type DefiniteArticle = "el" | "la" | "los" | "las" | "el/la";
 
@@ -254,6 +255,7 @@ function toVocabularyItem(row: string[]): VocabularyItem | null {
     note,
     spokenForm,
     acceptedSpokenForms,
+    visual: getSpanishVocabularyVisual(id, categoryId, target),
   };
 }
 
