@@ -1,8 +1,10 @@
-# A Hierarchical Structure-Building Method for Foreign-Language Learning
+# A Hierarchical Structure-Building Curriculum Framework for Foreign-Language Learning
 
 ## 1. Overview
 
-This is a hypothetical method for teaching foreign languages that makes the construction of phrases and clauses a central part of practice.
+This document presents a conceptual curriculum-design framework for the early stages of second-language learning. Its purpose is to communicate a way of organizing teaching and practice, not to serve as a research proposal or a complete, empirically validated teaching program.
+
+The central practical idea is that the complete sentence should not be the only primary unit of teaching and practice. Learners should also receive sustained practice with common phrase and clause types, such as noun phrases and verb phrases in English, so that they learn to understand and produce these units and reuse them inside larger expressions. **Hierarchical structure-building** refers to practising useful linguistic units of different sizes and learning how smaller units combine within larger ones. It does not mean that learners are trained as linguists or required to perform syntactic analysis.
 
 The proposal combines two principles that concern different dimensions of language learning. The first is structural: learners need to acquire the target language as a **hierarchically organized system**. A sentence is not merely a linear sequence of words. Words combine into phrases, phrases combine into larger phrases, and these structures combine into clauses. The second is pedagogical: instruction generally moves from specific expressions to partially open patterns and then to more abstract grammatical generalizations.
 
@@ -23,13 +25,13 @@ has a hierarchical structure such as:
 
 The phrase *the author of the book* functions as a unit, while also containing the smaller phrase *of the book*. A learner who sees only a sequence of words may have difficulty understanding which elements belong together, which expressions can be replaced as units, and how longer sentences are constructed.
 
-The proposed method therefore gives learners repeated practice in building the intermediate structures of the target language. As a separate matter, instruction generally proceeds through:
+The proposed framework therefore gives learners repeated practice in building the intermediate structures of the target language. As a separate matter, instruction generally proceeds through:
 
-> specific expressions → partially open patterns → abstract constructions
+> specific expressions → partially open patterns → abstract schemas
 
 Learners repeatedly connect forms with meanings, first through concrete examples and later through broader grammatical generalizations.
 
-The bracketed representations in this document describe the structures that curriculum designers use to organize practice. Learners do not necessarily need to study the labels or construct syntactic diagrams themselves.
+The bracketed representations in this document are planning tools for curriculum designers. They show which expressions are being treated as reusable teaching units and how those units can be combined. Learners do not need to study the labels, learn a theory of syntax, or construct syntactic diagrams themselves. Their task is to understand and produce the expressions through meaningful language practice.
 
 ## 2. The practical motivation: sentence-centred grammar teaching
 
@@ -54,7 +56,7 @@ A learner may know the rules for articles, adjective order, and plurals separate
 
 Likewise, a learner may know the words in a sentence without understanding how the verb organizes the participants and other elements around it.
 
-The proposed method addresses this problem by making the construction of phrases and clauses a central learning activity rather than leaving their internal organization implicit.
+The proposed framework addresses this problem by making phrases and clauses primary units of teaching and practice rather than leaving everything below the complete sentence implicit.
 
 The proposal does not depend on a claim that its components are theoretically novel. It is strongly influenced by and compatible with chunk-based learning, pattern practice, usage-based approaches, and construction grammar. Its purpose is to emphasize a practical implication that may remain underdeveloped even when some of these ideas are already accepted: learners need sustained practice with the constituents inside sentences and with the ways those constituents combine. This point remains worth stating where instruction continues to be organized mainly around complete sentences and separate grammar topics.
 
@@ -69,8 +71,8 @@ For example:
 > house
 > [NP the house]
 > [NP the old house]
-> [NP the old house [PP near the station]]
-> [Finite clause I saw [NP the old house [PP near the station]]]
+> [NP the old house [PP near [NP the station]]]
+> [Finite clause I saw [NP the old house [PP near [NP the station]]]]
 
 Previously learned structures can be inserted into larger ones. The learner therefore develops an understanding of both the parts and the relationships among them.
 
@@ -82,28 +84,28 @@ Learners should not normally begin with the most abstract grammatical rule.
 
 They may first learn:
 
-> I want water.
-> I want this one.
-> I want to go home.
+> the book
+> the cup
+> the bag
 
 Through repetition and variation, they may develop the partially open pattern:
 
-> I want ___.
+> the ___
 
-At this stage, the learner can use the pattern productively without fully analysing it as a first-person subject, verb, and complement. Later, the learner may connect it with related patterns:
+At this stage, the learner can use the pattern productively with familiar count nouns without fully analysing it in terms of determiners and nouns. Later, the learner may connect these expressions with related noun-phrase patterns:
 
-> You want ___.
-> She wants ___.
-> Do you want ___?
-> I wanted ___.
+> a book
+> this book
+> two books
+> those books
 
-More abstract grammatical knowledge can then emerge from a sufficiently rich set of familiar examples.
+From a sufficiently rich set of familiar examples, the learner can gradually develop more abstract knowledge of English noun-phrase structure, including how determiners, number, adjectives, nouns, and modifiers can combine. Partially open patterns are developed within a phrase or clause type; related patterns can later contribute to a broader abstract schema.
 
 ### 3.3 Form and meaning should be practised in both directions
 
 Learners should repeatedly move between meaning and linguistic form.
 
-In the meaning-to-form direction, learners receive a meaning through a picture, animation, action, situation, or expression in their first language, and say the corresponding target-language form aloud. In the form-to-meaning direction, they hear a target-language expression and demonstrate its meaning, for example by choosing a picture, arranging objects, performing an action, or giving an expression in their first language.
+In the meaning-to-form direction, learners receive a meaning through a picture, animation, action, situation, or expression in their first language, and say an appropriate target-language form aloud. In the form-to-meaning direction, they hear a target-language expression and demonstrate its meaning, for example by choosing a picture, arranging objects, performing an action, or giving an expression in their first language.
 
 For example, a learner may see a scene in which a girl places a cup on a table and produce:
 
@@ -111,11 +113,11 @@ For example, a learner may see a scene in which a girl places a cup on a table a
 
 In the reverse direction, the learner may hear the sentence and select the corresponding picture or arrange objects to represent it.
 
-The core practice is therefore oral and bidirectional. Written forms may be introduced as support, but they do not replace the connection between heard or spoken forms and meanings. This ensures that grammatical practice remains connected to what the expression describes or accomplishes.
+At the early stages for which this framework is primarily intended, the core practice is therefore oral and bidirectional. Written forms may be introduced as support, but they do not replace the connection between heard or spoken forms and meanings. This helps keep grammatical practice connected to what an expression describes or accomplishes. At later stages, the same emphasis on building phrases and clauses can be extended to written comprehension and production.
 
 ## 4. The first requirement: a grammar of the target language
 
-To put the method into practice, curriculum designers must first build a practical grammar of the target language.
+To put the framework into practice, curriculum designers must first build a practical grammar of the target language.
 
 This grammar should describe its hierarchical structures, including:
 
@@ -127,7 +129,7 @@ This grammar should describe its hierarchical structures, including:
 * restrictions, irregularities, and common extensions;
 * how smaller structures are embedded within larger ones.
 
-Therefore, it is expected that the grammar is in some way a type of phrase structure grammar, even though richer description may be necessary for each layers.
+The grammar therefore needs a practical way to represent phrase and clause structure. A phrase-structure description is one option, although richer or different descriptions may be necessary for particular languages and structural layers.
 
 The grammar does not need to resolve every theoretical question about the language. It must be detailed enough to determine what learners should practise and in what sequence.
 
@@ -144,17 +146,17 @@ Next, they practise in both directions:
 * **meaning to form:** receive a picture or first-language prompt and say the target-language expression aloud;
 * **form to meaning:** hear the target-language expression and demonstrate its meaning through a picture, an action, an arrangement of objects, or a first-language expression.
 
-They then encounter controlled variation:
+At a later clause stage, after learners have practised the relevant noun phrases and verb phrases, they may encounter controlled variation such as:
 
 > Give me the book.
 > Give me the cup.
 > Give me that one.
 
-This supports a partially open pattern:
+The imperative clause then supports a partially open pattern:
 
 > Give me ___.
 
-The open position is gradually filled with new and increasingly complex material:
+The open position is filled with noun phrases that learners have already practised. These noun phrases gradually include new and increasingly complex material:
 
 > Give me the red cup.
 > Give me the book on the table.
@@ -169,7 +171,7 @@ Explicit explanations can be introduced when they help learners understand and o
 
 ## 6. An English application
 
-One possible English curriculum would begin with noun phrases, followed by prepositional phrases, verb phrases, finite clauses, and more complex structures.
+One possible English curriculum would begin with noun phrases, followed by prepositional phrases, verb phrases, clauses, and more complex structures. Expressions introduced at a later stage presuppose practice with the relevant units from earlier stages.
 
 ### 6.1 Noun phrases
 
@@ -234,9 +236,9 @@ Previously learned noun phrases and prepositional phrases can now be inserted in
 >  [NP the small red bag]
 >  [PP under [NP the wooden chair]]]
 
-### 6.4 Finite clauses
+### 6.4 Clauses
 
-Once learners can construct verb phrases, they combine them with subjects, tense, aspect, modality, negation, and interrogation:
+Once learners can construct verb phrases, they use them to build clause types. These include finite clauses that combine predicates with subjects, tense, aspect, modality, negation, and interrogation:
 
 > [Finite clause She [VP reads the book]].
 > [Finite clause She [VP read the book]].
@@ -245,6 +247,12 @@ Once learners can construct verb phrases, they combine them with subjects, tense
 > [Finite clause She does not [VP read the book]].
 > [Finite clause Does she [VP read the book]]?
 
+Imperative clauses can also be introduced at this stage:
+
+> [Imperative clause [VP Give [NP me] [NP the book]]].
+
+An expression such as *Give me the book* is therefore not assumed to be initial beginner material. It is introduced only after learners have practised the noun phrases and verb-phrase pattern from which the clause is built.
+
 Learners can see these as related structures built around a shared predicate, rather than as unrelated grammar points.
 
 ### 6.5 More complex structures
@@ -252,7 +260,7 @@ Learners can see these as related structures built around a shared predicate, ra
 Familiar structures are gradually embedded within larger ones:
 
 > [NP the book]
-> [NP the book [PP on the table]]
+> [NP the book [PP on [NP the table]]]
 > [NP the book [Relative clause that I bought]]
 > [Finite clause I think [Complement clause that she bought the book]]
 
@@ -260,7 +268,7 @@ The curriculum continues by identifying and practising the major hierarchical st
 
 ## 7. A supplementary principle: pronunciation and oral retrieval
 
-Because the core learning activities are oral, pronunciation should be established early and practised throughout the method. This is a supplementary pedagogical principle. It is not presented as a consequence of hierarchical structure-building or of the progression from specific to abstract patterns.
+Because the framework is primarily intended for the early stages of second-language learning and its core activities at those stages are oral, pronunciation should be established early and practised throughout. This is a supplementary pedagogical principle. It is not presented as a consequence of hierarchical structure-building or of the progression from specific to abstract patterns.
 
 For spoken languages, learners should ideally form an accurate sound representation before spelling becomes dominant. When learners begin with written forms, they may interpret them through the pronunciation and spelling conventions of languages they already know. Once an inaccurate pronunciation has become habitual, correcting it may be difficult.
 
@@ -272,7 +280,9 @@ A useful sequence is:
 4. retrieve it orally;
 5. connect it with its written form.
 
-Writing does not need to be postponed completely. The principle is that learners should not know an expression only as a written sequence.
+Writing does not need to be postponed completely. The principle is that early learners should not know an expression only as a written sequence.
+
+As learners progress, the same constituent-building approach can support written practice. Learners can construct and expand noun phrases, combine them with verb phrases to form clauses, and embed familiar structures in longer written expressions. The early oral emphasis is therefore a starting point rather than a limit on later applications of the framework.
 
 Oral quizzes may also strengthen memory. Producing an answer aloud requires retrieval, articulation, and auditory feedback. Repeated oral production may help knowledge become faster and more procedural.
 
@@ -287,7 +297,7 @@ The purpose of this practice is to establish accurate and readily retrievable sp
 
 ## 8. Potential limitations
 
-The effectiveness of the method depends heavily on the quality of the language-specific grammar and curriculum.
+The usefulness of the framework in practice depends heavily on the quality of the language-specific grammar and curriculum.
 
 Designers must determine:
 
@@ -299,24 +309,26 @@ Designers must determine:
 
 There is also a risk of excessive conscious analysis. Learners should not be required to construct a full syntactic representation whenever they speak. Hierarchical practice should eventually support automatic production.
 
+Meaning-to-form prompts may also allow more than one appropriate expression. A picture of a girl putting a cup on a table, for example, does not by itself determine whether English speakers should use *a* or *the*, or which tense and aspect are appropriate. Activities that target these contrasts need sufficient situational or discourse context, and teachers and assessment systems must allow for alternative responses when the prompt does not determine a single form. First-language prompts must likewise be used with care because expressions in two languages are not always exact equivalents. These limitations do not remove the value of bidirectional practice, but they affect how prompts and expected responses should be designed.
+
 The proposed English order may also work better for some learners than others. Its cross-linguistic validity and the importance of beginning with particular phrase types must be investigated separately for each language and learner group.
 
 ## 9. Summary
 
-The proposed method teaches foreign languages by making the construction of their hierarchical grammatical structures a central object of practice. The bracketed analyses used in this document need not be shown to learners.
+The proposed curriculum-design framework makes phrases and clauses, rather than only complete sentences, primary units of teaching and practice. Learners practise these units so that they can reuse smaller expressions inside larger ones. The bracketed analyses used by curriculum designers need not be shown to learners, and the framework does not propose exercises in linguistic analysis.
 
 Its implementation begins with a practical grammar of the target language. This grammar identifies the major phrase and clause types and explains how smaller units combine into larger ones.
 
 Separately, the learning sequence generally proceeds through:
 
-> specific expressions → partially open patterns → abstract structures
+> specific expressions → partially open patterns → abstract schemas
 
-In an English application, learners may begin with noun phrases because they need to recognize a layer between a bare lexical noun and its use inside prepositional phrases, verb phrases, and clauses. They then build prepositional phrases, verb phrases, finite clauses, and increasingly complex structures.
+In an English application, learners may begin with noun phrases because they need to recognize a layer between a bare lexical noun and its use inside prepositional phrases, verb phrases, and clauses. They then build prepositional phrases, verb phrases, clauses, and increasingly complex structures.
 
-Throughout the process, learners connect meaning and form in both directions. They respond orally to meanings presented through pictures, situations, or their first language, and demonstrate the meanings of target-language expressions that they hear. Written forms may support this oral practice.
+Throughout the early stages, learners connect meaning and form in both directions. They respond orally to meanings presented through pictures, situations, or their first language, and demonstrate the meanings of target-language expressions that they hear. Written forms may support this oral practice, and later teaching can extend the same structure-building principles to written language.
 
 The two organizing principles can therefore be summarized as follows:
 
-> Foreign-language learning may become more effective when learners practise phrases and clauses as reusable structural units and learn how smaller units combine into larger ones.
+> At the early stages of second-language learning, curricula can organize practice around phrases and clauses as reusable units and around the ways smaller units combine into larger ones, rather than centring practice almost exclusively on complete sentences.
 >
 > Independently, instruction may support generalization by proceeding from specific expressions through partially open patterns to abstract grammatical knowledge.
