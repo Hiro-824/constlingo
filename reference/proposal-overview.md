@@ -2,34 +2,38 @@
 
 ## 1. Overview
 
-This is a hypothetical method for teaching foreign languages by guiding learners from specific expressions to increasingly abstract grammatical patterns.
+This is a hypothetical method for teaching foreign languages that makes the construction of phrases and clauses a central part of practice.
 
-Its central hypothesis is that learners need to acquire language as a **hierarchical system**. A sentence is not merely a linear sequence of words. Words combine into phrases, phrases combine into larger phrases, and these structures combine into clauses.
+The proposal combines two principles that concern different dimensions of language learning. The first is structural: learners need to acquire the target language as a **hierarchically organized system**. A sentence is not merely a linear sequence of words. Words combine into phrases, phrases combine into larger phrases, and these structures combine into clauses. The second is pedagogical: instruction generally moves from specific expressions to partially open patterns and then to more abstract grammatical generalizations.
+
+These principles are compatible, but no direct causal relationship between them is assumed. Structural hierarchy concerns how elements are organized within an expression. The progression from specific to abstract concerns the order in which learners encounter and generalize from expressions.
 
 For example:
 
-> The student read the book on the desk.
+> The student greeted the author of the book.
 
 has a hierarchical structure such as:
 
 > [Finite clause
 >  [NP The student]
->  [VP read
->   [NP the book
->    [PP on
->     [NP the desk]]]]]]
+>  [VP greeted
+>   [NP the author
+>    [PP of
+>     [NP the book]]]]]]
 
-The phrase *the book on the desk* functions as a unit, while also containing the smaller phrase *on the desk*. A learner who sees only a sequence of words may have difficulty understanding which elements belong together, which expressions can be replaced as units, and how longer sentences are constructed.
+The phrase *the author of the book* functions as a unit, while also containing the smaller phrase *of the book*. A learner who sees only a sequence of words may have difficulty understanding which elements belong together, which expressions can be replaced as units, and how longer sentences are constructed.
 
-The proposed method therefore gives learners repeated practice in building the intermediate structures of the target language. In general, learning proceeds through:
+The proposed method therefore gives learners repeated practice in building the intermediate structures of the target language. As a separate matter, instruction generally proceeds through:
 
 > specific expressions → partially open patterns → abstract constructions
 
 Learners repeatedly connect forms with meanings, first through concrete examples and later through broader grammatical generalizations.
 
-## 2. The problem with sentence-centred grammar teaching
+The bracketed representations in this document describe the structures that curriculum designers use to organize practice. Learners do not necessarily need to study the labels or construct syntactic diagrams themselves.
 
-Traditional grammar teaching often uses the complete sentence as its main unit.
+## 2. The practical motivation: sentence-centred grammar teaching
+
+This proposal is motivated by forms of conventional English instruction in which the complete sentence is the main unit of study. This includes the kinds of instruction experienced by the author in Japan and Canada; it is not intended as a description of all existing language teaching.
 
 Learners may study:
 
@@ -52,6 +56,8 @@ Likewise, a learner may know the words in a sentence without understanding how t
 
 The proposed method addresses this problem by making the construction of phrases and clauses a central learning activity rather than leaving their internal organization implicit.
 
+The proposal does not depend on a claim that its components are theoretically novel. It is strongly influenced by and compatible with chunk-based learning, pattern practice, usage-based approaches, and construction grammar. Its purpose is to emphasize a practical implication that may remain underdeveloped even when some of these ideas are already accepted: learners need sustained practice with the constituents inside sentences and with the ways those constituents combine. This point remains worth stating where instruction continues to be organized mainly around complete sentences and separate grammar topics.
+
 ## 3. Underlying assumptions
 
 ### 3.1 Language is hierarchically organized
@@ -68,7 +74,9 @@ For example:
 
 Previously learned structures can be inserted into larger ones. The learner therefore develops an understanding of both the parts and the relationships among them.
 
-### 3.2 Learning generally moves from specific to abstract
+### 3.2 As a separate pedagogical principle, learning generally moves from specific to abstract
+
+The sequence from specific expressions to abstract generalizations is a principle about the organization of instruction. It is distinct from the structural hierarchy described above and is not presented as its cause or consequence.
 
 Learners should not normally begin with the most abstract grammatical rule.
 
@@ -95,15 +103,15 @@ More abstract grammatical knowledge can then emerge from a sufficiently rich set
 
 Learners should repeatedly move between meaning and linguistic form.
 
-They may receive a picture, animation, action, situation, or semantic representation and produce the corresponding expression. They may also hear or read an expression and identify or reconstruct its meaning.
+In the meaning-to-form direction, learners receive a meaning through a picture, animation, action, situation, or expression in their first language, and say the corresponding target-language form aloud. In the form-to-meaning direction, they hear a target-language expression and demonstrate its meaning, for example by choosing a picture, arranging objects, performing an action, or giving an expression in their first language.
 
 For example, a learner may see a scene in which a girl places a cup on a table and produce:
 
 > The girl is putting the cup on the table.
 
-In the reverse direction, the learner may hear the sentence and arrange objects to represent it.
+In the reverse direction, the learner may hear the sentence and select the corresponding picture or arrange objects to represent it.
 
-This ensures that grammatical practice remains connected to what the expression describes or accomplishes.
+The core practice is therefore oral and bidirectional. Written forms may be introduced as support, but they do not replace the connection between heard or spoken forms and meanings. This ensures that grammatical practice remains connected to what the expression describes or accomplishes.
 
 ## 4. The first requirement: a grammar of the target language
 
@@ -129,7 +137,10 @@ At each stage, learners follow a similar process.
 
 First, they encounter frequent expressions connected with clear meanings.
 
-Next, they practise comprehension and oral production in both directions: from form to meaning and from meaning to form.
+Next, they practise in both directions:
+
+* **meaning to form:** receive a picture or first-language prompt and say the target-language expression aloud;
+* **form to meaning:** hear the target-language expression and demonstrate its meaning through a picture, an action, an arrangement of objects, or a first-language expression.
 
 They then encounter controlled variation:
 
@@ -245,9 +256,9 @@ Familiar structures are gradually embedded within larger ones:
 
 The curriculum continues by identifying and practising the major hierarchical structures of English.
 
-## 7. Pronunciation and oral retrieval
+## 7. A supplementary principle: pronunciation and oral retrieval
 
-Pronunciation should be established early and practised throughout the method.
+Because the core learning activities are oral, pronunciation should be established early and practised throughout the method. This is a supplementary pedagogical principle. It is not presented as a consequence of hierarchical structure-building or of the progression from specific to abstract patterns.
 
 For spoken languages, learners should ideally form an accurate sound representation before spelling becomes dominant. When learners begin with written forms, they may interpret them through the pronunciation and spelling conventions of languages they already know. Once an inaccurate pronunciation has become habitual, correcting it may be difficult.
 
@@ -261,16 +272,16 @@ A useful sequence is:
 
 Writing does not need to be postponed completely. The principle is that learners should not know an expression only as a written sequence.
 
-Oral quizzes may also strengthen memory. Producing an answer aloud requires retrieval, articulation, and auditory feedback. Repeated oral production may help knowledge become faster and more procedural, although this explanation should be tested empirically.
+Oral quizzes may also strengthen memory. Producing an answer aloud requires retrieval, articulation, and auditory feedback. Repeated oral production may help knowledge become faster and more procedural.
 
-Pronunciation practice should occur at every structural level:
+As learners encounter expressions of different sizes, the spoken form of each expression should be practised:
 
 > the old house
 > near the station
 > the old house near the station
 > I saw the old house near the station.
 
-This may also reinforce awareness of hierarchy because rhythm, stress, and pauses often correspond to phrase boundaries.
+The purpose of this practice is to establish accurate and readily retrievable spoken forms. The proposal does not assume that prosody itself teaches learners the hierarchical structure of an expression.
 
 ## 8. Potential limitations
 
@@ -290,18 +301,20 @@ The proposed English order may also work better for some learners than others. I
 
 ## 9. Summary
 
-The proposed method teaches foreign languages by making their hierarchical grammatical structure visible and practicable.
+The proposed method teaches foreign languages by making the construction of their hierarchical grammatical structures a central object of practice. The bracketed analyses used in this document need not be shown to learners.
 
 Its implementation begins with a practical grammar of the target language. This grammar identifies the major phrase and clause types and explains how smaller units combine into larger ones.
 
-Learners then proceed through:
+Separately, the learning sequence generally proceeds through:
 
 > specific expressions → partially open patterns → abstract structures
 
 In an English application, learners may begin with noun phrases because they need to recognize a layer between a bare lexical noun and its use inside prepositional phrases, verb phrases, and clauses. They then build prepositional phrases, verb phrases, finite clauses, and increasingly complex structures.
 
-Throughout the process, learners connect meaning and form in both directions and practise expressions orally as well as in writing.
+Throughout the process, learners connect meaning and form in both directions. They respond orally to meanings presented through pictures, situations, or their first language, and demonstrate the meanings of target-language expressions that they hear. Written forms may support this oral practice.
 
-The central hypothesis is:
+The two organizing principles can therefore be summarized as follows:
 
-> Foreign-language learning may become more efficient when learners explicitly practise the hierarchical steps through which meaningful expressions are built, while developing abstract grammar gradually from specific and partially open patterns.
+> Foreign-language learning may become more effective when learners practise phrases and clauses as reusable structural units and learn how smaller units combine into larger ones.
+>
+> Independently, instruction may support generalization by proceeding from specific expressions through partially open patterns to abstract grammatical knowledge.
