@@ -127,6 +127,8 @@ This grammar should describe its hierarchical structures, including:
 * restrictions, irregularities, and common extensions;
 * how smaller structures are embedded within larger ones.
 
+Therefore, it is expected that the grammar is in some way a type of phrase structure grammar, even though richer description may be necessary for each layers.
+
 The grammar does not need to resolve every theoretical question about the language. It must be detailed enough to determine what learners should practise and in what sequence.
 
 The general hypothesis may apply cross-linguistically, but each implementation must be language-specific. Languages differ in word order, case marking, agreement, morphology, argument structure, and the ways they organize information. The English sequence described below is therefore only one example.
