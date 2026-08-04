@@ -292,8 +292,9 @@ export default function LearningApp({
   const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
   const selectedVoiceRef = useRef<SpeechSynthesisVoice | null>(null);
   const feedbackTimerRef = useRef<number | null>(null);
-  const feedbackSpeechTimerRef = useRef<number | null>(null);
+  const playbackStartTimerRef = useRef<number | null>(null);
   const playbackFallbackTimerRef = useRef<number | null>(null);
+  const activeUtteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const playbackGenerationRef = useRef(0);
   const questionGenerationRef = useRef(0);
   const questionsRef = useRef<Question[]>([]);
@@ -409,9 +410,18 @@ export default function LearningApp({
 
   const stopPlayback = useCallback(() => {
     playbackGenerationRef.current += 1;
+    if (playbackStartTimerRef.current !== null) {
+      window.clearTimeout(playbackStartTimerRef.current);
+      playbackStartTimerRef.current = null;
+    }
     if (playbackFallbackTimerRef.current !== null) {
       window.clearTimeout(playbackFallbackTimerRef.current);
       playbackFallbackTimerRef.current = null;
+    }
+    if (activeUtteranceRef.current) {
+      activeUtteranceRef.current.onend = null;
+      activeUtteranceRef.current.onerror = null;
+      activeUtteranceRef.current = null;
     }
     window.speechSynthesis?.cancel();
     setPlaybackPurpose(null);
@@ -421,6 +431,10 @@ export default function LearningApp({
     (text: string, purpose: PlaybackPurpose, onEnd?: () => void) => {
       const requestGeneration = playbackGenerationRef.current + 1;
       playbackGenerationRef.current = requestGeneration;
+      if (playbackStartTimerRef.current !== null) {
+        window.clearTimeout(playbackStartTimerRef.current);
+        playbackStartTimerRef.current = null;
+      }
       if (playbackFallbackTimerRef.current !== null) {
         window.clearTimeout(playbackFallbackTimerRef.current);
         playbackFallbackTimerRef.current = null;
@@ -432,7 +446,13 @@ export default function LearningApp({
         return;
       }
 
-      window.speechSynthesis.cancel();
+      if (activeUtteranceRef.current) {
+        activeUtteranceRef.current.onend = null;
+        activeUtteranceRef.current.onerror = null;
+        activeUtteranceRef.current = null;
+      }
+      const synthesis = window.speechSynthesis;
+      synthesis.cancel();
       setPlaybackPurpose(purpose);
       const utterance = new SpeechSynthesisUtterance(text);
       const voice = selectedVoiceRef.current;
@@ -442,25 +462,54 @@ export default function LearningApp({
       utterance.pitch = 1;
 
       let completed = false;
-      const complete = () => {
+      const complete = (cancelPendingSpeech = false) => {
         if (completed || playbackGenerationRef.current !== requestGeneration) {
           return;
         }
         completed = true;
+        if (playbackStartTimerRef.current !== null) {
+          window.clearTimeout(playbackStartTimerRef.current);
+          playbackStartTimerRef.current = null;
+        }
         if (playbackFallbackTimerRef.current !== null) {
           window.clearTimeout(playbackFallbackTimerRef.current);
           playbackFallbackTimerRef.current = null;
         }
+        if (activeUtteranceRef.current === utterance) {
+          activeUtteranceRef.current = null;
+        }
+        utterance.onend = null;
+        utterance.onerror = null;
+        if (cancelPendingSpeech) {
+          synthesis.cancel();
+        }
         setPlaybackPurpose(null);
         onEnd?.();
       };
-      utterance.onend = complete;
-      utterance.onerror = complete;
-      playbackFallbackTimerRef.current = window.setTimeout(
-        complete,
-        Math.min(Math.max(text.length * 280, 2200), 5200),
-      );
-      window.speechSynthesis.speak(utterance);
+      utterance.onend = () => complete();
+      utterance.onerror = () => complete(true);
+
+      // Chrome/macOS can leave a remote voice request alive briefly after cancel().
+      // Flush once, wait for that cancellation to settle, then enqueue only the
+      // utterance that still belongs to the current playback generation.
+      playbackStartTimerRef.current = window.setTimeout(() => {
+        if (playbackGenerationRef.current !== requestGeneration) {
+          return;
+        }
+        synthesis.cancel();
+        playbackStartTimerRef.current = window.setTimeout(() => {
+          if (playbackGenerationRef.current !== requestGeneration) {
+            return;
+          }
+          playbackStartTimerRef.current = null;
+          activeUtteranceRef.current = utterance;
+          synthesis.speak(utterance);
+          playbackFallbackTimerRef.current = window.setTimeout(
+            () => complete(true),
+            Math.min(Math.max(text.length * 280, 2200), 5200),
+          );
+        }, 40);
+      }, 60);
     },
     [course.speechLocale],
   );
@@ -469,10 +518,6 @@ export default function LearningApp({
     if (feedbackTimerRef.current !== null) {
       window.clearTimeout(feedbackTimerRef.current);
       feedbackTimerRef.current = null;
-    }
-    if (feedbackSpeechTimerRef.current !== null) {
-      window.clearTimeout(feedbackSpeechTimerRef.current);
-      feedbackSpeechTimerRef.current = null;
     }
   }, []);
 
@@ -605,19 +650,10 @@ export default function LearningApp({
         feedbackTimerRef.current = null;
         continueWhenReady();
       }, correct ? 850 : 1350);
-      feedbackSpeechTimerRef.current = window.setTimeout(() => {
-        feedbackSpeechTimerRef.current = null;
-        speechDone = true;
-        continueWhenReady();
-      }, Math.min(Math.max(currentQuestion.item.spokenForm.length * 320, 2400), 5400));
       playSpeech(
         currentQuestion.item.spokenForm,
         "feedback",
         () => {
-          if (feedbackSpeechTimerRef.current !== null) {
-            window.clearTimeout(feedbackSpeechTimerRef.current);
-            feedbackSpeechTimerRef.current = null;
-          }
           speechDone = true;
           continueWhenReady();
         },
@@ -634,6 +670,7 @@ export default function LearningApp({
       return;
     }
     stopRecognition();
+    stopPlayback();
     const Recognition = getSpeechRecognition();
     if (!Recognition) {
       setRecognitionStatus("unsupported");
@@ -705,7 +742,7 @@ export default function LearningApp({
       recognitionRef.current = null;
       setRecognitionStatus("no-match");
     }
-  }, [answered, course.speechLocale, course.targetLocale, currentQuestion, finishAttempt, stopRecognition]);
+  }, [answered, course.speechLocale, course.targetLocale, currentQuestion, finishAttempt, stopPlayback, stopRecognition]);
 
   useEffect(() => {
     if (
@@ -751,6 +788,7 @@ export default function LearningApp({
     let cancelled = false;
     let recognition: SpeechRecognitionLike | null = null;
     let pauseTimer: number | null = null;
+    let listeningStartTimer: number | null = null;
     let recognitionTimer: number | null = null;
     let completedRepeats = 0;
 
@@ -801,70 +839,80 @@ export default function LearningApp({
       if (cancelled) {
         return;
       }
-      setDrillPhase("listening");
-      const Recognition = getSpeechRecognition();
-      if (!Recognition) {
-        setRecognitionStatus("unsupported");
-        setDrillPhase("unsupported");
-        recognitionTimer = window.setTimeout(() => completeRound("unsupported"), 1700);
-        return;
-      }
-      const activeRecognition = new Recognition();
-      recognition = activeRecognition;
-      activeRecognition.lang = course.speechLocale;
-      activeRecognition.interimResults = true;
-      activeRecognition.maxAlternatives = 3;
-      recognitionRef.current = activeRecognition;
-      let latestAlternatives: string[] = [];
-      setRecognitionStatus("listening");
-      setHeard("");
-      let roundFinished = false;
-      const finishOnce = (status: RecognitionStatus, transcript = "") => {
-        if (roundFinished) {
+      stopPlayback();
+      listeningStartTimer = window.setTimeout(() => {
+        listeningStartTimer = null;
+        if (cancelled) {
           return;
         }
-        roundFinished = true;
-        completeRound(status, transcript);
-      };
-      const finishFromLatestRecognition = () => {
-        if (cancelled || recognitionRef.current !== activeRecognition) {
+        // Cancel again at the phase boundary so a delayed remote synthesis
+        // request can never leak into the user's microphone window.
+        stopPlayback();
+        const Recognition = getSpeechRecognition();
+        if (!Recognition) {
+          setRecognitionStatus("unsupported");
+          setDrillPhase("unsupported");
+          recognitionTimer = window.setTimeout(() => completeRound("unsupported"), 1700);
           return;
         }
-        const decision = getRecognitionDecision(
-          latestAlternatives,
-          currentQuestion.item,
-          course.targetLocale,
-        );
-        finishOnce(
-          decision ? (decision.accepted ? "correct" : "miss") : "no-match",
-          decision?.transcript ?? "",
-        );
-      };
-      activeRecognition.onresult = (event) => {
-        if (cancelled || recognitionRef.current !== activeRecognition) {
-          return;
+        const activeRecognition = new Recognition();
+        recognition = activeRecognition;
+        activeRecognition.lang = course.speechLocale;
+        activeRecognition.interimResults = true;
+        activeRecognition.maxAlternatives = 3;
+        recognitionRef.current = activeRecognition;
+        let latestAlternatives: string[] = [];
+        setDrillPhase("listening");
+        setRecognitionStatus("listening");
+        setHeard("");
+        let roundFinished = false;
+        const finishOnce = (status: RecognitionStatus, transcript = "") => {
+          if (roundFinished) {
+            return;
+          }
+          roundFinished = true;
+          completeRound(status, transcript);
+        };
+        const finishFromLatestRecognition = () => {
+          if (cancelled || recognitionRef.current !== activeRecognition) {
+            return;
+          }
+          const decision = getRecognitionDecision(
+            latestAlternatives,
+            currentQuestion.item,
+            course.targetLocale,
+          );
+          finishOnce(
+            decision ? (decision.accepted ? "correct" : "miss") : "no-match",
+            decision?.transcript ?? "",
+          );
+        };
+        activeRecognition.onresult = (event) => {
+          if (cancelled || recognitionRef.current !== activeRecognition) {
+            return;
+          }
+          const result = event.results[event.results.length - 1];
+          latestAlternatives = getRecognitionAlternatives(result);
+          const leadingTranscript = latestAlternatives[0] ?? "";
+          setHeard(leadingTranscript);
+          const decision = getRecognitionDecision(
+            latestAlternatives,
+            currentQuestion.item,
+            course.targetLocale,
+          );
+          if (decision?.accepted || result?.isFinal) {
+            finishFromLatestRecognition();
+          }
+        };
+        activeRecognition.onerror = finishFromLatestRecognition;
+        activeRecognition.onend = finishFromLatestRecognition;
+        recognitionTimer = window.setTimeout(finishFromLatestRecognition, 4500);
+        try {
+          activeRecognition.start();
+        } catch {
+          finishOnce("no-match");
         }
-        const result = event.results[event.results.length - 1];
-        latestAlternatives = getRecognitionAlternatives(result);
-        const leadingTranscript = latestAlternatives[0] ?? "";
-        setHeard(leadingTranscript);
-        const decision = getRecognitionDecision(
-          latestAlternatives,
-          currentQuestion.item,
-          course.targetLocale,
-        );
-        if (decision?.accepted || result?.isFinal) {
-          finishFromLatestRecognition();
-        }
-      };
-      activeRecognition.onerror = finishFromLatestRecognition;
-      activeRecognition.onend = finishFromLatestRecognition;
-      recognitionTimer = window.setTimeout(finishFromLatestRecognition, 4500);
-      try {
-        activeRecognition.start();
-      } catch {
-        finishOnce("no-match");
-      }
+      }, 140);
     };
 
     function runRound() {
@@ -886,6 +934,9 @@ export default function LearningApp({
       cancelled = true;
       if (pauseTimer !== null) {
         window.clearTimeout(pauseTimer);
+      }
+      if (listeningStartTimer !== null) {
+        window.clearTimeout(listeningStartTimer);
       }
       if (recognitionTimer !== null) {
         window.clearTimeout(recognitionTimer);
