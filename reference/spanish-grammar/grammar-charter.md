@@ -1,7 +1,9 @@
 # Spanish Grammar Description Charter
 
-**Status:** Active initial charter  
-**Version:** 0.1  
+**Status:** Active initial charter
+
+**Version:** 0.1
+
 **Scope:** Grammar description only; curriculum and implementation are downstream work
 
 ## 1. Purpose
@@ -27,6 +29,8 @@ Learners will practise meaningful Spanish forms. They will not be expected to re
 ## 3. Coverage authority and supporting evidence
 
 The morphology and syntax volumes of the *Nueva gramática de la lengua española* (NGLE) are the primary authority for defining the coverage of the grammar description. Their complete contents are initially represented, without a project taxonomy, in the [source-faithful coverage maps](./coverage-maps/README.md).
+
+The NGLE's own analytical distinctions have been studied separately in the [NGLE Descriptive Architecture Report](./ngle-descriptive-architecture-report.md). That report records source entities, relations, terminology, and competing analyses; it does not define the project's grammar schema.
 
 Other authoritative references may supplement the NGLE for purposes such as terminology, second-language relevance, lexical properties, verb valency, frequency, register, and geographical distribution. Supplementary sources do not silently replace or override the NGLE. Any disagreement or difference in analytical scope must be recorded.
 
