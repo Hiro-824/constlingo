@@ -1,0 +1,630 @@
+source	section_id	parent_section_id	source_title	coverage_status	notes	derived_record_ids
+NGLE-ONLINE	ngle-online		Nueva gramática de la lengua española	unreviewed		
+NGLE-ONLINE	cuestiones-generales	ngle-online	Cuestiones generales	unreviewed		
+NGLE-ONLINE	morfologia	ngle-online	Morfología	unreviewed		
+NGLE-ONLINE	sintaxis	ngle-online	Sintaxis	unreviewed		
+NGLE-ONLINE	1	cuestiones-generales	Partes de la gramática. Unidades fundamentales del análisis gramatical	unreviewed		
+NGLE-ONLINE	1.1	1	Introducción	unreviewed		
+NGLE-ONLINE	1.2	1	Clases de gramática. Características generales de esta obra	unreviewed		
+NGLE-ONLINE	1.3	1	Unidades y niveles de análisis. Primera aproximación	unreviewed		
+NGLE-ONLINE	1.4	1	Unidades fonéticas y fonológicas	unreviewed		
+NGLE-ONLINE	1.5	1	Unidades morfológicas (I). Morfología flexiva y morfología léxica	unreviewed		
+NGLE-ONLINE	1.6	1	Unidades morfológicas (II). Morfología sincrónica y diacrónica. Opacidad y transparencia	unreviewed		
+NGLE-ONLINE	1.7	1	Unidades morfológicas (III). Sus relaciones con las fonológicas	unreviewed		
+NGLE-ONLINE	1.8	1	Unidades morfológicas (IV). Sus relaciones con las sintácticas	unreviewed		
+NGLE-ONLINE	1.9	1	Unidades sintácticas (I). Clases de palabras. Criterios de clasificación	unreviewed		
+NGLE-ONLINE	1.10	1	Unidades sintácticas (II). Expresiones lexicalizadas y semilexicalizadas	unreviewed		
+NGLE-ONLINE	1.11	1	Unidades sintácticas (III). Grupos sintácticos	unreviewed		
+NGLE-ONLINE	1.12	1	Unidades sintácticas (IV). Funciones	unreviewed		
+NGLE-ONLINE	1.13	1	Unidades sintácticas (V). Oraciones y enunciados	unreviewed		
+NGLE-ONLINE	2	morfologia	El género	unreviewed		
+NGLE-ONLINE	2.1	2	Definición. Clases de género. Sus características fundamentales	unreviewed		
+NGLE-ONLINE	2.2	2	El género no marcado. Empleo genérico del masculino	unreviewed		
+NGLE-ONLINE	2.3	2	Marcas de género	unreviewed		
+NGLE-ONLINE	2.4	2	Sustantivos comunes y ambiguos en cuanto al género. Consecuencias sintácticas de la distinción	unreviewed		
+NGLE-ONLINE	2.5	2	Características de los sustantivos comunes en cuanto al género según su terminación	unreviewed		
+NGLE-ONLINE	2.6	2	Moción genérica y sustantivos comunes en cuanto al género. Profesiones, títulos y actividades	unreviewed		
+NGLE-ONLINE	2.7	2	Otros sustantivos comunes en cuanto al género. Usos figurados y atributos nominales	unreviewed		
+NGLE-ONLINE	2.8	2	Sustantivos ambiguos en cuanto al género	unreviewed		
+NGLE-ONLINE	2.9	2	Los sustantivos epicenos. Alternancias con otras clases de nombres	unreviewed		
+NGLE-ONLINE	2.10	2	El género de los sustantivos que designan seres inanimados	unreviewed		
+NGLE-ONLINE	3	morfologia	El número	unreviewed		
+NGLE-ONLINE	3.1	3	Introducción. Manifestaciones gramaticales del número	unreviewed		
+NGLE-ONLINE	3.2	3	La formación del plural. Plurales en -s y plurales en -es. Reglas generales	unreviewed		
+NGLE-ONLINE	3.3	3	El plural de las voces de origen no castellano (I). Latinismos	unreviewed		
+NGLE-ONLINE	3.4	3	El plural de las voces de origen no castellano (II). Préstamos de otras lenguas	unreviewed		
+NGLE-ONLINE	3.5	3	El plural de los compuestos y las locuciones	unreviewed		
+NGLE-ONLINE	3.6	3	El plural de los nombres propios	unreviewed		
+NGLE-ONLINE	3.7	3	El plural de abreviaturas, siglas, acrónimos y acortamientos	unreviewed		
+NGLE-ONLINE	3.8	3	Preferencias morfológicas o léxicas por el singular o por el plural	unreviewed		
+NGLE-ONLINE	4	morfologia	La flexión verbal	unreviewed		
+NGLE-ONLINE	4.1	4	Informaciones morfológicas presentes en las formas verbales (I). Distinciones fundamentales	unreviewed		
+NGLE-ONLINE	4.2	4	Informaciones morfológicas presentes en las formas verbales (II). Problemas de segmentación	unreviewed		
+NGLE-ONLINE	4.3	4	Distribución de los morfemas flexivos (I). La vocal temática	unreviewed		
+NGLE-ONLINE	4.4	4	Distribución de los morfemas flexivos (II). Persona y número	unreviewed		
+NGLE-ONLINE	4.5	4	Distribución de los morfemas flexivos (III). Tiempo y modo	unreviewed		
+NGLE-ONLINE	4.6	4	La conjugación regular (I). Características generales	unreviewed		
+NGLE-ONLINE	4.7	4	La conjugación regular (II). Las variantes del voseo	unreviewed		
+NGLE-ONLINE	4.8	4	El acento en las formas verbales	unreviewed		
+NGLE-ONLINE	4.9	4	Verbos irregulares (I). Verbos vocálicos	unreviewed		
+NGLE-ONLINE	4.10	4	Verbos irregulares (II). Verbos con alternancia vocálica	unreviewed		
+NGLE-ONLINE	4.11	4	Verbos irregulares (III). Verbos con alternancia consonántica. Su concurrencia con las vocálicas	unreviewed		
+NGLE-ONLINE	4.12	4	Verbos irregulares (IV). Pretéritos fuertes y participios irregulares	unreviewed		
+NGLE-ONLINE	4.13	4	Verbos irregulares (V). Verbos de conjugación especial: haber, ser, ir, estar, dar. Raíces verbales supletivas	unreviewed		
+NGLE-ONLINE	4.14	4	Verbos irregulares (VI). Verbos defectivos	unreviewed		
+NGLE-ONLINE	4.15	4	Modelos de conjugación	unreviewed		
+NGLE-ONLINE	4.16	4	Índice alfabético de verbos irregulares	unreviewed		
+NGLE-ONLINE	5	morfologia	La derivación nominal (I). Nombres de acción y efecto	unreviewed		
+NGLE-ONLINE	5.1	5	Introducción. Aspectos generales de la derivación nominal	unreviewed		
+NGLE-ONLINE	5.2	5	El sufijo -ción y sus variantes (I). Aspectos morfofonológicos	unreviewed		
+NGLE-ONLINE	5.3	5	El sufijo -ción y sus variantes (II). Aspectos semánticos y dialectales	unreviewed		
+NGLE-ONLINE	5.4	5	Los sufijos -miento y -mento	unreviewed		
+NGLE-ONLINE	5.5	5	Los sufijos -(a)je, -dura y sus variantes	unreviewed		
+NGLE-ONLINE	5.6	5	Los sufijos -a, -e, -o (I). Aspectos morfofonológicos, semánticos y dialectales	unreviewed		
+NGLE-ONLINE	5.7	5	Los sufijos -a, -e, -o (II). La dirección del proceso derivativo. Posible existencia de un sufijo nominal nulo	unreviewed		
+NGLE-ONLINE	5.8	5	Derivados participiales. Analogías y diferencias con otros sustantivos	unreviewed		
+NGLE-ONLINE	5.9	5	Los sufijos -ada, -ado, -ido, -ón y -era	unreviewed		
+NGLE-ONLINE	5.10	5	El sufijo -azo	unreviewed		
+NGLE-ONLINE	5.11	5	Otros derivados. Alternancias sufijales	unreviewed		
+NGLE-ONLINE	6	morfologia	La derivación nominal (II). Otros derivados	unreviewed		
+NGLE-ONLINE	6.1	6	Nombres de cualidad, estado y condición (I). El sufijo -dad y sus variantes	unreviewed		
+NGLE-ONLINE	6.2	6	Nombres de cualidad, estado y condición (II). Los sufijos -ez, -eza, -icia, -icie, -ura, -or, -era y sus variantes	unreviewed		
+NGLE-ONLINE	6.3	6	Nombres de cualidad, estado y condición (III). Los sufijos -ía, -ería, -ia, -ncia y sus variantes	unreviewed		
+NGLE-ONLINE	6.4	6	Nombres de cualidad, estado y condición (IV). El sufijo -ismo	unreviewed		
+NGLE-ONLINE	6.5	6	Nombres de cualidad, estado y condición (V). Otros sufijos	unreviewed		
+NGLE-ONLINE	6.6	6	Nombres de persona, instrumento y lugar (I). El sufijo -dor / -dora y sus variantes. Aspectos morfofonológicos	unreviewed		
+NGLE-ONLINE	6.7	6	Nombres de persona, instrumento y lugar (II). El sufijo -dor / -dora y sus variantes. Aspectos semánticos y dialectales	unreviewed		
+NGLE-ONLINE	6.8	6	Nombres de persona, instrumento y lugar (III). Los sufijos -dero / -dera, -ero / -era, -torio / -toria, -ario / -aria y sus variantes	unreviewed		
+NGLE-ONLINE	6.9	6	Nombres de persona, instrumento y lugar (IV). El sufijo -ista	unreviewed		
+NGLE-ONLINE	6.10	6	Nombres de persona, instrumento y lugar (V). El sufijo -nte	unreviewed		
+NGLE-ONLINE	6.11	6	Nombres de persona, instrumento y lugar (VI). Otros derivados	unreviewed		
+NGLE-ONLINE	6.12	6	Nombres de lugar, tiempo y conjunto (I). Los sufijos -ía, -ería, -erío, -al, -ar y sus variantes. Sufijos vocálicos	unreviewed		
+NGLE-ONLINE	6.13	6	Nombres de lugar, tiempo y conjunto (II). Los sufijos -aje, -ado, -ada, -azgo, -ato. Otros derivados nominales	unreviewed		
+NGLE-ONLINE	7	morfologia	La derivación adjetival y adverbial	unreviewed		
+NGLE-ONLINE	7.1	7	Introducción. Clases de adjetivos derivados. Sincronía y diacronía en la derivación adjetival	unreviewed		
+NGLE-ONLINE	7.2	7	Alternancias morfológicas. Otros aspectos morfofonológicos de la derivación adjetival	unreviewed		
+NGLE-ONLINE	7.3	7	Sufijos característicos de los adjetivos calificativos (I). El sufijo -oso / -osa	unreviewed		
+NGLE-ONLINE	7.4	7	Sufijos característicos de los adjetivos calificativos (II). Los sufijos de grado extremo -ísimo / -ísima, -érrimo / -érrima	unreviewed		
+NGLE-ONLINE	7.5	7	Sufijos característicos de los adjetivos calificativos (III). Los sufijos -ento / -enta, -izo / -iza, -udo / -uda, -ón / -ona, -uno / -una y sus variantes	unreviewed		
+NGLE-ONLINE	7.6	7	Sufijos característicos de los adjetivos de relación (I). Adjetivos gentilicios. Otros usos de los sufijos que los forman	unreviewed		
+NGLE-ONLINE	7.7	7	Sufijos característicos de los adjetivos de relación (II). Derivados adjetivales esdrújulos. Los sufijos -ista, -al y -ar. Interpretaciones relacionales y calificativas de estos adjetivos	unreviewed		
+NGLE-ONLINE	7.8	7	Sufijos característicos de los adjetivos de relación (III). Otros sufijos. Interpretaciones relacionales y calificativas de los derivados que forman	unreviewed		
+NGLE-ONLINE	7.9	7	Sufijos de sentido activo o pasivo (I). Los sufijos -dor / -dora, -dero / -dera y sus variantes	unreviewed		
+NGLE-ONLINE	7.10	7	Sufijos de sentido activo o pasivo (II). El sufijo -ble	unreviewed		
+NGLE-ONLINE	7.11	7	Sufijos de sentido activo o pasivo (III). Los sufijos -dizo / -diza, -nte y sus variantes	unreviewed		
+NGLE-ONLINE	7.12	7	Otros sufijos adjetivales	unreviewed		
+NGLE-ONLINE	7.13	7	Dobletes morfológicos. Otras alternancias entre derivados adjetivales	unreviewed		
+NGLE-ONLINE	7.14	7	La derivación adverbial. Propiedades morfológicas de los adverbios en -mente	unreviewed		
+NGLE-ONLINE	8	morfologia	La derivación verbal. La parasíntesis	unreviewed		
+NGLE-ONLINE	8.1	8	Introducción. Clases morfológicas de verbos derivados	unreviewed		
+NGLE-ONLINE	8.2	8	Sincronía y diacronía en la derivación verbal. Principales alternancias morfofonológicas	unreviewed		
+NGLE-ONLINE	8.3	8	Verbos derivados en -ear y sus variantes (I). Sus bases léxicas	unreviewed		
+NGLE-ONLINE	8.4	8	Verbos derivados en -ear y sus variantes (II). Usos traslaticios	unreviewed		
+NGLE-ONLINE	8.5	8	Verbos derivados en -ear y sus variantes (III). Alternancias verbales	unreviewed		
+NGLE-ONLINE	8.6	8	Verbos derivados en -ar y sus variantes (I). Formas no parasintéticas	unreviewed		
+NGLE-ONLINE	8.7	8	Verbos derivados en -ar y sus variantes (II). Formas parasintéticas. Los tipos a-A-ar y a-N-a	unreviewed		
+NGLE-ONLINE	8.8	8	Verbos derivados en -ar y sus variantes (III). Formas parasintéticas. Los tipos en-A-ar y en-N-ar. Otras pautas morfológicas	unreviewed		
+NGLE-ONLINE	8.9	8	Verbos derivados en -ecer y sus variantes	unreviewed		
+NGLE-ONLINE	8.10	8	Verbos derivados en -izar, -ificar y sus variantes. Otros afijos verbales	unreviewed		
+NGLE-ONLINE	9	morfologia	La derivación apreciativa	unreviewed		
+NGLE-ONLINE	9.1	9	Introducción. Características generales de los afijos apreciativos	unreviewed		
+NGLE-ONLINE	9.2	9	Sufijos apreciativos y clases de palabras	unreviewed		
+NGLE-ONLINE	9.3	9	La sufijación apreciativa y el diccionario	unreviewed		
+NGLE-ONLINE	9.4	9	Formación de los diminutivos (I). Segmentación de los derivados	unreviewed		
+NGLE-ONLINE	9.5	9	Formación de los diminutivos (II). Distribución de variantes	unreviewed		
+NGLE-ONLINE	9.6	9	Interpretaciones de los diminutivos	unreviewed		
+NGLE-ONLINE	9.7	9	Sufijos aumentativos y despectivos	unreviewed		
+NGLE-ONLINE	10	morfologia	La prefijación	unreviewed		
+NGLE-ONLINE	10.1	10	El concepto de prefijación. Sus límites	unreviewed		
+NGLE-ONLINE	10.2	10	Clases de prefijos	unreviewed		
+NGLE-ONLINE	10.3	10	Propiedades fonológicas y morfológicas de los prefijos	unreviewed		
+NGLE-ONLINE	10.4	10	Prefijación y sintaxis	unreviewed		
+NGLE-ONLINE	10.5	10	Prefijos de sentido locativo	unreviewed		
+NGLE-ONLINE	10.6	10	Prefijos de sentido temporal y aspectual	unreviewed		
+NGLE-ONLINE	10.7	10	Prefijos de incidencia argumental. Prefijos reflexivos, recíprocos y colectivos	unreviewed		
+NGLE-ONLINE	10.8	10	Prefijos cuantificativos	unreviewed		
+NGLE-ONLINE	10.9	10	Prefijos gradativos y escalares	unreviewed		
+NGLE-ONLINE	10.10	10	Prefijos negativos	unreviewed		
+NGLE-ONLINE	10.11	10	Prefijos opositivos y de actitud favorable	unreviewed		
+NGLE-ONLINE	10.12	10	Prefijos adjetivales	unreviewed		
+NGLE-ONLINE	11	morfologia	La composición	unreviewed		
+NGLE-ONLINE	11.1	11	El concepto de composición. Clases de compuestos. Sus límites con las estructuras no compositivas	unreviewed		
+NGLE-ONLINE	11.2	11	Composición y sintaxis	unreviewed		
+NGLE-ONLINE	11.3	11	Otros aspectos de la estructura de las palabras compuestas	unreviewed		
+NGLE-ONLINE	11.4	11	Propiedades fonológicas de las palabras compuestas	unreviewed		
+NGLE-ONLINE	11.5	11	Compuestos de doble sustantivo	unreviewed		
+NGLE-ONLINE	11.6	11	Compuestos de doble adjetivo	unreviewed		
+NGLE-ONLINE	11.7	11	Compuestos de nombre y adjetivo	unreviewed		
+NGLE-ONLINE	11.8	11	Compuestos verbonominales	unreviewed		
+NGLE-ONLINE	11.9	11	Otras clases de compuestos	unreviewed		
+NGLE-ONLINE	11.10	11	Bases compositivas cultas. La composición neoclásica	unreviewed		
+NGLE-ONLINE	12	sintaxis	El sustantivo y el grupo nominal	unreviewed		
+NGLE-ONLINE	12.1	12	Introducción. Principales clases de sustantivos	unreviewed		
+NGLE-ONLINE	12.2	12	Sustantivos contables y no contables (I). Sus propiedades gramaticales	unreviewed		
+NGLE-ONLINE	12.3	12	Sustantivos contables y no contables (II). Subclases. Cambios de categoría	unreviewed		
+NGLE-ONLINE	12.4	12	Sustantivos individuales y colectivos	unreviewed		
+NGLE-ONLINE	12.5	12	Nombres cuantificativos y clasificativos. Sus propiedades gramaticales	unreviewed		
+NGLE-ONLINE	12.6	12	Aspectos léxicos y semánticos de los nombres cuantificativos	unreviewed		
+NGLE-ONLINE	12.7	12	El nombre propio (I). Sus características gramaticales. Nombres propios con determinante	unreviewed		
+NGLE-ONLINE	12.8	12	El nombre propio (II). Otros aspectos de la oposición «nombre propio – nombre común». Clases de nombres propios	unreviewed		
+NGLE-ONLINE	12.9	12	Componentes del grupo nominal. Locuciones nominales frente a grupos nominales	unreviewed		
+NGLE-ONLINE	12.10	12	Los complementos del nombre	unreviewed		
+NGLE-ONLINE	12.11	12	Las nominalizaciones (I). Sus clases. Nominalizaciones de acción y efecto	unreviewed		
+NGLE-ONLINE	12.12	12	Las nominalizaciones (II). Nominalizaciones de cualidad, de agente y de estado	unreviewed		
+NGLE-ONLINE	12.13	12	La aposición (I). Las aposiciones especificativas. Sus clases. Presencia y ausencia de la preposición de	unreviewed		
+NGLE-ONLINE	12.14	12	La aposición (II). Aposiciones de sentido enfático. Los tipos el asno de Sancho, una maravilla de película y un prodigio de vitalidad	unreviewed		
+NGLE-ONLINE	12.15	12	La aposición (III). La aposición explicativa	unreviewed		
+NGLE-ONLINE	12.16	12	Posición relativa de los modificadores del sustantivo	unreviewed		
+NGLE-ONLINE	13	sintaxis	El adjetivo y el grupo adjetival	unreviewed		
+NGLE-ONLINE	13.1	13	Introducción. Características generales de los adjetivos	unreviewed		
+NGLE-ONLINE	13.2	13	Clases fundamentales de adjetivos (I). Restricción y gradación	unreviewed		
+NGLE-ONLINE	13.3	13	Clases fundamentales de adjetivos (II). Adjetivos de grado extremo	unreviewed		
+NGLE-ONLINE	13.4	13	Clases fundamentales de adjetivos (III). Otros criterios de clasificación	unreviewed		
+NGLE-ONLINE	13.5	13	Repercusiones sintácticas de las propiedades morfológicas de los adjetivos	unreviewed		
+NGLE-ONLINE	13.6	13	Adjetivo y sustantivo (I). Diferencias gramaticales. Sustantivos adjetivados	unreviewed		
+NGLE-ONLINE	13.7	13	Adjetivo y sustantivo (II). Adjetivos sustantivados	unreviewed		
+NGLE-ONLINE	13.8	13	Adjetivo y adverbio	unreviewed		
+NGLE-ONLINE	13.9	13	Adjetivos, determinantes y pronombres (I). Numeroso, diverso, vario. Otros adjetivos con propiedades cuantificativas	unreviewed		
+NGLE-ONLINE	13.10	13	Adjetivos, determinantes y pronombres (II). Cierto, determinado, semejante, otro, demás	unreviewed		
+NGLE-ONLINE	13.11	13	Adjetivos, determinantes y pronombres (III). Mismo y propio	unreviewed		
+NGLE-ONLINE	13.12	13	Los adjetivos de relación	unreviewed		
+NGLE-ONLINE	13.13	13	Posición del adjetivo en el grupo nominal (I). Distinciones fundamentales	unreviewed		
+NGLE-ONLINE	13.14	13	Posición del adjetivo en el grupo nominal (II). Aspectos léxicos. Otros factores	unreviewed		
+NGLE-ONLINE	13.15	13	Posición del adjetivo en el grupo nominal (III). Concurrencia de varios adjetivos	unreviewed		
+NGLE-ONLINE	13.16	13	El grupo adjetival (I). Su estructura. Los modificadores del adjetivo	unreviewed		
+NGLE-ONLINE	13.17	13	El grupo adjetival (II). Los complementos del adjetivo. Otros aspectos de la estructura del grupo adjetival	unreviewed		
+NGLE-ONLINE	13.18	13	Las locuciones adjetivas	unreviewed		
+NGLE-ONLINE	14	sintaxis	El artículo (I). Clases de artículos. Usos del artículo determinado	unreviewed		
+NGLE-ONLINE	14.1	14	Definición. Clases de artículos. Sus propiedades fundamentales	unreviewed		
+NGLE-ONLINE	14.2	14	Formas del artículo determinado (I). Distribución de variantes	unreviewed		
+NGLE-ONLINE	14.3	14	Formas del artículo determinado (II). El artículo en las construcciones contractas	unreviewed		
+NGLE-ONLINE	14.4	14	La información consabida y el concepto de unicidad	unreviewed		
+NGLE-ONLINE	14.5	14	Anáfora directa y anáfora asociativa	unreviewed		
+NGLE-ONLINE	14.6	14	Otras características de los usos anafóricos. Usos endofóricos del artículo	unreviewed		
+NGLE-ONLINE	14.7	14	Relaciones de inclusión y pertenencia. El artículo determinado con valor de posesivo	unreviewed		
+NGLE-ONLINE	14.8	14	Usos deícticos del artículo determinado. El artículo en las expresiones temporales	unreviewed		
+NGLE-ONLINE	14.9	14	El artículo neutro lo (I). Su interpretación semántica	unreviewed		
+NGLE-ONLINE	14.10	14	El artículo neutro lo (II). Contextos anafóricos. Otros usos de lo	unreviewed		
+NGLE-ONLINE	15	sintaxis	El artículo (II). El artículo indeterminado. Artículos e indefinidos. Elipsis, anáfora, genericidad y especificidad. La ausencia de artículo	unreviewed		
+NGLE-ONLINE	15.1	15	Formas del artículo indeterminado	unreviewed		
+NGLE-ONLINE	15.2	15	La alternancia un ~ uno. Artículos y pronombres indefinidos	unreviewed		
+NGLE-ONLINE	15.3	15	Relaciones entre artículo indefinido y numeral	unreviewed		
+NGLE-ONLINE	15.4	15	Anáfora y primera mención	unreviewed		
+NGLE-ONLINE	15.5	15	Usos evaluativos y enfáticos del artículo indeterminado	unreviewed		
+NGLE-ONLINE	15.6	15	Grupos nominales definidos e indefinidos en contextos presentativos o existenciales	unreviewed		
+NGLE-ONLINE	15.7	15	Elipsis y anáfora en los grupos nominales introducidos por determinantes	unreviewed		
+NGLE-ONLINE	15.8	15	Uso genérico del artículo. La genericidad y la relación «artículo – pronombre»	unreviewed		
+NGLE-ONLINE	15.9	15	Especificidad e inespecificidad (I). Factores internos al grupo nominal	unreviewed		
+NGLE-ONLINE	15.10	15	Especificidad e inespecificidad (II). Factores externos al grupo nominal	unreviewed		
+NGLE-ONLINE	15.11	15	La ausencia del artículo (I). Constitución e interpretación semántica de los grupos nominales sin determinante	unreviewed		
+NGLE-ONLINE	15.12	15	La ausencia del artículo (II). Posición sintáctica de los sustantivos sin determinante	unreviewed		
+NGLE-ONLINE	15.13	15	La ausencia del artículo (III). Otros factores. Aspectos fraseológicos y discursivos	unreviewed		
+NGLE-ONLINE	16	sintaxis	El pronombre personal. La correferencia. Las formas de tratamiento	unreviewed		
+NGLE-ONLINE	16.1	16	El pronombre personal y el concepto de persona	unreviewed		
+NGLE-ONLINE	16.2	16	Género y número en los pronombres personales	unreviewed		
+NGLE-ONLINE	16.3	16	Otras distinciones morfológicas en los pronombres personales	unreviewed		
+NGLE-ONLINE	16.4	16	Los pronombres reflexivos	unreviewed		
+NGLE-ONLINE	16.5	16	Los pronombres recíprocos	unreviewed		
+NGLE-ONLINE	16.6	16	La correferencia y sus manifestaciones. Relaciones anafóricas y catafóricas	unreviewed		
+NGLE-ONLINE	16.7	16	Sintaxis de los pronombres átonos. Pronombres proclíticos y enclíticos	unreviewed		
+NGLE-ONLINE	16.8	16	Variación en los pronombres átonos de tercera persona (I). Leísmo, laísmo y loísmo. Características del leísmo	unreviewed		
+NGLE-ONLINE	16.9	16	Variación en los pronombres átonos de tercera persona (II). Preferencias léxicas en las alternancias de leísmo	unreviewed		
+NGLE-ONLINE	16.10	16	Variación en los pronombres átonos de tercera persona (III). El laísmo y el loísmo	unreviewed		
+NGLE-ONLINE	16.11	16	Secuencias de pronombres átonos	unreviewed		
+NGLE-ONLINE	16.12	16	Alternancias en la posición de los pronombres átonos	unreviewed		
+NGLE-ONLINE	16.13	16	Posición de los pronombres átonos en estructuras complejas	unreviewed		
+NGLE-ONLINE	16.14	16	Duplicación de los pronombres átonos	unreviewed		
+NGLE-ONLINE	16.15	16	Las formas de tratamiento (I). Trato de confianza y trato de respeto	unreviewed		
+NGLE-ONLINE	16.16	16	Las formas de tratamiento (II). Sustantivos y grupos nominales	unreviewed		
+NGLE-ONLINE	16.17	16	Las formas de tratamiento (III). El voseo. Aspectos sintácticos y sociolingüísticos	unreviewed		
+NGLE-ONLINE	17	sintaxis	Los demostrativos	unreviewed		
+NGLE-ONLINE	17.1	17	Introducción. El concepto de deixis. Los demostrativos como expresiones deícticas	unreviewed		
+NGLE-ONLINE	17.2	17	Clases de demostrativos	unreviewed		
+NGLE-ONLINE	17.3	17	Los demostrativos en el texto	unreviewed		
+NGLE-ONLINE	17.4	17	El demostrativo y el artículo definido. Similitudes y diferencias	unreviewed		
+NGLE-ONLINE	17.5	17	Los demostrativos pospuestos	unreviewed		
+NGLE-ONLINE	17.6	17	Los demostrativos neutros	unreviewed		
+NGLE-ONLINE	17.7	17	Los adverbios demostrativos (I). Sus clases	unreviewed		
+NGLE-ONLINE	17.8	17	Los adverbios demostrativos (II). Adverbios locativos	unreviewed		
+NGLE-ONLINE	17.9	17	Los adverbios demostrativos (III). Adverbios temporales y modales	unreviewed		
+NGLE-ONLINE	17.10	17	Usos demostrativos de tal y tanto. Su relación con otras interpretaciones	unreviewed		
+NGLE-ONLINE	17.11	17	Otros usos de los demostrativos. Construcciones lexicalizadas y semilexicalizadas	unreviewed		
+NGLE-ONLINE	18	sintaxis	Los posesivos	unreviewed		
+NGLE-ONLINE	18.1	18	Definición. Rasgos gramaticales de los posesivos	unreviewed		
+NGLE-ONLINE	18.2	18	Propiedades fundamentales de los posesivos	unreviewed		
+NGLE-ONLINE	18.3	18	Posesivos prenominales y posnominales	unreviewed		
+NGLE-ONLINE	18.4	18	Posesivos posnominales y complementos con de	unreviewed		
+NGLE-ONLINE	18.5	18	Interpretación semántica de las relaciones de posesión	unreviewed		
+NGLE-ONLINE	18.6	18	El antecedente de los posesivos	unreviewed		
+NGLE-ONLINE	18.7	18	Alternancias de presencia y ausencia de posesivos	unreviewed		
+NGLE-ONLINE	19	sintaxis	Los cuantificadores (I). Sus clases. Cuantificadores universales	unreviewed		
+NGLE-ONLINE	19.1	19	Introducción. El concepto de cuantificación	unreviewed		
+NGLE-ONLINE	19.2	19	Criterios de clasificación. Clases sintácticas de cuantificadores	unreviewed		
+NGLE-ONLINE	19.3	19	Cuantificadores fuertes y débiles	unreviewed		
+NGLE-ONLINE	19.4	19	Aspectos morfológicos de los cuantificadores y su repercusión sintáctica (I). Género y número	unreviewed		
+NGLE-ONLINE	19.5	19	Aspectos morfológicos de los cuantificadores y su repercusión sintáctica (II). La apócope	unreviewed		
+NGLE-ONLINE	19.6	19	Combinaciones de los cuantificadores con otras clases de palabras	unreviewed		
+NGLE-ONLINE	19.7	19	El cuantificador todo (I). Contextos definidos	unreviewed		
+NGLE-ONLINE	19.8	19	El cuantificador todo (II). Contextos no definidos	unreviewed		
+NGLE-ONLINE	19.9	19	Los cuantificadores cada y ambos. Expresiones relacionadas con ellos	unreviewed		
+NGLE-ONLINE	19.10	19	La cuantificación flotante	unreviewed		
+NGLE-ONLINE	20	sintaxis	Los cuantificadores (II). Cuantificadores indefinidos. El concepto de ámbito	unreviewed		
+NGLE-ONLINE	20.1	20	Los cuantificadores en las construcciones partitivas	unreviewed		
+NGLE-ONLINE	20.2	20	Los cuantificadores en las construcciones pseudopartitivas	unreviewed		
+NGLE-ONLINE	20.3	20	Cuantificadores existenciales	unreviewed		
+NGLE-ONLINE	20.4	20	Cuantificadores de indistinción o de elección libre	unreviewed		
+NGLE-ONLINE	20.5	20	Cuantificadores evaluativos (I). Características sintácticas	unreviewed		
+NGLE-ONLINE	20.6	20	Cuantificadores evaluativos (II). Usos anafóricos y no anafóricos	unreviewed		
+NGLE-ONLINE	20.7	20	Cuantificadores evaluativos (III). Otros cuantificadores	unreviewed		
+NGLE-ONLINE	20.8	20	Cuantificadores evaluativos (IV). Su interpretación semántica	unreviewed		
+NGLE-ONLINE	20.9	20	El ámbito de los cuantificadores	unreviewed		
+NGLE-ONLINE	21	sintaxis	Los numerales	unreviewed		
+NGLE-ONLINE	21.1	21	Clases de numerales. Relaciones y diferencias entre ellos	unreviewed		
+NGLE-ONLINE	21.2	21	Sintaxis de los numerales cardinales. Formación de numerales cardinales complejos	unreviewed		
+NGLE-ONLINE	21.3	21	Sustantivos numerales colectivos o de grupo	unreviewed		
+NGLE-ONLINE	21.4	21	Numerales ordinales (I). Aspectos léxicos y morfológicos	unreviewed		
+NGLE-ONLINE	21.5	21	Numerales ordinales (II). Aspectos sintácticos y semánticos	unreviewed		
+NGLE-ONLINE	21.6	21	Numerales fraccionarios	unreviewed		
+NGLE-ONLINE	21.7	21	Numerales multiplicativos	unreviewed		
+NGLE-ONLINE	21.8	21	Los numerales en las construcciones distributivas	unreviewed		
+NGLE-ONLINE	21.9	21	Otros usos de los numerales (I). Cómputos temporales	unreviewed		
+NGLE-ONLINE	21.10	21	Otros usos de los numerales (II). Construcciones lexicalizadas y semilexicalizadas	unreviewed		
+NGLE-ONLINE	22	sintaxis	Relativos, interrogativos y exclamativos. Sus grupos sintácticos	unreviewed		
+NGLE-ONLINE	22.1	22	Introducción. Características fundamentales de relativos, interrogativos y exclamativos	unreviewed		
+NGLE-ONLINE	22.2	22	Semejanzas y diferencias entre relativos, interrogativos y exclamativos	unreviewed		
+NGLE-ONLINE	22.3	22	Grupos relativos	unreviewed		
+NGLE-ONLINE	22.4	22	Los relativos quien, que y cual	unreviewed		
+NGLE-ONLINE	22.5	22	El relativo posesivo cuyo	unreviewed		
+NGLE-ONLINE	22.6	22	El cuantificador relativo cuanto	unreviewed		
+NGLE-ONLINE	22.7	22	Adverbios relativos (I). Sus propiedades fundamentales	unreviewed		
+NGLE-ONLINE	22.8	22	Adverbios relativos (II). Los adverbios donde y adonde	unreviewed		
+NGLE-ONLINE	22.9	22	Adverbios relativos (III). Cuando	unreviewed		
+NGLE-ONLINE	22.10	22	Adverbios relativos (IV). Como. Relativas adverbiales y comparativas de igualdad	unreviewed		
+NGLE-ONLINE	22.11	22	Adverbios relativos (V). Como. Presencia y ausencia del pronombre átono lo	unreviewed		
+NGLE-ONLINE	22.12	22	Los relativos inespecíficos. Su relación con los indefinidos	unreviewed		
+NGLE-ONLINE	22.13	22	Interrogativos y exclamativos (I). Quién y qué. Sus grupos sintácticos	unreviewed		
+NGLE-ONLINE	22.14	22	Interrogativos y exclamativos (II). Cuál, cuánto, cuán y cúyo. Sus grupos sintácticos. Combinación de expresiones cuantificativas	unreviewed		
+NGLE-ONLINE	22.15	22	Interrogativos y exclamativos (III). Dónde, adónde y cuándo	unreviewed		
+NGLE-ONLINE	22.16	22	Interrogativos y exclamativos (IV). Cómo y por qué. Locuciones que se les asimilan	unreviewed		
+NGLE-ONLINE	22.17	22	Relativos, interrogativos y exclamativos desplazados fuera de su oración. El concepto de ‘accesibilidad’	unreviewed		
+NGLE-ONLINE	23	sintaxis	El verbo (I). Tiempo y aspecto. El aspecto léxico. Los tiempos del modo indicativo	unreviewed		
+NGLE-ONLINE	23.1	23	Introducción. El concepto de tiempo verbal. Clasificación de los tiempos	unreviewed		
+NGLE-ONLINE	23.2	23	El aspecto verbal. Sus clases	unreviewed		
+NGLE-ONLINE	23.3	23	El aspecto léxico o modo de acción (I). Clases de situaciones y de propiedades	unreviewed		
+NGLE-ONLINE	23.4	23	El aspecto léxico o modo de acción (II). Su naturaleza composicional	unreviewed		
+NGLE-ONLINE	23.5	23	El presente (canto) (I). Caracterización deíctica. Los presentes generalizadores	unreviewed		
+NGLE-ONLINE	23.6	23	El presente (canto) (II). Presentes retrospectivos y prospectivos. Otros usos del presente	unreviewed		
+NGLE-ONLINE	23.7	23	El pretérito perfecto compuesto (he cantado) (I). Relevancia actual de los hechos pretéritos	unreviewed		
+NGLE-ONLINE	23.8	23	El pretérito perfecto compuesto (he cantado) (II). El perfecto de hechos recientes. Otros usos	unreviewed		
+NGLE-ONLINE	23.9	23	El pretérito perfecto simple (canté)	unreviewed		
+NGLE-ONLINE	23.10	23	El pretérito imperfecto (cantaba) (I). Información deíctica e información aspectual	unreviewed		
+NGLE-ONLINE	23.11	23	El pretérito imperfecto (cantaba) (II). Desarrollos de la noción de copretérito. Valores modales del imperfecto	unreviewed		
+NGLE-ONLINE	23.12	23	El pretérito imperfecto (cantaba) (III). Relevancia del modo de acción. La oposición canté / cantaba	unreviewed		
+NGLE-ONLINE	23.13	23	El pretérito imperfecto (cantaba) (IV). Otros aspectos de la oposición canté / cantaba	unreviewed		
+NGLE-ONLINE	23.14	23	El futuro simple (cantaré). Futuros sintéticos y analíticos	unreviewed		
+NGLE-ONLINE	23.15	23	El condicional simple (cantaría)	unreviewed		
+NGLE-ONLINE	23.16	23	Tiempos compuestos no orientados directamente desde el momento del habla: el pretérito pluscuamperfecto (había cantado), el pretérito anterior (hube cantado), el futuro compuesto (habré cantado), el condicional compuesto (habría cantado)	unreviewed		
+NGLE-ONLINE	24	sintaxis	El verbo (II). Tiempo y aspecto. Los tiempos del modo subjuntivo. Interpretaciones de los adjuntos temporales. La concordancia de tiempos	unreviewed		
+NGLE-ONLINE	24.1	24	Los tiempos del subjuntivo (I). Características generales. El presente (cante) y el pretérito perfecto compuesto (haya cantado)	unreviewed		
+NGLE-ONLINE	24.2	24	Los tiempos del subjuntivo (II). El pretérito imperfecto (cantara o cantase) y el pretérito pluscuamperfecto (hubiera o hubiese cantado)	unreviewed		
+NGLE-ONLINE	24.3	24	Los tiempos del subjuntivo (III). El futuro simple (cantare) y el futuro compuesto (hubiere cantado)	unreviewed		
+NGLE-ONLINE	24.4	24	Tiempo, aspecto y adjuntos de localización temporal (I). Clases de modificadores temporales. Interpretaciones que reciben	unreviewed		
+NGLE-ONLINE	24.5	24	Tiempo, aspecto y adjuntos de localización temporal (II). Construcciones temporales con el adverbio cuando	unreviewed		
+NGLE-ONLINE	24.6	24	Tiempo, aspecto y adjuntos de localización temporal (III). Construcciones temporales con el verbo hacer	unreviewed		
+NGLE-ONLINE	24.7	24	La concordancia de tiempos (I). Sus características fundamentales. Predicados restrictivos y no restrictivos	unreviewed		
+NGLE-ONLINE	24.8	24	La concordancia de tiempos (II). Relaciones de anterioridad, posterioridad y simultaneidad. Interpretaciones de doble acceso	unreviewed		
+NGLE-ONLINE	24.9	24	La concordancia de tiempos (III). La sintaxis de los tiempos y las partículas temporales	unreviewed		
+NGLE-ONLINE	25	sintaxis	El verbo (III). El modo	unreviewed		
+NGLE-ONLINE	25.1	25	Introducción. El concepto de modo. Modo y modalidad	unreviewed		
+NGLE-ONLINE	25.2	25	Inductores del modo	unreviewed		
+NGLE-ONLINE	25.3	25	El modo en las subordinadas sustantivas (I). Contextos básicos de selección del modo	unreviewed		
+NGLE-ONLINE	25.4	25	El modo en las subordinadas sustantivas (II). Alternancias de los modos. Reinterpretación de los contenidos léxicos	unreviewed		
+NGLE-ONLINE	25.5	25	El modo en las subordinadas sustantivas (III). Otros contextos de alternancia	unreviewed		
+NGLE-ONLINE	25.6	25	El modo en las subordinadas sustantivas (IV). Alternancias modales con núcleos nominales desemantizados. Nuevos efectos de la estructura informativa	unreviewed		
+NGLE-ONLINE	25.7	25	El modo en las subordinadas sustantivas (V). Negación y subjuntivo en la subordinación sustantiva. Otros inductores asimilables a la negación	unreviewed		
+NGLE-ONLINE	25.8	25	El modo en las subordinadas sustantivas (VI). Contigüidad sintáctica e inducción modal	unreviewed		
+NGLE-ONLINE	25.9	25	El modo en las subordinadas relativas (I). Características generales	unreviewed		
+NGLE-ONLINE	25.10	25	El modo en las subordinadas relativas (II). Interpretación de los grupos nominales que las contienen	unreviewed		
+NGLE-ONLINE	25.11	25	El modo en las subordinadas relativas (III). Inductores modales	unreviewed		
+NGLE-ONLINE	25.12	25	El modo en las subordinadas relativas (IV). Otros aspectos sintácticos y semánticos de las alternancias modales	unreviewed		
+NGLE-ONLINE	25.13	25	Elección del modo con las conjunciones subordinantes	unreviewed		
+NGLE-ONLINE	25.14	25	Elección del modo con preposiciones, adverbios e interjecciones	unreviewed		
+NGLE-ONLINE	26	sintaxis	El verbo (IV). Las formas no personales: el infinitivo	unreviewed		
+NGLE-ONLINE	26.1	26	Introducción. Las formas no personales del verbo	unreviewed		
+NGLE-ONLINE	26.2	26	Infinitivos verbales y nominales. Delimitación	unreviewed		
+NGLE-ONLINE	26.3	26	Los infinitivos nominales. Diferencias y semejanzas con los verbales	unreviewed		
+NGLE-ONLINE	26.4	26	Los infinitivos verbales. Su interpretación semántica. Infinitivo simple e infinitivo compuesto	unreviewed		
+NGLE-ONLINE	26.5	26	Infinitivos activos y pasivos (I). Construcciones adjetivales	unreviewed		
+NGLE-ONLINE	26.6	26	Infinitivos activos y pasivos (II). Otras construcciones	unreviewed		
+NGLE-ONLINE	26.7	26	Sujetos expresos y sujetos tácitos (I). Aspectos sintácticos de la distinción	unreviewed		
+NGLE-ONLINE	26.8	26	Sujetos expresos y sujetos tácitos (II). Correferencia de sujetos	unreviewed		
+NGLE-ONLINE	26.9	26	El infinitivo con los verbos de influencia y de percepción (I). Características de estas construcciones	unreviewed		
+NGLE-ONLINE	26.10	26	El infinitivo con los verbos de influencia y de percepción (II). Orden interno de los segmentos. Combinaciones con pronombres átonos	unreviewed		
+NGLE-ONLINE	26.11	26	El infinitivo en las oraciones sustantivas	unreviewed		
+NGLE-ONLINE	26.12	26	El infinitivo en las oraciones de relativo	unreviewed		
+NGLE-ONLINE	26.13	26	El infinitivo y las partículas	unreviewed		
+NGLE-ONLINE	26.14	26	El infinitivo independiente	unreviewed		
+NGLE-ONLINE	27	sintaxis	El verbo (V). Las formas no personales: el gerundio y el participio	unreviewed		
+NGLE-ONLINE	27.1	27	El gerundio entre las formas no personales del verbo. Construcciones con gerundio	unreviewed		
+NGLE-ONLINE	27.2	27	El gerundio y otras clases de palabras. Gerundios lexicalizados y semilexicalizados	unreviewed		
+NGLE-ONLINE	27.3	27	El sujeto del gerundio. Sujetos expresos y sujetos tácitos	unreviewed		
+NGLE-ONLINE	27.4	27	Interpretaciones semánticas del gerundio (I). Usos temporales	unreviewed		
+NGLE-ONLINE	27.5	27	Interpretaciones semánticas del gerundio (II). Otros valores. Confluencia de significados	unreviewed		
+NGLE-ONLINE	27.6	27	El gerundio predicativo (I). Construcciones verbales y preposicionales	unreviewed		
+NGLE-ONLINE	27.7	27	El gerundio predicativo (II). Construcciones nominales. El gerundio en estructuras bimembres	unreviewed		
+NGLE-ONLINE	27.8	27	El participio. Características fundamentales	unreviewed		
+NGLE-ONLINE	27.9	27	Formación de participios. Su interpretación semántica	unreviewed		
+NGLE-ONLINE	27.10	27	Adjetivo y participio (I). Contextos comunes	unreviewed		
+NGLE-ONLINE	27.11	27	Adjetivo y participio (II). Contextos diferenciados	unreviewed		
+NGLE-ONLINE	28	sintaxis	El verbo (VI). Las perífrasis verbales	unreviewed		
+NGLE-ONLINE	28.1	28	Definición. Características fundamentales de las perífrasis verbales. Clases sintácticas de perífrasis	unreviewed		
+NGLE-ONLINE	28.2	28	Clases semánticas de perífrasis verbales. Dificultades de estas clasificaciones	unreviewed		
+NGLE-ONLINE	28.3	28	Construcciones perifrásticas, semiperifrásticas y no perifrásticas (I). Propiedades sintácticas de las perífrasis. Desviaciones de estas pautas y creación de nuevos auxiliares	unreviewed		
+NGLE-ONLINE	28.4	28	Construcciones perifrásticas, semiperifrásticas y no perifrásticas (II). Otros verbos semiauxiliares. Procesos de gramaticalización incompletos	unreviewed		
+NGLE-ONLINE	28.5	28	Cohesión e independencia de los componentes de las perífrasis. Perífrasis verbales y tiempos compuestos	unreviewed		
+NGLE-ONLINE	28.6	28	Perífrasis de infinitivo (I). Características fundamentales de las perífrasis modales	unreviewed		
+NGLE-ONLINE	28.7	28	Perífrasis de infinitivo (II). Negación y tiempo en las perífrasis modales de infinitivo	unreviewed		
+NGLE-ONLINE	28.8	28	Perífrasis de infinitivo (III). Perífrasis temporales y aspectuales. El verbo ir	unreviewed		
+NGLE-ONLINE	28.9	28	Perífrasis de infinitivo (IV). Perífrasis temporales y aspectuales. Otras perífrasis	unreviewed		
+NGLE-ONLINE	28.10	28	Perífrasis de infinitivo (V). Perífrasis de fase y perífrasis escalares. Perífrasis de sentido incoativo o ingresivo	unreviewed		
+NGLE-ONLINE	28.11	28	Perífrasis de infinitivo (VI). Perífrasis de fase y perífrasis escalares. Perífrasis de interrupción y término	unreviewed		
+NGLE-ONLINE	28.12	28	Perífrasis de gerundio (I). El auxiliar estar	unreviewed		
+NGLE-ONLINE	28.13	28	Perífrasis de gerundio (II). El auxiliar ir	unreviewed		
+NGLE-ONLINE	28.14	28	Perífrasis de gerundio (III). Los auxiliares andar y venir	unreviewed		
+NGLE-ONLINE	28.15	28	Perífrasis de gerundio (IV). Otras perífrasis	unreviewed		
+NGLE-ONLINE	28.16	28	Perífrasis de participio. Límites entre construcciones perifrásticas y atributivas	unreviewed		
+NGLE-ONLINE	29	sintaxis	La preposición y el grupo preposicional	unreviewed		
+NGLE-ONLINE	29.1	29	Introducción. Los conceptos de preposición y grupo preposicional	unreviewed		
+NGLE-ONLINE	29.2	29	Inventario de preposiciones. Criterios de delimitación	unreviewed		
+NGLE-ONLINE	29.3	29	Otros aspectos sintácticos del grupo preposicional. Problemas de segmentación	unreviewed		
+NGLE-ONLINE	29.4	29	Correlaciones de preposiciones	unreviewed		
+NGLE-ONLINE	29.5	29	Secuencias de preposiciones	unreviewed		
+NGLE-ONLINE	29.6	29	Aspectos semánticos de las preposiciones. La relación entre preposición y término	unreviewed		
+NGLE-ONLINE	29.7	29	Usos particulares de las preposiciones (I): a, ante, bajo, con, contra, de, desde	unreviewed		
+NGLE-ONLINE	29.8	29	Usos particulares de las preposiciones (II): en, entre, hacia, hasta, para, por, sin, sobre, tras	unreviewed		
+NGLE-ONLINE	29.9	29	Locuciones preposicionales. Pautas gramaticales sobre las que se forman	unreviewed		
+NGLE-ONLINE	30	sintaxis	El adverbio y el grupo adverbial	unreviewed		
+NGLE-ONLINE	30.1	30	Introducción. El concepto de adverbio	unreviewed		
+NGLE-ONLINE	30.2	30	Clases de adverbios. Criterios de clasificación	unreviewed		
+NGLE-ONLINE	30.3	30	Adverbios adjetivales	unreviewed		
+NGLE-ONLINE	30.4	30	Adverbios cuantificativos	unreviewed		
+NGLE-ONLINE	30.5	30	Adverbios de lugar	unreviewed		
+NGLE-ONLINE	30.6	30	Adverbios de tiempo (I). Adverbios referenciales y de duración	unreviewed		
+NGLE-ONLINE	30.7	30	Adverbios de tiempo (II). Adverbios de frecuencia	unreviewed		
+NGLE-ONLINE	30.8	30	Adverbios de aspecto. Sus relaciones con otras clases de adverbios	unreviewed		
+NGLE-ONLINE	30.9	30	Adverbios de modo o manera	unreviewed		
+NGLE-ONLINE	30.10	30	Adverbios oracionales (I). Sus clases. Adverbios de la enunciación y adverbios de tópico	unreviewed		
+NGLE-ONLINE	30.11	30	Adverbios oracionales (II). Adverbios del enunciado	unreviewed		
+NGLE-ONLINE	30.12	30	Conectores discursivos adverbiales (I). Características fundamentales. Clases sintácticas	unreviewed		
+NGLE-ONLINE	30.13	30	Conectores discursivos adverbiales (II). Clases semánticas	unreviewed		
+NGLE-ONLINE	30.14	30	El grupo adverbial	unreviewed		
+NGLE-ONLINE	30.15	30	Locuciones adverbiales (I). Sus características gramaticales	unreviewed		
+NGLE-ONLINE	30.16	30	Locuciones adverbiales (II). Locuciones formadas con preposición y término nominal	unreviewed		
+NGLE-ONLINE	30.17	30	Locuciones adverbiales (III). Locuciones formadas con otras pautas sintácticas	unreviewed		
+NGLE-ONLINE	31	sintaxis	La conjunción. Sus grupos sintácticos. Las construcciones coordinadas	unreviewed		
+NGLE-ONLINE	31.1	31	El concepto de conjunción. Sus características fundamentales. Conjunciones coordinantes y subordinantes	unreviewed		
+NGLE-ONLINE	31.2	31	Las conjunciones copulativas. Aspectos formales e interpretativos	unreviewed		
+NGLE-ONLINE	31.3	31	Conjunciones discontinuas o correlativas	unreviewed		
+NGLE-ONLINE	31.4	31	Categorías coordinables (I). Coordinación de segmentos análogos y divergentes	unreviewed		
+NGLE-ONLINE	31.5	31	Categorías coordinables (II). Las oraciones subordinadas como segmentos coordinados	unreviewed		
+NGLE-ONLINE	31.6	31	Coordinación copulativa y pluralidad	unreviewed		
+NGLE-ONLINE	31.7	31	Coordinación y concordancia	unreviewed		
+NGLE-ONLINE	31.8	31	La elipsis en la coordinación copulativa	unreviewed		
+NGLE-ONLINE	31.9	31	La coordinación disyuntiva	unreviewed		
+NGLE-ONLINE	31.10	31	La coordinación adversativa	unreviewed		
+NGLE-ONLINE	31.11	31	Conjunciones subordinantes y locuciones conjuntivas. Pautas con las que se forman	unreviewed		
+NGLE-ONLINE	31.12	31	Conjunciones que denotan excepción	unreviewed		
+NGLE-ONLINE	31.13	31	Relaciones y límites entre conjunción y adverbio (I). Usos de mientras	unreviewed		
+NGLE-ONLINE	31.14	31	Relaciones y límites entre conjunción y adverbio (II). Otras conjunciones. Su relación con los usos adverbiales	unreviewed		
+NGLE-ONLINE	32	sintaxis	La interjección. Sus grupos sintácticos	unreviewed		
+NGLE-ONLINE	32.1	32	Introducción. Características generales de la interjección. Clases de interjecciones	unreviewed		
+NGLE-ONLINE	32.2	32	La interjección entre los enunciados exclamativos	unreviewed		
+NGLE-ONLINE	32.3	32	Interjecciones y onomatopeyas (I). Aspectos fónicos y gráficos	unreviewed		
+NGLE-ONLINE	32.4	32	Interjecciones y onomatopeyas (II). Aspectos sintácticos	unreviewed		
+NGLE-ONLINE	32.5	32	La interjección y otras clases de palabras	unreviewed		
+NGLE-ONLINE	32.6	32	Interjecciones apelativas	unreviewed		
+NGLE-ONLINE	32.7	32	Interjecciones expresivas o sintomáticas	unreviewed		
+NGLE-ONLINE	32.8	32	Los grupos interjectivos	unreviewed		
+NGLE-ONLINE	33	sintaxis	El sujeto	unreviewed		
+NGLE-ONLINE	33.1	33	Introducción. Doble interpretación de la función de sujeto. Elementos gramaticales que la ejercen	unreviewed		
+NGLE-ONLINE	33.2	33	Otros posibles sujetos. Polémicas relativas a la extensión de este paradigma	unreviewed		
+NGLE-ONLINE	33.3	33	Aspectos semánticos de la noción de sujeto. El sujeto y la diátesis verbal. Alternancias en las que participan los sujetos	unreviewed		
+NGLE-ONLINE	33.4	33	Sujetos expresos y sujetos tácitos (I). Sus rasgos gramaticales	unreviewed		
+NGLE-ONLINE	33.5	33	Sujetos expresos y sujetos tácitos (II). Aspectos discursivos de la alternancia. Otros factores	unreviewed		
+NGLE-ONLINE	33.6	33	La concordancia «sujeto – verbo» (I). Distinciones básicas. Aspectos fundamentales de la concordancia de persona	unreviewed		
+NGLE-ONLINE	33.7	33	La concordancia «sujeto – verbo» (II). Sujetos coordinados	unreviewed		
+NGLE-ONLINE	33.8	33	La concordancia «sujeto – verbo» (III). Construcciones pseudopartitivas. La concordancia con los nombres de grupo	unreviewed		
+NGLE-ONLINE	33.9	33	La concordancia «sujeto – verbo» (IV). Construcciones partitivas	unreviewed		
+NGLE-ONLINE	33.10	33	La concordancia «sujeto – verbo» (V). Construcciones copulativas	unreviewed		
+NGLE-ONLINE	34	sintaxis	El complemento directo. Transitividad e intransitividad	unreviewed		
+NGLE-ONLINE	34.1	34	Definición. El concepto de transitividad	unreviewed		
+NGLE-ONLINE	34.2	34	Sustitutos pronominales del complemento directo	unreviewed		
+NGLE-ONLINE	34.3	34	Clases semánticas de verbos transitivos. Interpretación de su complemento directo	unreviewed		
+NGLE-ONLINE	34.4	34	Presencia y ausencia de complemento directo. Verbos transitivos en uso absoluto. Otras formas de omisión e interpretación contextual del complemento directo	unreviewed		
+NGLE-ONLINE	34.5	34	Alternancias de transitividad (I). El acusativo interno	unreviewed		
+NGLE-ONLINE	34.6	34	Alternancias de transitividad (II). Verbos causativos	unreviewed		
+NGLE-ONLINE	34.7	34	Alternancias de transitividad (III). Otros usos transitivos e intransitivos de los verbos. Cambios de régimen y diferencias semánticas	unreviewed		
+NGLE-ONLINE	34.8	34	El complemento directo preposicional (I). Nombres y pronombres. Complementos de persona y de cosa personificada	unreviewed		
+NGLE-ONLINE	34.9	34	El complemento directo preposicional (II). Presencia y ausencia de preposición en grupos nominales indefinidos	unreviewed		
+NGLE-ONLINE	34.10	34	El complemento directo preposicional (III). Clases de verbos que favorecen la alternancia en el uso de la preposición. Otros factores que intervienen en ella	unreviewed		
+NGLE-ONLINE	34.11	34	Complementos directos lexicalizados. Locuciones verbales formadas con verbos transitivos	unreviewed		
+NGLE-ONLINE	35	sintaxis	El complemento indirecto	unreviewed		
+NGLE-ONLINE	35.1	35	Introducción. Características del complemento indirecto. Sus clases	unreviewed		
+NGLE-ONLINE	35.2	35	Los pronombres dativos	unreviewed		
+NGLE-ONLINE	35.3	35	Aspectos sintácticos del complemento indirecto (I). El grupo preposicional. Complementos indirectos y predicados complejos	unreviewed		
+NGLE-ONLINE	35.4	35	Aspectos sintácticos del complemento indirecto (II). Presencia y ausencia de pronombres dativos. Complementos indirectos duplicados	unreviewed		
+NGLE-ONLINE	35.5	35	Complementos indirectos seleccionados o argumentales (I). Destinatarios y experimentadores	unreviewed		
+NGLE-ONLINE	35.6	35	Complementos indirectos seleccionados o argumentales (II). Complementos de término, origen y ubicación	unreviewed		
+NGLE-ONLINE	35.7	35	Complementos indirectos no seleccionados o no argumentales	unreviewed		
+NGLE-ONLINE	35.8	35	Alternancias del complemento indirecto con el sujeto y el complemento directo	unreviewed		
+NGLE-ONLINE	36	sintaxis	El complemento de régimen preposicional	unreviewed		
+NGLE-ONLINE	36.1	36	Definición. Características fundamentales	unreviewed		
+NGLE-ONLINE	36.2	36	Los complementos de régimen verbal y otras funciones sintácticas (I). El complemento de régimen y el complemento circunstancial. Los argumentos locativos	unreviewed		
+NGLE-ONLINE	36.3	36	Los complementos de régimen verbal y otras funciones sintácticas (II). Alternancias en las que intervienen los complementos de régimen	unreviewed		
+NGLE-ONLINE	36.4	36	Alternancias de preposiciones	unreviewed		
+NGLE-ONLINE	36.5	36	Complementos de régimen de los sustantivos y los adjetivos. Sus límites con otras funciones sintácticas	unreviewed		
+NGLE-ONLINE	36.6	36	Complementos de régimen con las preposiciones a, ante y bajo	unreviewed		
+NGLE-ONLINE	36.7	36	Complementos de régimen con las preposiciones con y contra	unreviewed		
+NGLE-ONLINE	36.8	36	Complementos de régimen con las preposiciones de y desde	unreviewed		
+NGLE-ONLINE	36.9	36	Complementos de régimen con las preposiciones en, entre, hacia y hasta	unreviewed		
+NGLE-ONLINE	36.10	36	Complementos de régimen con las preposiciones para, por, sobre y tras	unreviewed		
+NGLE-ONLINE	37	sintaxis	El atributo (I). Clases de expresiones predicativas. El atributo en las oraciones copulativas	unreviewed		
+NGLE-ONLINE	37.1	37	Introducción. Variedades del atributo	unreviewed		
+NGLE-ONLINE	37.2	37	Clases de expresiones predicativas (I). Atributos nominales, pronominales y adjetivales	unreviewed		
+NGLE-ONLINE	37.3	37	Clases de expresiones predicativas (II). Atributos preposicionales y adverbiales	unreviewed		
+NGLE-ONLINE	37.4	37	Clases de expresiones predicativas (III). Oraciones y grupos verbales en función de atributo. Construcciones conexas	unreviewed		
+NGLE-ONLINE	37.5	37	Interpretación de los grupos nominales en las oraciones copulativas. Las copulativas inversas	unreviewed		
+NGLE-ONLINE	37.6	37	Concordancia del atributo	unreviewed		
+NGLE-ONLINE	37.7	37	El atributo en las oraciones copulativas con ser y estar (I). Aspectos semánticos de la distinción	unreviewed		
+NGLE-ONLINE	37.8	37	El atributo en las oraciones copulativas con ser y estar (II). Polémicas relativas a los atributos locativos	unreviewed		
+NGLE-ONLINE	37.9	37	El atributo en las oraciones copulativas con ser y estar (III). Aspectos sintácticos y léxicos	unreviewed		
+NGLE-ONLINE	37.10	37	El verbo parecer. Usos copulativos y no copulativos	unreviewed		
+NGLE-ONLINE	38	sintaxis	El atributo (II). Construcciones semicopulativas. Los complementos predicativos. Las construcciones absolutas	unreviewed		
+NGLE-ONLINE	38.1	38	El atributo en las construcciones semicopulativas (I). Verbos semicopulativos y verbos plenos	unreviewed		
+NGLE-ONLINE	38.2	38	El atributo en las construcciones semicopulativas (II). Los verbos de cambio. Devenir, hacerse, ponerse, volverse y quedarse	unreviewed		
+NGLE-ONLINE	38.3	38	El atributo en las construcciones semicopulativas (III). Otros verbos	unreviewed		
+NGLE-ONLINE	38.4	38	El atributo en las construcciones semicopulativas (IV). Alternancias entre los verbos de cambio	unreviewed		
+NGLE-ONLINE	38.5	38	El atributo en las construcciones semicopulativas (V). Atributos con otros auxiliares semicopulativos	unreviewed		
+NGLE-ONLINE	38.6	38	Los complementos predicativos (I). Sus clases. Complementos predicativos del sujeto, el objeto directo y otras funciones sintácticas	unreviewed		
+NGLE-ONLINE	38.7	38	Los complementos predicativos (II). Complementos predicativos obligatorios y opcionales	unreviewed		
+NGLE-ONLINE	38.8	38	Los complementos predicativos (III). Su interpretación semántica	unreviewed		
+NGLE-ONLINE	38.9	38	Complementos predicativos en contextos preposicionales (I). Predicativos en contextos no oracionales	unreviewed		
+NGLE-ONLINE	38.10	38	Complementos predicativos en contextos preposicionales (II). Predicativos como términos de preposición	unreviewed		
+NGLE-ONLINE	38.11	38	Las construcciones absolutas (I). Sus elementos constitutivos	unreviewed		
+NGLE-ONLINE	38.12	38	Las construcciones absolutas (II). Su interpretación semántica	unreviewed		
+NGLE-ONLINE	38.13	38	Las construcciones absolutas (III). Construcciones absolutas dependientes e independientes	unreviewed		
+NGLE-ONLINE	39	sintaxis	Los adjuntos. El complemento circunstancial	unreviewed		
+NGLE-ONLINE	39.1	39	Introducción. Los adjuntos como modificadores no seleccionados	unreviewed		
+NGLE-ONLINE	39.2	39	Caracterización y delimitación de los adjuntos. Los adjuntos frente a otras unidades sintácticas	unreviewed		
+NGLE-ONLINE	39.3	39	Clases sintácticas de adjuntos	unreviewed		
+NGLE-ONLINE	39.4	39	Incidencia de los adjuntos. Su posición sintáctica	unreviewed		
+NGLE-ONLINE	39.5	39	Clases semánticas de adjuntos (I). Límites de estas clasificaciones	unreviewed		
+NGLE-ONLINE	39.6	39	Clases semánticas de adjuntos (II). Adjuntos de manera, instrumento, medio y compañía	unreviewed		
+NGLE-ONLINE	39.7	39	Clases semánticas de adjuntos (III). Adjuntos de cantidad, lugar y tiempo	unreviewed		
+NGLE-ONLINE	39.8	39	Clases semánticas de adjuntos (IV). Adjuntos de causa y finalidad	unreviewed		
+NGLE-ONLINE	40	sintaxis	Las funciones informativas	unreviewed		
+NGLE-ONLINE	40.1	40	Introducción. Información conocida e información nueva	unreviewed		
+NGLE-ONLINE	40.2	40	El concepto de tópico (I). Estructura y posición de los tópicos	unreviewed		
+NGLE-ONLINE	40.3	40	El concepto de tópico (II). Vínculos sintácticos y discursivos entre el tópico y la oración a la que corresponde	unreviewed		
+NGLE-ONLINE	40.4	40	El concepto de foco. Los focos antepuestos	unreviewed		
+NGLE-ONLINE	40.5	40	Adverbios de foco (I). Sus clases	unreviewed		
+NGLE-ONLINE	40.6	40	Adverbios de foco (II). El foco de la negación	unreviewed		
+NGLE-ONLINE	40.7	40	Adverbios de foco (III). El foco de la afirmación. Construcciones con el adverbio sí	unreviewed		
+NGLE-ONLINE	40.8	40	Adverbios de foco (IV). Adverbios de inclusión	unreviewed		
+NGLE-ONLINE	40.9	40	Adverbios de foco (V). Adverbios de exclusión, particularización y aproximación	unreviewed		
+NGLE-ONLINE	40.10	40	Copulativas enfáticas o de relieve (I). Sus características fundamentales	unreviewed		
+NGLE-ONLINE	40.11	40	Copulativas enfáticas o de relieve (II). Efectos sintácticos de contagio o conectividad	unreviewed		
+NGLE-ONLINE	40.12	40	Copulativas enfáticas o de relieve (III). Copulativas enfáticas sin relativos	unreviewed		
+NGLE-ONLINE	41	sintaxis	Oraciones activas, pasivas, impersonales y medias	unreviewed		
+NGLE-ONLINE	41.1	41	Introducción. Oraciones activas y pasivas	unreviewed		
+NGLE-ONLINE	41.2	41	La pasiva perifrástica (I). Sus características generales. Pasivas en perífrasis verbales	unreviewed		
+NGLE-ONLINE	41.3	41	La pasiva perifrástica (II). Restricciones semánticas en la formación de pasivas. El complemento agente	unreviewed		
+NGLE-ONLINE	41.4	41	Las construcciones inacusativas. Propiedades de los verbos con los que se forman	unreviewed		
+NGLE-ONLINE	41.5	41	Impersonales no reflejas (I). Clases de oraciones impersonales. Verbos impersonales referidos a fenómenos atmosféricos	unreviewed		
+NGLE-ONLINE	41.6	41	Impersonales no reflejas (II). Impersonales con los verbos haber, hacer, ser, estar e ir	unreviewed		
+NGLE-ONLINE	41.7	41	Impersonales no reflejas (III). Impersonales con el verbo dar. Falsas impersonales y alternancias preposicionales	unreviewed		
+NGLE-ONLINE	41.8	41	Impersonales no reflejas (IV). Impersonales formadas con otros verbos	unreviewed		
+NGLE-ONLINE	41.9	41	Impersonales no reflejas (V). Sujetos tácitos de interpretación inespecífica	unreviewed		
+NGLE-ONLINE	41.10	41	Impersonales con se o impersonales reflejas	unreviewed		
+NGLE-ONLINE	41.11	41	La pasiva refleja (I). Características fundamentales	unreviewed		
+NGLE-ONLINE	41.12	41	La pasiva refleja (II). Semejanzas y diferencias entre pasivas reflejas e impersonales reflejas	unreviewed		
+NGLE-ONLINE	41.13	41	Las construcciones medias (I). Los verbos pronominales	unreviewed		
+NGLE-ONLINE	41.14	41	Las construcciones medias (II). Verbos intransitivos no pronominales. Alternancias sintácticas	unreviewed		
+NGLE-ONLINE	42	sintaxis	La modalidad. Los actos de habla. Construcciones imperativas, interrogativas y exclamativas	unreviewed		
+NGLE-ONLINE	42.1	42	Introducción. Interpretaciones de la modalidad	unreviewed		
+NGLE-ONLINE	42.2	42	Los actos verbales	unreviewed		
+NGLE-ONLINE	42.3	42	Los enunciados imperativos (I). Propiedades formales del imperativo. Pronombres átonos y negación	unreviewed		
+NGLE-ONLINE	42.4	42	Los enunciados imperativos (II). El sujeto del imperativo. Diferencias entre oraciones imperativas, exhortativas y desiderativas	unreviewed		
+NGLE-ONLINE	42.5	42	Los enunciados imperativos (III). Aspectos sintácticos y semánticos. Otras oraciones de sentido imperativo	unreviewed		
+NGLE-ONLINE	42.6	42	Características generales de las oraciones interrogativas	unreviewed		
+NGLE-ONLINE	42.7	42	Las interrogativas totales (I). Propiedades sintácticas y semánticas	unreviewed		
+NGLE-ONLINE	42.8	42	Las interrogativas totales (II). Los apéndices confirmativos. Otras fórmulas interrogativas	unreviewed		
+NGLE-ONLINE	42.9	42	Las interrogativas parciales	unreviewed		
+NGLE-ONLINE	42.10	42	Interrogación y negación	unreviewed		
+NGLE-ONLINE	42.11	42	Las preguntas en la réplica	unreviewed		
+NGLE-ONLINE	42.12	42	La interrogación retórica	unreviewed		
+NGLE-ONLINE	42.13	42	La exclamación (I). Grupos sintácticos exclamativos. Las expresiones vocativas	unreviewed		
+NGLE-ONLINE	42.14	42	La exclamación (II). Exclamativas totales y parciales	unreviewed		
+NGLE-ONLINE	42.15	42	La exclamación (III). Otras clases de oraciones exclamativas. Relaciones y límites entre ellas	unreviewed		
+NGLE-ONLINE	42.16	42	La exclamación (IV). Exclamación y ponderación. El uso enfático del artículo determinado	unreviewed		
+NGLE-ONLINE	43	sintaxis	Oraciones subordinadas sustantivas	unreviewed		
+NGLE-ONLINE	43.1	43	Introducción	unreviewed		
+NGLE-ONLINE	43.2	43	Clases de subordinadas sustantivas	unreviewed		
+NGLE-ONLINE	43.3	43	Estructura de las subordinadas sustantivas declarativas con verbo en forma personal	unreviewed		
+NGLE-ONLINE	43.4	43	Las subordinadas sustantivas declarativas en función de sujeto y complemento directo	unreviewed		
+NGLE-ONLINE	43.5	43	Las subordinadas sustantivas declarativas como término de preposición	unreviewed		
+NGLE-ONLINE	43.6	43	Dequeísmo y queísmo. Otras alternancias de presencia y ausencia de preposición	unreviewed		
+NGLE-ONLINE	43.7	43	Las interrogativas indirectas (I). Sus clases. Relaciones y diferencias entre las interrogativas indirectas y otros tipos de subordinadas	unreviewed		
+NGLE-ONLINE	43.8	43	Las interrogativas indirectas (II). Otros aspectos sintácticos y semánticos	unreviewed		
+NGLE-ONLINE	43.9	43	Discurso directo y discurso indirecto (I). Sus características fundamentales	unreviewed		
+NGLE-ONLINE	43.10	43	Discurso directo y discurso indirecto (II). Alternancias deícticas y mecanismos de traslación	unreviewed		
+NGLE-ONLINE	44	sintaxis	Oraciones subordinadas de relativo	unreviewed		
+NGLE-ONLINE	44.1	44	Introducción. Clases de oraciones de relativo. Sus características fundamentales	unreviewed		
+NGLE-ONLINE	44.2	44	Estructura de las oraciones de relativo (I). Las relativas preposicionales	unreviewed		
+NGLE-ONLINE	44.3	44	Estructura de las oraciones de relativo (II). Los relativos complejos	unreviewed		
+NGLE-ONLINE	44.4	44	Relativas especificativas y explicativas (I). Características prosódicas	unreviewed		
+NGLE-ONLINE	44.5	44	Relativas especificativas y explicativas (II). Características sintácticas y semánticas	unreviewed		
+NGLE-ONLINE	44.6	44	Relativas especificativas y explicativas (III). Otros aspectos semánticos. Límites de la distinción	unreviewed		
+NGLE-ONLINE	44.7	44	Particularidades de las relativas sin antecedente expreso	unreviewed		
+NGLE-ONLINE	44.8	44	El antecedente de las relativas	unreviewed		
+NGLE-ONLINE	44.9	44	Relativas de pronombre pleonástico o reasuntivo y relativas no pronominales	unreviewed		
+NGLE-ONLINE	44.10	44	Aspectos discursivos de las subordinadas relativas	unreviewed		
+NGLE-ONLINE	45	sintaxis	Construcciones comparativas, superlativas y consecutivas	unreviewed		
+NGLE-ONLINE	45.1	45	Características generales de las construcciones comparativas	unreviewed		
+NGLE-ONLINE	45.2	45	Elementos constitutivos de la comparación de desigualdad (I). Definiciones	unreviewed		
+NGLE-ONLINE	45.3	45	Elementos constitutivos de la comparación de desigualdad (II). El grupo cuantificativo	unreviewed		
+NGLE-ONLINE	45.4	45	Elementos constitutivos de la comparación de desigualdad (III). Los términos de la comparación	unreviewed		
+NGLE-ONLINE	45.5	45	Otros aspectos de la comparación de desigualdad en estructuras complejas	unreviewed		
+NGLE-ONLINE	45.6	45	La alternancia que ~ de en las comparativas de desigualdad (I). Características de la distinción	unreviewed		
+NGLE-ONLINE	45.7	45	La alternancia que ~ de en las comparativas de desigualdad (II). Otros contextos de elección	unreviewed		
+NGLE-ONLINE	45.8	45	La comparación de igualdad (I). Comparativas con tanto y tan	unreviewed		
+NGLE-ONLINE	45.9	45	La comparación de igualdad (II). Comparativas con mismo e igual	unreviewed		
+NGLE-ONLINE	45.10	45	La comparación de igualdad (III). Otras construcciones comparativas y pseudocomparativas de igualdad	unreviewed		
+NGLE-ONLINE	45.11	45	Las comparativas proporcionales	unreviewed		
+NGLE-ONLINE	45.12	45	Comparativas progresivas, comparativas correctivas o de adecuación y comparativas prototípicas	unreviewed		
+NGLE-ONLINE	45.13	45	Las construcciones superlativas	unreviewed		
+NGLE-ONLINE	45.14	45	Las construcciones consecutivas	unreviewed		
+NGLE-ONLINE	46	sintaxis	Construcciones causales, finales e ilativas	unreviewed		
+NGLE-ONLINE	46.1	46	Introducción. Características generales de estas construcciones	unreviewed		
+NGLE-ONLINE	46.2	46	Estructura sintáctica de las construcciones causales y finales	unreviewed		
+NGLE-ONLINE	46.3	46	Causales internas y externas al predicado verbal. Principales diferencias	unreviewed		
+NGLE-ONLINE	46.4	46	Causales y finales argumentales y no argumentales	unreviewed		
+NGLE-ONLINE	46.5	46	Causales y finales del enunciado y de la enunciación	unreviewed		
+NGLE-ONLINE	46.6	46	Las causales explicativas	unreviewed		
+NGLE-ONLINE	46.7	46	Características particulares de las oraciones finales	unreviewed		
+NGLE-ONLINE	46.8	46	Construcciones finales con la preposición a	unreviewed		
+NGLE-ONLINE	46.9	46	Relaciones de correferencia en las construcciones finales y causales	unreviewed		
+NGLE-ONLINE	46.10	46	Locuciones de sentido causal y final	unreviewed		
+NGLE-ONLINE	46.11	46	Las construcciones ilativas (I). Sus relaciones con otras pautas sintácticas	unreviewed		
+NGLE-ONLINE	46.12	46	Las construcciones ilativas (II). Particularidades de algunas conjunciones	unreviewed		
+NGLE-ONLINE	47	sintaxis	Construcciones condicionales y concesivas	unreviewed		
+NGLE-ONLINE	47.1	47	Características generales de las construcciones condicionales y concesivas. Primeras similitudes y diferencias entre ellas	unreviewed		
+NGLE-ONLINE	47.2	47	Relaciones entre subordinadas condicionales, concesivas y sustantivas. Referencia y escalaridad	unreviewed		
+NGLE-ONLINE	47.3	47	La elipsis en los períodos condicionales y concesivos	unreviewed		
+NGLE-ONLINE	47.4	47	Condicionales del enunciado y de la enunciación	unreviewed		
+NGLE-ONLINE	47.5	47	La expresión del énfasis en el período condicional	unreviewed		
+NGLE-ONLINE	47.6	47	Oraciones pseudocondicionales	unreviewed		
+NGLE-ONLINE	47.7	47	Otros aspectos semánticos de las oraciones condicionales	unreviewed		
+NGLE-ONLINE	47.8	47	Tiempo y modo en las oraciones condicionales	unreviewed		
+NGLE-ONLINE	47.9	47	Posición de la prótasis y la apódosis en los períodos condicionales	unreviewed		
+NGLE-ONLINE	47.10	47	Construcciones condicionales sin la conjunción si. Conjunciones y locuciones conjuntivas	unreviewed		
+NGLE-ONLINE	47.11	47	Otras construcciones de sentido condicional	unreviewed		
+NGLE-ONLINE	47.12	47	Las oraciones concesivas. Características generales	unreviewed		
+NGLE-ONLINE	47.13	47	Tiempo y modo en las oraciones concesivas	unreviewed		
+NGLE-ONLINE	47.14	47	Construcciones preposicionales de sentido concesivo (I). Locuciones preposicionales. Relaciones y límites con otras locuciones	unreviewed		
+NGLE-ONLINE	47.15	47	Construcciones preposicionales de sentido concesivo (II). Los tipos por fuerte que sea y con el talento que tiene. Sus variantes sintácticas	unreviewed		
+NGLE-ONLINE	47.16	47	Fórmulas concesivas duplicadas. Otras construcciones concesivas sin la conjunción aunque	unreviewed		
+NGLE-ONLINE	48	sintaxis	La negación	unreviewed		
+NGLE-ONLINE	48.1	48	Introducción. Conceptos fundamentales	unreviewed		
+NGLE-ONLINE	48.2	48	Clases de negación	unreviewed		
+NGLE-ONLINE	48.3	48	La alternancia negativa	unreviewed		
+NGLE-ONLINE	48.4	48	El ámbito de la negación (I). Sus características principales. Indefinidos existenciales en entornos negativos	unreviewed		
+NGLE-ONLINE	48.5	48	El ámbito de la negación (II). Otros cuantificadores	unreviewed		
+NGLE-ONLINE	48.6	48	Inductores negativos	unreviewed		
+NGLE-ONLINE	48.7	48	Términos de polaridad negativa (I). Locuciones verbales y grupos nominales indefinidos	unreviewed		
+NGLE-ONLINE	48.8	48	Términos de polaridad negativa (II). Adverbios. Otras expresiones	unreviewed		
+NGLE-ONLINE	48.9	48	Términos de polaridad negativa (III). Aspectos sintácticos	unreviewed		
+NGLE-ONLINE	48.10	48	La negación de las formas no personales del verbo	unreviewed		
+NGLE-ONLINE	48.11	48	Negación expletiva y negación encubierta. Otros tipos de negaciones interpretables y no interpretables	unreviewed		
+NGLE-ONLINE	48.12	48	La negación anticipada	unreviewed		
+NGLE-ONLINE	48.13	48	La elipsis en las oraciones negativas. Fragmentos negativos y negaciones idiomáticas	unreviewed		
