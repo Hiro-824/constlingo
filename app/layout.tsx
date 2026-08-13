@@ -1,20 +1,14 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+import "./styles/shell.css";
+import "./styles/library.css";
+import "./styles/setup.css";
+import "./styles/session.css";
+import "./styles/result.css";
 
 export const metadata: Metadata = {
-  title: "Constlingo",
-  description: "スペイン語1000語の四択・発音演習アプリ",
+  title: "Constlingo — 声で身につける語学練習",
+  description: "見て、思い出して、声にする。基本語彙を短い演習で身につける語学学習アプリ。",
 };
 
 export default function RootLayout({
@@ -23,10 +17,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="ja"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
+    <html lang="ja" className="h-full antialiased">
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
